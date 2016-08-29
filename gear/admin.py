@@ -3,7 +3,7 @@ from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 import nested_admin
 
-from .models import Recipe, Item, Ingredient
+from .models import Recipe, Item, Ingredient, GearStat
 
 
 class IngredientInlineForm(forms.ModelForm):
@@ -37,15 +37,21 @@ class RecipeInline(nested_admin.NestedTabularInline):
 	validate_max = True
 
 
+class StatInline(nested_admin.NestedTabularInline):
+	""" Def class"""
+	model = GearStat
+	extra = 0
+
+
 class ItemAdmin(nested_admin.NestedModelAdmin):
 	""" Def class"""
 	fieldsets = [
-	(None, {'fields':['item_name']}),
-	(None, {'fields':['item_color']}),
+		(None, {'fields':['name']}),
+		(None, {'fields':['color']}),
 	]
-	inlines = [RecipeInline]
-	list_display = ('item_name', 'item_color')
-	list_filter = ['item_color']
-	search_fields = ['item_name', 'item_color']
+	inlines = [StatInline, RecipeInline]
+	list_display = ('name', 'color', 'level', 'description')
+	list_filter = ['color', 'level']
+	search_fields = ['name', 'color', 'level', 'description']
 
 admin.site.register(Item, ItemAdmin)

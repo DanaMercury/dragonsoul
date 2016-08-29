@@ -30,6 +30,7 @@ DEBUG = True
 
 INSTALLED_APPS = [
     'gear.apps.GearConfig',
+    'stats.apps.StatsConfig',
     'nested_admin',
     'django.contrib.admin',
     'django.contrib.auth',
