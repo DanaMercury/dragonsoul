@@ -46,12 +46,11 @@ class StatInline(nested_admin.NestedTabularInline):
 class ItemAdmin(nested_admin.NestedModelAdmin):
 	""" Def class"""
 	fieldsets = [
-		(None, {'fields':['name']}),
-		(None, {'fields':['color']}),
+		(None, {'fields':['name', 'color', 'equippable']}),
 	]
 	inlines = [StatInline, RecipeInline]
 	list_display = ('name', 'color', 'level', 'description')
 	list_filter = ['color', 'level']
-	search_fields = ['name', 'color', 'level', 'description']
+	search_fields = ['name', 'color', 'level', 'description', 'equippable']
 
 admin.site.register(Item, ItemAdmin)
