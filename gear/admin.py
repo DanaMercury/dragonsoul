@@ -16,7 +16,7 @@ class IngredientInlineForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(IngredientInlineForm, self).__init__(*args, **kwargs)
 		try:
-			self.fields['item'].queryset = Item.objects.exclude(item_name=self.instance.recipe.item.name)
+			self.fields['item'].queryset = Item.objects.exclude(name=self.instance.recipe.item.name)
 		except ObjectDoesNotExist:
 			pass
 
