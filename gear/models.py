@@ -38,6 +38,7 @@ class Ingredient(models.Model):
 	def __str__(self):
 		return str(self.quantity) + " " + self.item.name
 
+
 class GearStat(models.Model):
 	"""Add Stat def"""
 	item = models.ForeignKey(Item, on_delete = models.CASCADE)

@@ -28,7 +28,7 @@ class IngredientInline(nested_admin.NestedTabularInline):
 	extra = 0
 
 
-class RecipeInline(nested_admin.NestedTabularInline):
+class RecipeInline(nested_admin.NestedStackedInline):
 	""" Def class"""
 	model = Recipe
 	inlines = [IngredientInline]

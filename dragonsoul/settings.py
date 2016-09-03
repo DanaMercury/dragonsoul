@@ -31,6 +31,7 @@ DEBUG = True
 INSTALLED_APPS = [
     'gear.apps.GearConfig',
     'stats.apps.StatsConfig',
+    'heroes.apps.HeroesConfig',
     'nested_admin',
     'django.contrib.admin',
     'django.contrib.auth',
