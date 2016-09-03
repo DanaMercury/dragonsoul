@@ -36,7 +36,7 @@ class Ingredient(models.Model):
 	quantity = models.IntegerField(null = True)
 
 	def __str__(self):
-		return str(self.quantity) + " " + self.item.name + " on " + self.recipe.name
+		return str(self.quantity) + " " + self.item.name + " on " + self.recipe.item.name
 
 
 class GearStat(models.Model):
