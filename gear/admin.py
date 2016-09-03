@@ -16,7 +16,7 @@ class IngredientInlineForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(IngredientInlineForm, self).__init__(*args, **kwargs)
 		try:
-			self.fields['item'].queryset = Item.objects.exclude(item_name=self.instance.recipe.item.item_name)
+			self.fields['item'].queryset = Item.objects.exclude(name=self.instance.recipe.item.name)
 		except ObjectDoesNotExist:
 			pass
 
@@ -46,7 +46,7 @@ class StatInline(nested_admin.NestedTabularInline):
 class ItemAdmin(nested_admin.NestedModelAdmin):
 	""" Def class"""
 	fieldsets = [
-		(None, {'fields':['name', 'color', 'description', 'equippable']}),
+		(None, {'fields':['name', 'color', 'level', 'description', 'equippable']}),
 	]
 	inlines = [StatInline, RecipeInline]
 	list_display = ('name', 'color', 'equippable', 'level', 'description')
