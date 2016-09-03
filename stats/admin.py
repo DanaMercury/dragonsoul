@@ -9,5 +9,6 @@ class StatAdmin(admin.ModelAdmin):
 	]
 	list_display = ('name', 'name') #replace second name with description ASAP
 	search_fields = ['name']
+	ordering = ['name']
 
 admin.site.register(Stat, StatAdmin)

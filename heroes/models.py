@@ -10,8 +10,6 @@ class Hero(models.Model):
 		return self.name
 
 
-
-
 class Rarity(models.Model):
 	"""The color and level of the hero."""
 	hero = models.ForeignKey(Hero, on_delete = models.CASCADE)

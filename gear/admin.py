@@ -52,5 +52,6 @@ class ItemAdmin(nested_admin.NestedModelAdmin):
 	list_display = ('name', 'color', 'level', 'description', 'equippable')
 	list_filter = ['color', 'equippable', 'level']
 	search_fields = ['name', 'description']
-
+	ordering = ['name']
+	
 admin.site.register(Item, ItemAdmin)
