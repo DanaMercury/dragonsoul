@@ -49,8 +49,8 @@ class ItemAdmin(nested_admin.NestedModelAdmin):
 		(None, {'fields':['name', 'color', 'level', 'description', 'equippable']}),
 	]
 	inlines = [StatInline, RecipeInline]
-	list_display = ('name', 'color', 'level', 'description')
-	list_filter = ['color', 'level']
-	search_fields = ['name', 'color', 'level', 'description', 'equippable']
+	list_display = ('name', 'color', 'level', 'description', 'equippable')
+	list_filter = ['color', 'equippable', 'level']
+	search_fields = ['name', 'description']
 
 admin.site.register(Item, ItemAdmin)
