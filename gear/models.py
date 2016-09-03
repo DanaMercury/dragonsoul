@@ -3,7 +3,7 @@ from stats.models import Stat
 
 
 class Item(models.Model):
-	"""The smallest denominator. Could be scraps, scrolls, or equippable items"""		
+	"""The smallest denominator. Could be scraps, scrolls, or equippable items"""
 	name = models.CharField(max_length = 200, unique = True, null = True)
 	color = models.IntegerField(default = 1, choices = [
 		(1, 'white'),
@@ -15,7 +15,7 @@ class Item(models.Model):
 	level = models.IntegerField(null = True, blank = True)
 	description = models.CharField(max_length = 200, unique = True, null = True)
 	equippable = models.BooleanField(default = False)
-	
+
 	def __str__(self):
 		return self.name
 
@@ -46,4 +46,4 @@ class GearStat(models.Model):
 	quantity = models.IntegerField(null = True)
 
 	def __str__(self):
-		return str(self.stat.name)
+		return str(self.quantity) + " " + self.stat.name + " on " + self.item.name
