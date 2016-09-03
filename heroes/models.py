@@ -21,12 +21,52 @@ class Rarity(models.Model):
 		(5,'orange'),
 	])
 	level = models.IntegerField(null = True, blank = True)
-	gear1 = models.ForeignKey(Item, on_delete = models.CASCADE, null =True, related_name="gear1")
-	gear2 = models.ForeignKey(Item, on_delete = models.CASCADE, null =True, related_name="gear2")
-	gear3 = models.ForeignKey(Item, on_delete = models.CASCADE, null =True, related_name="gear3")
-	gear4 = models.ForeignKey(Item, on_delete = models.CASCADE, null =True, related_name="gear4")
-	gear5 = models.ForeignKey(Item, on_delete = models.CASCADE, null =True, related_name="gear5")
-	gear6 = models.ForeignKey(Item, on_delete = models.CASCADE, null =True, related_name="gear6")
+	gear1 = models.ForeignKey(
+		Item,
+		limit_choices_to={'equippable': True},
+		on_delete = models.CASCADE,
+		null =True,
+		related_name="gear1"
+	)
+	gear2 = models.ForeignKey(
+		Item,
+		limit_choices_to={'equippable': True},
+		on_delete = models.CASCADE,
+		null =True,
+		related_name="gear2"
+	)
 	
+	gear3 = models.ForeignKey(
+		Item,
+		limit_choices_to={'equippable': True},
+		on_delete = models.CASCADE,
+		null =True,
+		related_name="gear3"
+	)
+	
+	gear4 = models.ForeignKey(
+		Item,
+		limit_choices_to={'equippable': True},
+		on_delete = models.CASCADE,
+		null =True,
+		related_name="gear4"
+	)
+	
+	gear5 = models.ForeignKey(
+		Item,
+		limit_choices_to={'equippable': True},
+		on_delete = models.CASCADE,
+		null =True,
+		related_name="gear5"
+	)
+	
+	gear6 = models.ForeignKey(
+		Item,
+		limit_choices_to={'equippable': True},
+		on_delete = models.CASCADE,
+		null =True,
+		related_name="gear6"
+	)
+
 	def __str__(self):
 		return str(self.get_color_display()) + " " + str(self.level)
