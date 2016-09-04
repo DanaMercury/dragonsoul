@@ -115,7 +115,7 @@
 		var list = '';
 		for(i = 0; i < sortable.length; i++) {
 			var item = sortable[i];
-			list += '<li class="color' + item.color + '">' + item.total + 'x ' + name + '</li>';
+			list += '<li class="color' + item.color + '">' + item.total + 'x ' + item.name + '</li>';
 		}
 		document.getElementById('items').innerHTML = list;
 	}
