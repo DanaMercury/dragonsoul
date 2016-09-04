@@ -115,7 +115,7 @@
 		var list = '';
 		for(i = 0; i < sortable.length; i++) {
 			var item = sortable[i];
-			list += '<li class="color' + item.color + '">' + item.name + ' x' + item.total + '</li>';
+			list += '<li class="color' + item.color + '">' + item.total + 'x ' + name + '</li>';
 		}
 		document.getElementById('items').innerHTML = list;
 	}
@@ -145,4 +145,12 @@
 
 	remember();
 	calculate_gear();
+</script>
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-77025911-1', 'auto');
+	ga('send', 'pageview');
 </script>
