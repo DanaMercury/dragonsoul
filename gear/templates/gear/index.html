@@ -1,44 +1,127 @@
-<h1>Heroes</h1>
-{% for hero in heroes %}
-	<h2>{{ hero.name }}</h2>
-	{% for rarity in hero.rarities %}
-	<h3>{{ rarity }}</h3>
-	<ul>
-		<li>{{ rarity.gear1 }}</li>
-		<li>{{ rarity.gear2 }}</li>
-		<li>{{ rarity.gear3 }}</li>
-		<li>{{ rarity.gear4 }}</li>
-		<li>{{ rarity.gear5 }}</li>
-		<li>{{ rarity.gear6 }}</li>
+<style>
+	.color1 { color: black; }
+	.color2 { color: green; }
+	.color3 { color: blue; }
+	.color4 { color: purple; }
+	.color5 { color: orange; }
+	#itemlist { position: fixed; top: 0; right: 0; bottom: 0; width: 33%; padding: 1vw; overflow: scroll; }
+	#heronav { position: fixed; top: 0; left: 0; height: 100px; width: 60%; padding: 1vw; }
+	#herogear { position: fixed; top: 100px; left: 0; bottom: 0; width: 60%; padding: 1vw; overflow: scroll; }
+	#herolist, .rarity ul { list-style: none; margin: 0; padding: 0; }
+	#herolist li { float: left; padding-right: 20px; }
+	.rarity ul li { display: inline-block; width: 32%; float-left; }
+	h2, h3 { clear: both; }
+	h2 { padding-top: 30px; }
+	h1 + h2 { padding-top: 0; }
+	label { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+</style>
+<div id="heronav">
+	<ul id="herolist">
+		{% for hero in heroes %}
+			<li><a href="#{{hero.id}}">{{ hero.name }}</a></li>
+		{% endfor %}
 	</ul>
+</div>
+<div id="herogear">
+	<h1>Heroes</h1>
+	{% for hero in heroes %}
+		<h2><a name="{{hero.id}}">{{ hero.name }}</a></h2>
+		{% for rarity in hero.rarities %}
+			<div class="rarity">
+				<h3 class="color{{ rarity.color }}">{{ rarity }}</h3>
+				<ul>
+					<li class="color{{ rarity.gear1.color }}"><label><input type="checkbox" id="{{hero.name}}{{rarity}}_1" onchange="calculate_gear();" /> {{ rarity.gear1 }}</label></li>
+					<li class="color{{ rarity.gear2.color }}"><label><input type="checkbox" id="{{hero.name}}{{rarity}}_2" onchange="calculate_gear();" /> {{ rarity.gear2 }}</label></li>
+					<li class="color{{ rarity.gear3.color }}"><label><input type="checkbox" id="{{hero.name}}{{rarity}}_3" onchange="calculate_gear();" /> {{ rarity.gear3 }}</label></li>
+					<li class="color{{ rarity.gear4.color }}"><label><input type="checkbox" id="{{hero.name}}{{rarity}}_4" onchange="calculate_gear();" /> {{ rarity.gear4 }}</label></li>
+					<li class="color{{ rarity.gear5.color }}"><label><input type="checkbox" id="{{hero.name}}{{rarity}}_5" onchange="calculate_gear();" /> {{ rarity.gear5 }}</label></li>
+					<li class="color{{ rarity.gear6.color }}"><label><input type="checkbox" id="{{hero.name}}{{rarity}}_6" onchange="calculate_gear();" /> {{ rarity.gear6 }}</label></li>
+				</ul>
+			</div>
+		{% endfor %}
 	{% endfor %}
-{% endfor %}
-
-<h1>Items</h1>
-<ul id="items">
-</ul>
+</div>
+<div id="itemlist">
+	<h1>Items</h1>
+	<ul id="items"></ul>
+</div>
 
 <script>
 	items = {{ items|safe }};
-	aggregate = {}
-	for (var key in items) {
-		if (items.hasOwnProperty(key)) {
-			var subitems = items[key];
-			for (var subkey in subitems) {
-				if (subitems.hasOwnProperty(subkey)) {
-					if(!(subkey in aggregate)) {
-						aggregate[subkey] = 0;
+	heroes = {};
+	{% for hero in heroes %}
+		heroes['{{ hero.name }}'] = { 'rarities' : [] };
+		{% for rarity in hero.rarities %}
+			heroes['{{ hero.name }}']['rarities'].push('{{ rarity | safe }}');
+		{% endfor %}
+	{% endfor %}
+
+	function calculate_gear() {
+		aggregate = {}
+		for(var key in heroes) {
+			if(heroes.hasOwnProperty(key)) {
+				var progress = {}
+				var hero = heroes[key];
+				var name = key;
+				for(var raritykey in hero.rarities) {
+					if(hero.rarities.hasOwnProperty(raritykey)) {
+						var rarity = hero.rarities[raritykey];
+						progress[rarity] = {};
+						for(i = 1; i < 7; i++) {
+							var itemkey = name + rarity + '_' + i;
+							if(document.getElementById(itemkey).checked) {
+								progress[rarity][i] = 1;
+								var item = items[itemkey];
+								for (var subkey in item) {
+									if (item.hasOwnProperty(subkey)) {
+										if (!(subkey in aggregate)) {
+											aggregate[subkey] = { 'total' : 0, 'color' : item[subkey].color };
+										}
+										aggregate[subkey].total += item[subkey].total;
+									}
+								}
+							} else {
+								progress[rarity][i] = 0;
+							}
+						}
 					}
-					aggregate[subkey] += subitems[subkey];
+				}
+				localStorage.setItem(key, JSON.stringify(progress));
+			}
+		}
+		var list = '';
+		for (var aggkey in aggregate) {
+			if (aggregate.hasOwnProperty(aggkey)) {
+				var item = aggregate[aggkey];
+				list += '<li class="color' + item.color + '">' + aggkey + ' x' + item.total + '</li>';
+			}
+		}
+		document.getElementById('items').innerHTML = list;
+	}
+	
+	function remember() {
+		for(var key in heroes) {
+			if(heroes.hasOwnProperty(key)) {
+				var hero = heroes[key];
+				var progress = JSON.parse(localStorage.getItem(key));
+				if(null !== progress) {
+					for(var raritykey in hero.rarities) {
+						if(hero.rarities.hasOwnProperty(raritykey)) {
+							var rarity = hero.rarities[raritykey];
+							if(null != progress[rarity]) {
+								for(i = 1; i < 7; i++) {
+									if(null != progress[rarity][i]) {
+										document.getElementById(key + rarity + '_' + i).checked = (progress[rarity][i] ? true : false);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
 	}
-	var list = '';
-	for (var key in aggregate) {
-		if(aggregate.hasOwnProperty(key)) {
-			list += '<li>' + key + ' x' + aggregate[key] + '</li>';
-		}
-	}
-	document.getElementById('items').innerHTML = list;
+
+	remember();
+	calculate_gear();
 </script>

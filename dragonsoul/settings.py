@@ -29,9 +29,6 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
-    'gear.apps.GearConfig',
-    'stats.apps.StatsConfig',
-    'heroes.apps.HeroesConfig',
     'nested_admin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,6 +40,9 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'gear.apps.GearConfig',
+    'stats.apps.StatsConfig',
+    'heroes.apps.HeroesConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
