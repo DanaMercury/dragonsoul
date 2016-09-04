@@ -99,7 +99,11 @@
 		}
 		sortable.sort(
 		    function(a, b) {
-				return b['total'] - a['total']
+				var n = b.total - a.total;
+				if (n !== 0) {
+					return n;
+				}
+				return a.name - b.name;
 			}
 		)
 		var list = '';
