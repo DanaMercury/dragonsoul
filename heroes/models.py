@@ -14,11 +14,11 @@ class Rarity(models.Model):
 	"""The color and level of the hero."""
 	hero = models.ForeignKey(Hero, on_delete = models.CASCADE)
 	color = models.IntegerField(default = 1, choices = [
-		(1,'white'),
-		(2,'green'),
-		(3,'blue'),
-		(4,'purple'),
-		(5,'orange'),
+		(1,'White'),
+		(2,'Green'),
+		(3,'Blue'),
+		(4,'Purple'),
+		(5,'Orange'),
 	])
 	level = models.IntegerField(null = True, blank = True)
 	gear1 = models.ForeignKey(
@@ -35,7 +35,6 @@ class Rarity(models.Model):
 		null =True,
 		related_name="gear2"
 	)
-	
 	gear3 = models.ForeignKey(
 		Item,
 		limit_choices_to={'equippable': True},
@@ -43,7 +42,6 @@ class Rarity(models.Model):
 		null =True,
 		related_name="gear3"
 	)
-	
 	gear4 = models.ForeignKey(
 		Item,
 		limit_choices_to={'equippable': True},
@@ -51,7 +49,6 @@ class Rarity(models.Model):
 		null =True,
 		related_name="gear4"
 	)
-	
 	gear5 = models.ForeignKey(
 		Item,
 		limit_choices_to={'equippable': True},
@@ -59,7 +56,6 @@ class Rarity(models.Model):
 		null =True,
 		related_name="gear5"
 	)
-	
 	gear6 = models.ForeignKey(
 		Item,
 		limit_choices_to={'equippable': True},
@@ -69,4 +65,8 @@ class Rarity(models.Model):
 	)
 
 	def __str__(self):
-		return str(self.get_color_display()) + " " + str(self.level)
+		if None == self.level:
+			level = ''
+		else:
+			level = '+' + str(self.level)
+		return self.get_color_display() + ' ' + level

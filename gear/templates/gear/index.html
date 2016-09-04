@@ -1,0 +1,44 @@
+<h1>Heroes</h1>
+{% for hero in heroes %}
+	<h2>{{ hero.name }}</h2>
+	{% for rarity in hero.rarities %}
+	<h3>{{ rarity }}</h3>
+	<ul>
+		<li>{{ rarity.gear1 }}</li>
+		<li>{{ rarity.gear2 }}</li>
+		<li>{{ rarity.gear3 }}</li>
+		<li>{{ rarity.gear4 }}</li>
+		<li>{{ rarity.gear5 }}</li>
+		<li>{{ rarity.gear6 }}</li>
+	</ul>
+	{% endfor %}
+{% endfor %}
+
+<h1>Items</h1>
+<ul id="items">
+</ul>
+
+<script>
+	items = {{ items|safe }};
+	aggregate = {}
+	for (var key in items) {
+		if (items.hasOwnProperty(key)) {
+			var subitems = items[key];
+			for (var subkey in subitems) {
+				if (subitems.hasOwnProperty(subkey)) {
+					if(!(subkey in aggregate)) {
+						aggregate[subkey] = 0;
+					}
+					aggregate[subkey] += subitems[subkey];
+				}
+			}
+		}
+	}
+	var list = '';
+	for (var key in aggregate) {
+		if(aggregate.hasOwnProperty(key)) {
+			list += '<li>' + key + ' x' + aggregate[key] + '</li>';
+		}
+	}
+	document.getElementById('items').innerHTML = list;
+</script>
