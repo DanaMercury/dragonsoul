@@ -25,7 +25,6 @@
 	</ul>
 </div>
 <div id="herogear">
-	<h1>Heroes</h1>
 	{% for hero in heroes %}
 		<h2><a name="{{hero.id}}">{{ hero.name }}</a></h2>
 		{% for rarity in hero.rarities %}
@@ -44,7 +43,8 @@
 	{% endfor %}
 </div>
 <div id="itemlist">
-	<h1>Items</h1>
+	<h1>Grinding List</h1>
+	<p>To avoid double representation, this list is only the grindable items. For example, a Head Banger requires 20 Head Banger scraps, but this list will only show the 20 scraps, not the resulting Head Banger. Keep this in mind as you choose to buy, sell, or use items and scraps for enchantments.</p>
 	<ul id="items"></ul>
 </div>
 
