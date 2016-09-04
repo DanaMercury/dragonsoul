@@ -69,8 +69,8 @@
 						progress[rarity] = {};
 						for(i = 1; i < 7; i++) {
 							var itemkey = name + rarity + '_' + i;
-							if(document.getElementById(itemkey).checked) {
-								progress[rarity][i] = 1;
+							if(!(document.getElementById(itemkey).checked)) {
+								progress[rarity][i] = 0;
 								var item = items[itemkey];
 								for (var subkey in item) {
 									if (item.hasOwnProperty(subkey)) {
@@ -81,7 +81,7 @@
 									}
 								}
 							} else {
-								progress[rarity][i] = 0;
+								progress[rarity][i] = 1;
 							}
 						}
 					}
