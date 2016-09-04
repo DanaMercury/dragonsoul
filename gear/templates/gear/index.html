@@ -103,6 +103,10 @@
 				if (n !== 0) {
 					return n;
 				}
+				var x = b.color - a.color;
+				if (x !== 0) {
+					return x
+				}
 				if (a.name < b.name) {
 					return -1;
 				}
