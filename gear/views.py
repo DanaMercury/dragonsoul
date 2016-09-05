@@ -5,10 +5,7 @@ from .models import Item, Recipe
 def processItems(item, items, multiplier, master_items):
 	try:
 		for ingredient in item.recipe.ingredients.all():
-			for subitem in master_items:
-				if ingredient.item.id == subitem.id:
-					processItems(subitem, items, multiplier * ingredient.quantity, master_items)
-					break
+			processItems(master_items[ingredient.item.id], items, multiplier * ingredient.quantity, master_items)
 	except Recipe.DoesNotExist:
 		if item.name not in items:
 			items[item.name] = { 'total' : 0, 'color' : item.color }
@@ -24,7 +21,10 @@ def index(request):
 		'rarities__gear5__recipe__ingredients',
 		'rarities__gear6__recipe__ingredients',
 	)
-	master_items = Item.objects.all().prefetch_related('recipe__ingredients')
+	raw_items = Item.objects.all().prefetch_related('recipe__ingredients')
+	master_items = {}
+	for item in raw_items:
+		master_items[item.id] = item
 	items = {}
 	for hero in heroes:
 		for rarity in hero.rarities.all():
@@ -36,10 +36,7 @@ def index(request):
 			for i in range(1,7):
 				items[label + '_' + str(i)] = {}
 				item_id = getattr(rarity, 'gear' + str(i)).id
-				for item in master_items:
-					if item_id == item.id:
-						processItems(item, items[label + '_' + str(i)], 1, master_items)
-						break
+				processItems(master_items[item_id], items[label + '_' + str(i)], 1, master_items)
 	context = {
 		'heroes' : heroes,
 		'items' : items,
