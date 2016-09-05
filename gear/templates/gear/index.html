@@ -6,14 +6,14 @@
 	.color4 { color: purple; }
 	.color5 { color: orange; }
 	#itemlist { position: fixed; top: 0; right: 0; bottom: 0; width: 25%; padding: 1vw; overflow: scroll; }
-	#heronav { position: fixed; top: 0; left: 0; height: 100px; width: 70%; padding: 1vw; }
+	#heronav { position: fixed; top: 0; left: 0; height: 100px; width: 70%; padding: 1vw; background: red; }
 	#herogear { position: fixed; top: 100px; left: 0; bottom: 0; width: 70%; padding: 1vw; overflow: scroll; }
 	#herolist, .rarity ul { list-style: none; margin: 0; padding: 0; }
 	#herolist li { float: left; padding-right: 20px; }
 	.rarity ul li { display: inline-block; width: 32%; float-left; }
 	h2, h3 { clear: both; }
 	h2 { padding-top: 30px; }
-	h1 + h2 { padding-top: 0; }
+	#herogear > h2:first-child { padding-top: 0 }
 	h3 { padding-top: 20px; }
 	h2 + div h3 { padding-top: 0; }
 	label { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
