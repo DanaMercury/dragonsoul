@@ -14,7 +14,7 @@ def processItems(item, items, multiplier):
 		pass
 
 def index(request):
-	ids = [6, 5, 4]
+	ids = [6, 5, 4, 3]
 	heroes = Hero.objects.all().exclude(id__in = ids)
 	items = {}
 	for hero in heroes:
