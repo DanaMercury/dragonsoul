@@ -1,30 +1,13 @@
 from django.contrib import admin
 from django import forms
-from django.core.exceptions import ObjectDoesNotExist
 import nested_admin
 
 from .models import Recipe, Item, Ingredient, GearStat
 
 
-class IngredientInlineForm(forms.ModelForm):
-	""" Def class"""
-
-	class Meta:
-		model = Ingredient
-		fields = '__all__'
-
-	def __init__(self, *args, **kwargs):
-		super(IngredientInlineForm, self).__init__(*args, **kwargs)
-		try:
-			self.fields['item'].queryset = Item.objects.exclude(name=self.instance.recipe.item.name)
-		except ObjectDoesNotExist:
-			pass
-
-
 class IngredientInline(nested_admin.NestedTabularInline):
 	""" Def class"""
 	model = Ingredient
-	form = IngredientInlineForm
 	extra = 0
 
 
@@ -53,5 +36,5 @@ class ItemAdmin(nested_admin.NestedModelAdmin):
 	list_filter = ['color', 'equippable', 'level']
 	search_fields = ['name', 'description']
 	ordering = ['name']
-	
+
 admin.site.register(Item, ItemAdmin)

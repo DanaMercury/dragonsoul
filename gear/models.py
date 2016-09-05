@@ -6,11 +6,11 @@ class Item(models.Model):
 	"""The smallest denominator. Could be scraps, scrolls, or equippable items"""
 	name = models.CharField(max_length = 200, unique = True, null = True)
 	color = models.IntegerField(default = 1, choices = [
-		(1, 'white'),
-		(2, 'green'),
-		(3, 'blue'),
-		(4, 'purple'),
-		(5, 'orange')
+		(1, 'White'),
+		(2, 'Green'),
+		(3, 'Blue'),
+		(4, 'Purple'),
+		(5, 'Orange')
 	])
 	level = models.IntegerField(null = True, blank = True)
 	description = models.CharField(max_length = 200, unique = True, null = True)
@@ -22,7 +22,7 @@ class Item(models.Model):
 
 class Recipe(models.Model):
 	"""Add Recipe def"""
-	item = models.OneToOneField(Item, on_delete = models.CASCADE)
+	item = models.OneToOneField(Item, on_delete = models.CASCADE, related_name="recipe")
 	cost = models.IntegerField(null = True)
 
 	def __str__(self):
@@ -32,7 +32,7 @@ class Recipe(models.Model):
 class Ingredient(models.Model):
 	"""Add Ingredient def"""
 	recipe = models.ForeignKey(Recipe, on_delete = models.CASCADE, related_name='ingredients')
-	item = models.ForeignKey(Item, on_delete = models.CASCADE, related_name='ingredient_items')
+	item = models.ForeignKey(Item, on_delete = models.CASCADE)
 	quantity = models.IntegerField(null = True)
 
 	def __str__(self):

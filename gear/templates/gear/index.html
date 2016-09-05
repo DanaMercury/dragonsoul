@@ -1,4 +1,31 @@
-<html><head></head><body>
+<html><head><title>DragonSoul Gear Calculator</title>
+<style>
+	.color1 { color: black; }
+	.color2 { color: green; }
+	.color3 { color: blue; }
+	.color4 { color: purple; }
+	.color5 { color: orange; }
+	#itemlist { position: fixed; top: 0; right: 0; bottom: 0; width: 25%; padding: 1vw; overflow: scroll; }
+	#heronav { position: fixed; top: 0; left: 0; height: 100px; width: 70%; padding: 1vw; }
+	#herogear { position: fixed; top: 100px; left: 0; bottom: 0; width: 70%; padding: 1vw; overflow: scroll; }
+	#herolist, .rarity ul { list-style: none; margin: 0; padding: 0; }
+	#herolist li { float: left; padding-right: 20px; }
+	.rarity ul li { display: inline-block; width: 32%; float-left; }
+	h2, h3 { clear: both; }
+	h2 { padding-top: 30px; }
+	h1 + h2 { padding-top: 0; }
+	h3 { padding-top: 20px; }
+	h2 + div h3 { padding-top: 0; }
+	label { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+</style>
+</head><body>
+<div id="heronav">
+	<ul id="herolist">
+		{% for hero in heroes %}
+			<li><a href="#{{hero.id}}">{{ hero.name }}</a></li>
+		{% endfor %}
+	</ul>
+</div>
 <div id="herogear">
 	{% for hero in heroes %}
 		<h2><a name="{{hero.id}}">{{ hero.name }}</a></h2>
@@ -17,6 +44,120 @@
 		{% endfor %}
 	{% endfor %}
 </div>
+<div id="itemlist">
+	<h1>Grinding List</h1>
+	<p>To avoid double representation, this list is only the grindable items. For example, a Head Banger requires 20 Head Banger scraps, but this list will only show the 20 scraps, not the resulting Head Banger. Keep this in mind as you choose to buy, sell, or use items and scraps for enchantments.</p>
+	<ul id="items"></ul>
+</div>
+
+<script>
+	items = {{ items|safe }};
+	heroes = {};
+	{% for hero in heroes %}
+		heroes['{{ hero.name }}'] = { 'rarities' : [] };
+		{% for rarity in hero.rarities.all %}
+			heroes['{{ hero.name }}']['rarities'].push('{{ rarity | safe }}');
+		{% endfor %}
+	{% endfor %}
+
+	function calculate_gear() {
+		aggregate = {}
+		for(var key in heroes) {
+			if(heroes.hasOwnProperty(key)) {
+				var progress = {}
+				var hero = heroes[key];
+				var name = key;
+				for(var raritykey in hero.rarities) {
+					if(hero.rarities.hasOwnProperty(raritykey)) {
+						var rarity = hero.rarities[raritykey];
+						progress[rarity] = {};
+						for(i = 1; i < 7; i++) {
+							var itemkey = name + rarity + '_' + i;
+							if(!(document.getElementById(itemkey).checked)) {
+								progress[rarity][i] = 0;
+								var item = items[itemkey];
+								for (var subkey in item) {
+									if (item.hasOwnProperty(subkey)) {
+										if (!(subkey in aggregate)) {
+											aggregate[subkey] = { 'total' : 0, 'color' : item[subkey].color, 'name' : subkey };
+										}
+										aggregate[subkey].total += item[subkey].total;
+									}
+								}
+							} else {
+								progress[rarity][i] = 1;
+							}
+						}
+					}
+				}
+				localStorage.setItem(key, JSON.stringify(progress));
+			}
+		}
+		var sortable = [];
+		for (var aggkey in aggregate) {
+			if (aggregate.hasOwnProperty(aggkey)) {
+				sortable.push(aggregate[aggkey]);
+			}
+		}
+		sortable.sort(
+		    function(a, b) {
+				var n = b.total - a.total;
+				if (n !== 0) {
+					return n;
+				}
+				var x = b.color - a.color;
+				if (x !== 0) {
+					return x
+				}
+				if (a.name < b.name) {
+					return -1;
+				}
+				if (a.name > b.name) {
+					return 1
+				}
+				return 0
+			}
+		)
+		var list = '';
+		for(i = 0; i < sortable.length; i++) {
+			var item = sortable[i];
+			list += '<li class="color' + item.color + '">' + item.total + 'x ' + item.name + '</li>';
+		}
+		document.getElementById('items').innerHTML = list;
+	}
 	
-{{ items }} <br />
+	function remember() {
+		for(var key in heroes) {
+			if(heroes.hasOwnProperty(key)) {
+				var hero = heroes[key];
+				var progress = JSON.parse(localStorage.getItem(key));
+				if(null !== progress) {
+					for(var raritykey in hero.rarities) {
+						if(hero.rarities.hasOwnProperty(raritykey)) {
+							var rarity = hero.rarities[raritykey];
+							if(null != progress[rarity]) {
+								for(i = 1; i < 7; i++) {
+									if(null != progress[rarity][i]) {
+										document.getElementById(key + rarity + '_' + i).checked = (progress[rarity][i] ? true : false);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	remember();
+	calculate_gear();
+</script>
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-77025911-1', 'auto');
+	ga('send', 'pageview');
+</script>
 </body></html>

@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from heroes.models import Hero, Rarity
-from .models import Item, Recipe, Ingredient
+from heroes.models import Hero
+from .models import Item, Recipe
 
 def processItems(item, items, multiplier):
 	try:
 		for ingredient in item.recipe.ingredients.all():
-			processItems(ingredient.item, items, multiplier * ingredient.quantity)
+			item = Item.objects.get(id = ingredient.item.id)
+			processItems(item, items, multiplier * ingredient.quantity)
 	except Recipe.DoesNotExist:
 		if item.name not in items:
 			items[item.name] = { 'total' : 0, 'color' : item.color }
@@ -20,7 +21,7 @@ def index(request):
 		'rarities__gear4__recipe__ingredients',
 		'rarities__gear5__recipe__ingredients',
 		'rarities__gear6__recipe__ingredients',
-)
+	)
 	items = {}
 	for hero in heroes:
 		for rarity in hero.rarities.all():
@@ -31,7 +32,9 @@ def index(request):
 			label = hero.name + rarity.get_color_display() + ' ' + level
 			for i in range(1,7):
 				items[label + '_' + str(i)] = {}
-#				processItems(getattr(rarity, 'gear' + str(i)), items[label + '_' + str(i)], 1)
+				item_id = getattr(rarity, 'gear' + str(i)).id
+				item = Item.objects.get(id = item_id)
+				processItems(item, items[label + '_' + str(i)], 1)
 	context = {
 		'heroes' : heroes,
 		'items' : items,
