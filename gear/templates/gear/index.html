@@ -29,7 +29,7 @@
 <div id="herogear">
 	{% for hero in heroes %}
 		<h2><a name="{{hero.id}}">{{ hero.name }}</a></h2>
-		{% for rarity in hero.rarities %}
+		{% for rarity in hero.rarities.all %}
 			<div class="rarity">
 				<h3 class="color{{ rarity.color }}">{{ rarity }}</h3>
 				<ul>
@@ -55,7 +55,7 @@
 	heroes = {};
 	{% for hero in heroes %}
 		heroes['{{ hero.name }}'] = { 'rarities' : [] };
-		{% for rarity in hero.rarities %}
+		{% for rarity in hero.rarities.all %}
 			heroes['{{ hero.name }}']['rarities'].push('{{ rarity | safe }}');
 		{% endfor %}
 	{% endfor %}

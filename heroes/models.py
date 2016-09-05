@@ -12,7 +12,7 @@ class Hero(models.Model):
 
 class Rarity(models.Model):
 	"""The color and level of the hero."""
-	hero = models.ForeignKey(Hero, on_delete = models.CASCADE)
+	hero = models.ForeignKey(Hero, on_delete = models.CASCADE, related_name="rarities")
 	color = models.IntegerField(default = 1, choices = [
 		(1,'White'),
 		(2,'Green'),

@@ -26,17 +26,17 @@ class Recipe(models.Model):
 	cost = models.IntegerField(null = True)
 
 	def __str__(self):
-		return self.item.name + " recipe"
+		return self.item.name + ' recipe'
 
 
 class Ingredient(models.Model):
 	"""Add Ingredient def"""
-	recipe = models.ForeignKey(Recipe, on_delete = models.CASCADE)
-	item = models.ForeignKey(Item, on_delete = models.CASCADE)
+	recipe = models.ForeignKey(Recipe, on_delete = models.CASCADE, related_name='ingredients')
+	item = models.ForeignKey(Item, on_delete = models.CASCADE, related_name='ingredient_items')
 	quantity = models.IntegerField(null = True)
 
 	def __str__(self):
-		return str(self.quantity) + " " + self.item.name + " on " + self.recipe.item.name
+		return str(self.quantity) + ' ' + self.item.name + ' on ' + self.recipe.item.name
 
 
 class GearStat(models.Model):
@@ -46,4 +46,4 @@ class GearStat(models.Model):
 	quantity = models.IntegerField(null = True)
 
 	def __str__(self):
-		return str(self.quantity) + " " + self.stat.name + " on " + self.item.name
+		return str(self.quantity) + ' ' + self.stat.name + ' on ' + self.item.name
