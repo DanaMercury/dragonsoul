@@ -37,6 +37,3 @@ def index(request):
 		'items' : items,
 	}
 	return render(request, 'gear/index.html', context)
-
-"""
-"""
