@@ -14,7 +14,7 @@ def processItems(item, items, multiplier):
 		pass
 
 def index(request):
-	heroes = Hero.objects.all()
+	heroes = Hero.objects.all().exclude(id=6)
 	items = {}
 	for hero in heroes:
 		hero.rarities = hero.rarity_set.all()
