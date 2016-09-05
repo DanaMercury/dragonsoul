@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from heroes.models import Hero
-from .models import Item, Recipe
+from heroes.models import Hero, Rarity
+from .models import Item, Recipe, Ingredient
 
 def processItems(item, items, multiplier):
 	try:
@@ -20,7 +20,7 @@ def index(request):
 		'rarities__gear4__recipe__ingredients',
 		'rarities__gear5__recipe__ingredients',
 		'rarities__gear6__recipe__ingredients',
-	)
+)
 	items = {}
 	for hero in heroes:
 		for rarity in hero.rarities.all():
@@ -31,7 +31,7 @@ def index(request):
 			label = hero.name + rarity.get_color_display() + ' ' + level
 			for i in range(1,7):
 				items[label + '_' + str(i)] = {}
-				processItems(getattr(rarity, 'gear' + str(i)), items[label + '_' + str(i)], 1)
+#				processItems(getattr(rarity, 'gear' + str(i)), items[label + '_' + str(i)], 1)
 	context = {
 		'heroes' : heroes,
 		'items' : items,
