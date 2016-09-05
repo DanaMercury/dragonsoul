@@ -14,12 +14,12 @@ def processItems(item, items, multiplier, master_items):
 
 def index(request):
 	heroes = Hero.objects.all().prefetch_related(
-		'rarities__gear1__recipe__ingredients',
-		'rarities__gear2__recipe__ingredients',
-		'rarities__gear3__recipe__ingredients',
-		'rarities__gear4__recipe__ingredients',
-		'rarities__gear5__recipe__ingredients',
-		'rarities__gear6__recipe__ingredients',
+		'rarities__gear1',
+		'rarities__gear2',
+		'rarities__gear3',
+		'rarities__gear4',
+		'rarities__gear5',
+		'rarities__gear6',
 	)
 	raw_items = Item.objects.all().prefetch_related('recipe__ingredients')
 	master_items = {}
