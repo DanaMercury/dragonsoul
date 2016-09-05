@@ -139,8 +139,10 @@ STATICFILES_DIRS = [
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-if DEBUG is True:
-  class AllIPS(list):
-      def __contains__(self, item):
-           return True
-  INTERNAL_IPS = AllIPS()
+def show_toolbar(request):
+    return True
+
+DEBUG_TOOLBAR_CONFIG = {
+    # ...
+    'SHOW_TOOLBAR_CALLBACK': 'dragonsoul.settings.show_toolbar',
+}
