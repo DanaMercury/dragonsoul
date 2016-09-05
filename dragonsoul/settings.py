@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+	'debug_toolbar',
     'gear.apps.GearConfig',
     'stats.apps.StatsConfig',
     'heroes.apps.HeroesConfig',
