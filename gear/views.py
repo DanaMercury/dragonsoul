@@ -20,7 +20,7 @@ def index(request):
 		'rarities__gear4',
 		'rarities__gear5',
 		'rarities__gear6',
-	)
+	).order_by('id')
 	raw_items = Item.objects.all().prefetch_related('recipe__ingredients')
 	master_items = {}
 	for item in raw_items:
