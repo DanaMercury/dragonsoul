@@ -19,6 +19,9 @@ class Item(models.Model):
 	def __str__(self):
 		return self.name
 
+	class Meta:
+		ordering = ['name']
+
 
 class Recipe(models.Model):
 	"""Add Recipe def"""

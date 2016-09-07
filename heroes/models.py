@@ -9,6 +9,9 @@ class Hero(models.Model):
 	def __str__(self):
 		return self.name
 
+	class Meta:
+		ordering = ['id']
+
 
 class Rarity(models.Model):
 	"""The color and level of the hero."""
@@ -71,6 +74,9 @@ class Rarity(models.Model):
 			level = '+' + str(self.level)
 		return self.get_color_display() + ' ' + level
 
+	class Meta:
+		ordering = ['color', 'level']
+
 class Quest(models.Model):
 	"""Optional field for legendary quest."""
 	hero = models.ForeignKey(Hero, on_delete = models.CASCADE, related_name="quests")
@@ -87,4 +93,7 @@ class Quest(models.Model):
 
 	def __str__(self):
 		return str(self.quantity) + ' ' + self.sacrifice.name
+
+	class Meta:
+		ordering = ['id']
 
