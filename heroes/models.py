@@ -70,3 +70,21 @@ class Rarity(models.Model):
 		else:
 			level = '+' + str(self.level)
 		return self.get_color_display() + ' ' + level
+		
+class Quest(models.Model):
+	"""Optional field for legendary quest."""
+	hero = models.ForeignKey(Hero, on_delete = models.CASCADE, related_name="quest")
+	#name = models.CharField(max_length = 200, unique = True, null = True)
+	#description = models.CharField(max_length = 200, unique = True, null = True)
+	sacrifice = models.ForeignKey(
+		Item,
+		limit_choices_to={'equippable': True},
+		on_delete = models.CASCADE,
+		null =True,
+		
+	)
+	quantity = models.IntegerField(null = True)
+	
+	def __str__(self):
+		return str(self.quantity) + ' ' + self.item.name
+	
