@@ -8,8 +8,8 @@ def processItems(item, items, multiplier, master_items):
 			processItems(master_items[ingredient.item.id], items, multiplier * ingredient.quantity, master_items)
 	except Recipe.DoesNotExist:
 		if item.name not in items:
-			items[item.name] = { 'total' : 0, 'color' : item.color }
-		items[item.name]['total'] += 1 * multiplier
+			items[item.id] = { 'total' : 0, 'color' : item.color, 'name' : item.name, 'id' : item.id }
+		items[item.id]['total'] += 1 * multiplier
 		pass
 
 def index(request):
@@ -28,11 +28,7 @@ def index(request):
 	items = {}
 	for hero in heroes:
 		for rarity in hero.rarities.all():
-			if None == rarity.level:
-					level = ''
-			else:
-					level = '+' + str(rarity.level)
-			label = hero.name + rarity.get_color_display() + ' ' + level
+			label = str(hero.id) + '_' + str(rarity.id)
 			for i in range(1,7):
 				items[label + '_' + str(i)] = {}
 				item_id = getattr(rarity, 'gear' + str(i)).id
