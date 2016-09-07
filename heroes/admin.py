@@ -1,20 +1,26 @@
 from django.contrib import admin
 
-from .models import Hero, Rarity
+from .models import Hero, Rarity, Quest
 
 
 class RarityInline(admin.StackedInline):
-	""" Def class"""
+	""" Deets from Rarity model """
 	model = Rarity
 	extra = 0
 	
+class QuestInline(admin.StackedInline):
+	""" Deets on Quest model """
+	model = Quest
+	extra = 0
+	max_num = 1
+	validate_max = True
 	
 class HeroAdmin(admin.ModelAdmin):
-	""" Def class"""
+	""" Putting Rarity and Quest forms into the Hero form """
 	fieldsets = [
 		(None, {'fields':['name']}),
 	]
-	inlines = [RarityInline]
+	inlines = [RarityInline, QuestInline]
 	search_fields = ['name']
 
 admin.site.register(Hero, HeroAdmin)
