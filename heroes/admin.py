@@ -7,14 +7,12 @@ class RarityInline(admin.StackedInline):
 	""" Deets from Rarity model """
 	model = Rarity
 	extra = 0
-	
-class QuestInline(admin.StackedInline):
+
+class QuestInline(admin.TabularInline):
 	""" Deets on Quest model """
 	model = Quest
 	extra = 0
-	max_num = 1
-	validate_max = True
-	
+
 class HeroAdmin(admin.ModelAdmin):
 	""" Putting Rarity and Quest forms into the Hero form """
 	fieldsets = [
