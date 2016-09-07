@@ -20,6 +20,7 @@ def index(request):
 		'rarities__gear4',
 		'rarities__gear5',
 		'rarities__gear6',
+		'quests',
 	).order_by('id')
 	raw_items = Item.objects.all().prefetch_related('recipe__ingredients')
 	master_items = {}
@@ -33,6 +34,11 @@ def index(request):
 				items[label + '_' + str(i)] = {}
 				item_id = getattr(rarity, 'gear' + str(i)).id
 				processItems(master_items[item_id], items[label + '_' + str(i)], 1, master_items)
+		for quest in hero.quests.all():
+			label = str(hero.id) + '_quest' + str(quest.id)
+			items[label] = {}
+			item_id = quest.sacrifice.id
+			processItems(master_items[item_id], items[label], quest.quantity, master_items)
 	context = {
 		'heroes' : heroes,
 		'items' : items,

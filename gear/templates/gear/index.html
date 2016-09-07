@@ -50,6 +50,16 @@
 						</ul>
 					</div>
 				{% endfor %}
+				{% if hero.quests.all.0 %}
+					<h3>Quest Item Sacrifices</h3>
+					{% for quest in hero.quests.all %}
+						<div class="quest">
+							<ul>
+								<li class="color{{ quest.sacrifice.color }}"><label><input type="checkbox" id="{{ hero.id }}_quest{{ quest.id }}" onchange="calculate_gear();" /> {{ quest.quantity }}x {{ quest.sacrifice }}</label></li>
+							</ul>
+						</div>
+					{% endfor %}
+				{% endif %}
 			</div>
 		{% endfor %}
 	</div>
@@ -60,12 +70,15 @@
 	</div>
 
 	<script>
-		items = {{ items|safe }};
+		items = {{ items | safe }};
 		heroes = {};
 		{% for hero in heroes %}
-			heroes['{{ hero.id }}'] = { 'name' : '{{ hero.name }}', 'id' : {{ hero.id }}, 'rarities' : [] };
+			heroes['{{ hero.id }}'] = { 'name' : '{{ hero.name }}', 'id' : {{ hero.id }}, 'rarities' : [], 'quests' : [] };
 			{% for rarity in hero.rarities.all %}
 				heroes['{{ hero.id }}']['rarities'].push('{{ rarity.id | safe }}');
+			{% endfor %}
+			{% for quest in hero.quests.all %}
+				heroes['{{ hero.id }}']['quests'].push('{{ quest.id | safe }}');
 			{% endfor %}
 		{% endfor %}
 
@@ -99,14 +112,30 @@
 						$('#' + hero.id + '_' + rarity).removeClass('complete');
 					}
 				});
+				$.each(hero.quests, function(k, quest) {
+					progress['quest' + quest] = {};
+					itemkey = hero.id + '_quest' + quest;
+					if (!($('#' + itemkey).is(':checked'))) {
+						progress['quest' + quest] = 0;
+						ingredients = items[itemkey];
+						$.each(ingredients, function(k, ingredient) {
+							console.log(ingredient);
+							if (!(ingredient.id in aggregate)) {
+								aggregate[ingredient.id] = { 'id' : ingredient.id, 'name' : ingredient.name, 'total' : ingredient.total, 'color' : ingredient.color }
+							} else {
+								aggregate[ingredient.id].total += ingredient.total;
+							}
+						});
+					} else {
+						progress['quest' + quest] = 1;
+					}
+				});
 				localStorage.setItem(hero.id, JSON.stringify(progress));
-				delete(progress)
 			});
 			sortable = [];
 			$.each(aggregate, function(k, item) {
 				sortable.push(item);
 			});
-			delete (aggregate);
 			sortable.sort(
 				function(a, b) {
 					n = b.total - a.total;
@@ -130,7 +159,6 @@
 			$.each(sortable, function(k, item) {
 				list += '<li class="color' + item.color + '">' + item.total + 'x ' + item.name + '</li>';
 			});
-			delete (sortable)
 			$('#items').html(list);
 		}
 		
@@ -147,6 +175,11 @@
 							}
 						}
 					});
+					$.each(hero.quests, function(k, quest) {
+						if(null != progress['quest' + quest]) {
+							$('#' + hero.id + '_quest' + quest).prop('checked', (progress['quest' + quest] ? true : false));
+						}
+					});
 				}
 			});
 		}
@@ -155,6 +188,8 @@
 			$('#' + hero + ' .rarity').each(function() {
 				update_rarity($(this)[0].id, checked);
 			});
+			$('#' + hero + ' .quest input').prop('checked', checked);
+			calculate_gear();
 		}
 
 		function update_rarity(rarity, checked) {
