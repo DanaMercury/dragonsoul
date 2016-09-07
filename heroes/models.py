@@ -23,7 +23,7 @@ class Rarity(models.Model):
 		(4,'Purple'),
 		(5,'Orange'),
 	])
-	level = models.IntegerField(null = True, blank = True)
+	level = models.IntegerField(default = 0)
 	gear1 = models.ForeignKey(
 		Item,
 		limit_choices_to={'equippable': True},
@@ -68,7 +68,7 @@ class Rarity(models.Model):
 	)
 
 	def __str__(self):
-		if None == self.level:
+		if 0 == self.level:
 			level = ''
 		else:
 			level = '+' + str(self.level)
