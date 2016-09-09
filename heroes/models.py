@@ -5,6 +5,9 @@ from gear.models import Item
 class Hero(models.Model):
 	"""Name of the Hero"""
 	name = models.CharField(max_length = 200, unique = True, null = True)
+	image = models.ImageField(upload_to = 'heroes', height_field = 'height', width_field = 'width', null = True)
+	height = models.IntegerField(default = 0)
+	width = models.IntegerField(default = 0)
 
 	def __str__(self):
 		return self.name

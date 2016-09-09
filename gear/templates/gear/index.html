@@ -7,10 +7,11 @@
 		.color4 { color: purple; }
 		.color5 { color: orange; }
 		#itemlist { position: fixed; top: 0; right: 0; bottom: 0; width: 25%; padding: 1vw; overflow: scroll; }
-		#heronav { position: fixed; top: 0; left: 0; height: 90px; width: 70%; padding: 1vw; font-size: 75%; }
-		#herogear { position: fixed; top: 120px; left: 0; bottom: 0; width: 70%; padding: 1vw; overflow: scroll; }
+		#heronav { position: fixed; top: 0; left: 0; height: 200px; width: 70%; padding: 1vw; }
+		#heronav img { width: 40px; }
+		#herogear { position: fixed; top: 220px; left: 0; bottom: 0; width: 70%; padding: 1vw; overflow: scroll; }
 		#herolist, .rarity ul { list-style: none; margin: 0; padding: 0; }
-		#herolist li { float: left; padding-right: 20px; }
+		#herolist li { float: left; padding-right: 5px; }
 		.rarity.complete ul { display: none; }
 		.rarity ul li { display: inline-block; width: 32%; float-left; }
 		h2, h3 { clear: both; }
@@ -26,7 +27,7 @@
 	<div id="heronav">
 		<ul id="herolist">
 			{% for hero in heroes %}
-				<li><a href="#{{hero.id}}">{{ hero.name }}</a></li>
+				<li><a href="#{{hero.id}}"><img src="/media/{{ hero.image }}" /></a></li>
 			{% endfor %}
 		</ul>
 	</div>
