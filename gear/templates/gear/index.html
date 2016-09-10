@@ -7,15 +7,17 @@
 		.color4 { color: purple; }
 		.color5 { color: orange; }
 		#itemlist { position: fixed; top: 0; right: 0; bottom: 0; width: 25%; padding: 1vw; overflow: scroll; }
-		#heronav { position: fixed; top: 0; left: 0; height: 90px; width: 70%; padding: 1vw; font-size: 75%; }
-		#herogear { position: fixed; top: 120px; left: 0; bottom: 0; width: 70%; padding: 1vw; overflow: scroll; }
+		#heronav { position: fixed; top: 0; left: 0; height: 220px; width: 70%; padding: 1vw; }
+		#heronav img { width: 40px; }
+		#herogear { position: fixed; top: 230px; left: 0; bottom: 0; width: 70%; padding: 1vw; overflow: scroll; }
+		.hero { border-top: solid 1px grey; margin-top: 20px; padding-top: 20px; }
+		#herogear img { width: 80px; float: left; clear: both; margin-bottom: 10px; }
+		#herogear h2 { float: left; margin-left: 10px; margin-top: 30px; }
 		#herolist, .rarity ul { list-style: none; margin: 0; padding: 0; }
-		#herolist li { float: left; padding-right: 20px; }
+		#herolist li { float: left; padding-right: 5px; }
 		.rarity.complete ul { display: none; }
 		.rarity ul li { display: inline-block; width: 32%; float-left; }
-		h2, h3 { clear: both; }
-		h2 { padding-top: 30px; }
-		#herogear > h2:first-child { padding-top: 0 }
+		h3 { clear: both; }
 		h3 { padding-top: 20px; }
 		h2 + div h3 { padding-top: 0; }
 		label { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
@@ -26,13 +28,14 @@
 	<div id="heronav">
 		<ul id="herolist">
 			{% for hero in heroes %}
-				<li><a href="#{{hero.id}}">{{ hero.name }}</a></li>
+				<li><a href="#{{hero.id}}"><img src="{{ hero.image.url }}" /></a></li>
 			{% endfor %}
 		</ul>
 	</div>
 	<div id="herogear">
 		{% for hero in heroes %}
-			<div id="{{ hero.id }}" name="{{ hero.id }}">
+			<div id="{{ hero.id }}" name="{{ hero.id }}" class="hero">
+				<img src="{{ hero.image.url }}" />
 				<h2>{{ hero.name }}
 					<span class="toggle" onclick="update_hero('{{ hero.id }}', true)">Mark Complete</span> &#x00A0; 
 					<span class="toggle" onclick="update_hero('{{ hero.id }}', false)">Reset</span>

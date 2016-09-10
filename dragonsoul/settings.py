@@ -21,7 +21,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "!q(elvznzkd&ht^p&(+v#)xl0sp&nzk$wssktp_n4y#c3!i&&m"
+SECRET_KEY = os.environ.get('DJANGO_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # greater consistency between gunicorn and `./manage.py runserver`. See:
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
+	'storages',
     'django.contrib.staticfiles',
 	'debug_toolbar',
     'gear.apps.GearConfig',
@@ -139,6 +140,13 @@ STATICFILES_DIRS = [
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+AWS_S3_SECURE_URLS = False       # use http instead of https
+AWS_QUERYSTRING_AUTH = False     # don't add complex authentication-related query parameters for requests
+AWS_S3_ACCESS_KEY_ID = os.environ.get('S3_ID') # enter your access key id
+AWS_S3_SECRET_ACCESS_KEY = os.environ.get('S3_KEY') # enter your secret access key
+AWS_STORAGE_BUCKET_NAME = 'dragonsoul'
 
 def show_toolbar(request):
     return True
