@@ -9,7 +9,7 @@ class RarityInline(admin.StackedInline):
 	extra = 0
 
 class QuestInline(admin.TabularInline):
-	""" Deets on Quest model """
+	""" Deets from Quest model """
 	model = Quest
 	extra = 0
 

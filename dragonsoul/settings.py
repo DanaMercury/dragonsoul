@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'gear.apps.GearConfig',
     'stats.apps.StatsConfig',
     'heroes.apps.HeroesConfig',
+    'drops.apps.DropsConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
