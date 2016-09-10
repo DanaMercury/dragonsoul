@@ -33,16 +33,56 @@
 		</ul>
 	</div>
 	<div id="herogear">
+		<h1>All Heroes
+			<select id="bulk_all" onchange="bulk_all()">
+				<option value="0_0">Bulk Complete All Heroes Through...</option>
+				<option value="1_0">White</option>
+				<option value="2_0">Green</option>
+				<option value="2_1">Green +1</option>
+				<option value="3_0">Blue</option>
+				<option value="3_1">Blue +1</option>
+				<option value="3_2">Blue +2</option>
+				<option value="4_0">Purple</option>
+				<option value="4_1">Purple +1</option>
+				<option value="4_2">Purple +2</option>
+				<option value="4_3">Purple +3</option>
+				<option value="4_4">Purple +4</option>
+				<option value="5_0">Orange</option>
+				<option value="5_1">Orange +1</option>
+				<option value="5_2">Orange +2</option>
+				<option value="5_3">Orange +3</option>
+			</select>
+			<span class="toggle" onclick="reset_all()">Reset All Heroes</span>
+		</h1>
+
 		{% for hero in heroes %}
 			<div id="{{ hero.id }}" name="{{ hero.id }}" class="hero">
 				<img src="{{ hero.image.url }}" />
 				<h2>{{ hero.name }}
 					<span class="toggle" onclick="update_hero('{{ hero.id }}', true)">Mark Complete</span> &#x00A0; 
+					<select id="bulk_{{ hero.id }}" onchange="bulk_hero('{{ hero.id }}')">
+						<option value="0_0">Bulk Complete Through...</option>
+						<option value="1_0">White</option>
+						<option value="2_0">Green</option>
+						<option value="2_1">Green +1</option>
+						<option value="3_0">Blue</option>
+						<option value="3_1">Blue +1</option>
+						<option value="3_2">Blue +2</option>
+						<option value="4_0">Purple</option>
+						<option value="4_1">Purple +1</option>
+						<option value="4_2">Purple +2</option>
+						<option value="4_3">Purple +3</option>
+						<option value="4_4">Purple +4</option>
+						<option value="5_0">Orange</option>
+						<option value="5_1">Orange +1</option>
+						<option value="5_2">Orange +2</option>
+						<option value="5_3">Orange +3</option>
+					</select>
 					<span class="toggle" onclick="update_hero('{{ hero.id }}', false)">Reset</span>
 				</h2>
 				{% for rarity in hero.rarities.all %}
 					<div class="rarity" id="{{ hero.id }}_{{ rarity.id }}">
-						<h3 class="color{{ rarity.color }}"><span onclick="$(this).parent().parent().toggleClass('complete');">{{ rarity }}</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', true)">Mark Complete</span></h3>
+						<h3 class="color{{ rarity.color }}"><span onclick="$(this).parent().parent().toggleClass('complete');">{{ rarity }}</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', true)">Mark Complete</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', false)">Reset</span></h3>
 						<ul>
 							<li class="color{{ rarity.gear1.color }}"><label><input type="checkbox" id="{{ hero.id }}_{{ rarity.id }}_1" onchange="calculate_gear();" /> {{ rarity.gear1 }}</label></li>
 							<li class="color{{ rarity.gear2.color }}"><label><input type="checkbox" id="{{ hero.id }}_{{ rarity.id }}_2" onchange="calculate_gear();" /> {{ rarity.gear2 }}</label></li>
@@ -76,12 +116,21 @@
 		items = {{ items | safe }};
 		heroes = {};
 		{% for hero in heroes %}
-			heroes['{{ hero.id }}'] = { 'name' : '{{ hero.name }}', 'id' : {{ hero.id }}, 'rarities' : [], 'quests' : [] };
+			heroes['{{ hero.id | safe }}'] = {
+				'name' : '{{ hero.name | safe }}', 
+				'id' : {{ hero.id | safe }}, 
+				'rarities' : [], 
+				'quests' : [] 
+			};
 			{% for rarity in hero.rarities.all %}
-				heroes['{{ hero.id }}']['rarities'].push('{{ rarity.id | safe }}');
+				heroes['{{ hero.id | safe }}']['rarities'].push({
+					'id' : {{ rarity.id | safe }},
+					'color' : {{ rarity.color | safe }},
+					'level' : {{ rarity.level | safe }},
+				});
 			{% endfor %}
 			{% for quest in hero.quests.all %}
-				heroes['{{ hero.id }}']['quests'].push('{{ quest.id | safe }}');
+				heroes['{{ hero.id | safe }}']['quests'].push('{{ quest.id | safe }}');
 			{% endfor %}
 		{% endfor %}
 
@@ -90,12 +139,12 @@
 			$.each(heroes, function(k, hero) {
 				progress = {}
 				$.each(hero.rarities, function(k, rarity) {
-					progress[rarity] = {};
+					progress[rarity.id] = {};
 					litmus = 0;
 					for (i = 1; i < 7; i++) {
-						itemkey = hero.id + '_' + rarity + '_' + i;
+						itemkey = hero.id + '_' + rarity.id + '_' + i;
 						if (!($('#' + itemkey).is(':checked'))) {
-							progress[rarity][i] = 0;
+							progress[rarity.id][i] = 0;
 							ingredients = items[itemkey];
 							$.each(ingredients, function(k, ingredient) {
 								if (!(ingredient.id in aggregate)) {
@@ -105,14 +154,14 @@
 								}
 							});
 						} else {
-							progress[rarity][i] = 1;
+							progress[rarity.id][i] = 1;
 							litmus++;
 						}
 					}
 					if (6 == litmus) {
-						$('#' + hero.id + '_' + rarity).addClass('complete');
+						$('#' + hero.id + '_' + rarity.id).addClass('complete');
 					} else {
-						$('#' + hero.id + '_' + rarity).removeClass('complete');
+						$('#' + hero.id + '_' + rarity.id).removeClass('complete');
 					}
 				});
 				$.each(hero.quests, function(k, quest) {
@@ -169,10 +218,10 @@
 				var progress = JSON.parse(localStorage.getItem(hero.id));
 				if(null !== progress) {
 					$.each(hero.rarities, function(k, rarity) {
-						if(null != progress[rarity]) {
+						if(null != progress[rarity.id]) {
 							for(i = 1; i < 7; i++) {
-								if(null != progress[rarity][i]) {
-									$('#' + hero.id + '_' + rarity + '_' + i).prop('checked', (progress[rarity][i] ? true : false));
+								if(null != progress[rarity.id][i]) {
+									$('#' + hero.id + '_' + rarity.id + '_' + i).prop('checked', (progress[rarity.id][i] ? true : false));
 								}
 							}
 						}
@@ -184,6 +233,40 @@
 					});
 				}
 			});
+		}
+
+		function bulk_all() {
+			rarity = $('#bulk_all').val();
+			$.each(heroes, function(k,hero) {
+				$('#bulk_' + hero.id).val(rarity);
+				bulk_hero(hero.id);
+			});
+			$('#bulk_all').val('0_0');
+		}
+
+		function reset_all() {
+			$.each(heroes, function(k,hero) {
+				update_hero(hero.id, false);
+			});
+		}
+
+		function bulk_hero(hero) {
+			console.log(hero);
+			threshold = $('#bulk_' + hero).val();
+			threshold = threshold.split('_');
+			console.log(threshold);
+			color = parseInt(threshold[0]);
+			level = parseInt(threshold[1]);
+			console.log(heroes[hero]);
+			$.each(heroes[hero].rarities, function(k, rarity) {
+				console.log(rarity.color);
+				if(color >= rarity.color) {
+					if(color > rarity.color || level >= rarity.level) {
+						update_rarity(hero + '_' + rarity.id, true);
+					}
+				}
+			});
+			$('#bulk_' + hero).val('0_0');
 		}
 
 		function update_hero(hero, checked) {
