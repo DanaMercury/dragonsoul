@@ -5,6 +5,9 @@ from stats.models import Stat
 class Item(models.Model):
 	"""The smallest denominator. Could be scraps, scrolls, or equippable items"""
 	name = models.CharField(max_length = 200, unique = True, null = True)
+	image = models.ImageField(upload_to = 'items', height_field = 'height', width_field = 'width', null = True)
+	height = models.IntegerField(default = 0)
+	width = models.IntegerField(default = 0)
 	color = models.IntegerField(default = 1, choices = [
 		(1, 'White'),
 		(2, 'Green'),
