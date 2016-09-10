@@ -54,7 +54,6 @@
 			</select>
 			<span class="toggle" onclick="reset_all()">Reset All Heroes</span>
 		</h1>
-		<p>(bulk changes take a long time to execute; please wait until you see the changes complete.)</p>
 
 		{% for hero in heroes %}
 			<div id="{{ hero.id }}" name="{{ hero.id }}" class="hero">
