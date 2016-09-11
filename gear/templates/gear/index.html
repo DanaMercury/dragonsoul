@@ -6,21 +6,33 @@
 		.color3 { color: #107DB2; }
 		.color4 { color: #8C4BC6; }
 		.color5 { color: #F28200; }
-		#itemlist { position: fixed; top: 0; right: 0; bottom: 0; width: 25%; padding: 1vw; overflow: scroll; }
-		#heronav { position: fixed; top: 0; left: 0; height: 140px; width: 70%; padding: 1vw; overflow: scroll; }
-		#heronav img { width: 40px; }
-		#herogear { position: fixed; top: 150px; left: 0; bottom: 0; width: 70%; padding: 1vw; overflow: scroll; }
-		.hero { border-top: solid 1px #333; margin-top: 20px; padding-top: 20px; }
-		#herogear img { width: 80px; float: left; clear: both; margin-bottom: 10px; }
-		#herogear h2 { float: left; margin-left: 10px; margin-top: 30px; }
-		#herolist, .rarity ul { list-style: none; margin: 0; padding: 0; }
-		#herolist li { float: left; padding-right: 5px; }
-		.rarity.complete ul { display: none; }
-		.rarity ul li { display: inline-block; width: 32%; float-left; }
+		.bg1 { background: rgba(237,237,238,.2); border: solid 1px #333333; }
+		.bg2 { background: rgba(16,227,16,.2); border: solid 1px #10E310; }
+		.bg3 { background: rgba(16,125,178,.2); border: solid 1px #107DB2; }
+		.bg4 { background: rgba(140,75,198,.2); border: solid 1px #8C4BC6; }
+		.bg5 { background: rgba(242,130,0,.2); border: solid 1px #F28200; }
 		h3 { clear: both; }
 		h3 { padding-top: 20px; }
-		h2 + div h3 { padding-top: 0; }
-		label { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+		#heronav { position: fixed; top: 0; left: 0; height: 100px; width: 100%; padding: 1vw; overflow: scroll; }
+		#heronav img { width: 40px; }
+		#herogear { position: fixed; top: 110px; left: 0; bottom: 0; width: 63%; padding: 1vw; overflow: scroll; }
+		#itemlist { position: fixed; top: 110px; right: 0; bottom: 0; width: 33%; padding: 1vw; overflow: scroll; }
+		.hero { border-top: solid 1px #333; margin-top: 20px; padding-top: 20px; clear: both; }
+		#herogear h2 + div { clear: both; }
+		#herogear img { width: 80px; float: left; clear: both; margin-bottom: 10px; }
+		#herogear .rarity { width: 210px; margin: 10px; padding: 10px; float: left; }
+		#herogear .rarity h3 { margin: 0 0 5px; 0; padding: 0; }
+		#heronav ul { list-style: none; padding; 0; margin: 0; }
+		#heronav ul li { display: inline-block; float: left; margin: 3px; padding: 0; }
+		.rarity ul { list-style: none; padding: 0; width: 200px; margin: 0 auto; }
+		.rarity ul li { display: inline-block; float: left; margin: 3px; }
+		.quest ul, #items { list-style: none; padding: 0; margin: 0 auto 10px; }
+		.quest ul li, #items li { display: inline-block; float: left; margin: 3px 3px 20px; width: 70px; padding: 5px; text-align: center; }
+		.quest ul li.complete { text-decoration: line-through; }
+		#herogear ul li img, #items li img { width: 60px; margin: 0; opacity: 0.3; filter: grayscale(.7); cursor: pointer; }
+		#herogear ul li img.complete, #herogear ul li.complete img, #items li img { opacity: 1; filter: grayscale(0); }
+		#herogear .quest ul li img { margin: 0 5px; }
+		.rarity.complete ul { display: none; }
 		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; }
 		.toggle:hover { color: grey; text-decoration: underline; } 
 	</style>
@@ -81,15 +93,15 @@
 					<span class="toggle" onclick="update_hero('{{ hero.id }}', false)">Reset</span>
 				</h2>
 				{% for rarity in hero.rarities.all %}
-					<div class="rarity" id="{{ hero.id }}_{{ rarity.id }}">
-						<h3 class="color{{ rarity.color }}"><span onclick="$(this).parent().parent().toggleClass('complete');">{{ rarity }}</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', true)">Mark Complete</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', false)">Reset</span></h3>
+					<div class="rarity bg{{ rarity.color }}" id="{{ hero.id }}_{{ rarity.id }}">
+						<h3 class="color{{ rarity.color }}"><span onclick="$(this).parent().parent().toggleClass('complete');">{{ rarity }}</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', true)">Complete</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', false)">Reset</span></h3>
 						<ul>
-							<li class="color{{ rarity.gear1.color }}"><label><input type="checkbox" id="{{ hero.id }}_{{ rarity.id }}_1" onchange="calculate_gear();" /> {{ rarity.gear1 }}</label></li>
-							<li class="color{{ rarity.gear2.color }}"><label><input type="checkbox" id="{{ hero.id }}_{{ rarity.id }}_2" onchange="calculate_gear();" /> {{ rarity.gear2 }}</label></li>
-							<li class="color{{ rarity.gear3.color }}"><label><input type="checkbox" id="{{ hero.id }}_{{ rarity.id }}_3" onchange="calculate_gear();" /> {{ rarity.gear3 }}</label></li>
-							<li class="color{{ rarity.gear4.color }}"><label><input type="checkbox" id="{{ hero.id }}_{{ rarity.id }}_4" onchange="calculate_gear();" /> {{ rarity.gear4 }}</label></li>
-							<li class="color{{ rarity.gear5.color }}"><label><input type="checkbox" id="{{ hero.id }}_{{ rarity.id }}_5" onchange="calculate_gear();" /> {{ rarity.gear5 }}</label></li>
-							<li class="color{{ rarity.gear6.color }}"><label><input type="checkbox" id="{{ hero.id }}_{{ rarity.id }}_6" onchange="calculate_gear();" /> {{ rarity.gear6 }}</label></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_1" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear1 }}" src="{{ rarity.gear1.image.url }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_2" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear2 }}" src="{{ rarity.gear2.image.url }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_3" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear3 }}" src="{{ rarity.gear3.image.url }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_4" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear4 }}" src="{{ rarity.gear4.image.url }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_5" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear5 }}" src="{{ rarity.gear5.image.url }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_6" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear6 }}" src="{{ rarity.gear6.image.url }}" /></li>
 						</ul>
 					</div>
 				{% endfor %}
@@ -98,7 +110,7 @@
 					{% for quest in hero.quests.all %}
 						<div class="quest">
 							<ul>
-								<li class="color{{ quest.sacrifice.color }}"><label><input type="checkbox" id="{{ hero.id }}_quest{{ quest.id }}" onchange="calculate_gear();" /> {{ quest.quantity }}x {{ quest.sacrifice }}</label></li>
+								<li class="bg{{ quest.color }}"><img id="{{ hero.id }}_quest{{ quest.id }}" onclick="$(this).parent().toggleClass('complete'); calculate_gear();" name="{{ quest.sacrifice }}" src="{{ quest.sacrifice.image.url }}" /><br /> {{ quest.quantity }}x</li>
 							</ul>
 						</div>
 					{% endfor %}
@@ -138,7 +150,7 @@
 			if(null !== calculate_scheduler) {
 				clearTimeout(calculate_scheduler);
 			}
-			calculate_scheduler = setTimeout(calculate_gear, 1000);
+			calculate_scheduler = setTimeout(calculate_gear, 100);
 		}
 
 		function calculate_gear() {
@@ -150,12 +162,12 @@
 					litmus = 0;
 					for (i = 1; i < 7; i++) {
 						itemkey = hero.id + '_' + rarity.id + '_' + i;
-						if (!($('#' + itemkey).is(':checked'))) {
+						if (!($('#' + itemkey).hasClass('complete'))) {
 							progress[rarity.id][i] = 0;
 							ingredients = items[itemkey];
 							$.each(ingredients, function(k, ingredient) {
 								if (!(ingredient.id in aggregate)) {
-									aggregate[ingredient.id] = { 'id' : ingredient.id, 'name' : ingredient.name, 'total' : ingredient.total, 'color' : ingredient.color }
+									aggregate[ingredient.id] = { 'id' : ingredient.id, 'name' : ingredient.name, 'total' : ingredient.total, 'color' : ingredient.color, 'image' : ingredient.image }
 								} else {
 									aggregate[ingredient.id].total += ingredient.total;
 								}
@@ -174,12 +186,12 @@
 				$.each(hero.quests, function(k, quest) {
 					progress['quest' + quest] = {};
 					itemkey = hero.id + '_quest' + quest;
-					if (!($('#' + itemkey).is(':checked'))) {
+					if (!($('#' + itemkey).parent().hasClass('complete'))) {
 						progress['quest' + quest] = 0;
 						ingredients = items[itemkey];
 						$.each(ingredients, function(k, ingredient) {
 							if (!(ingredient.id in aggregate)) {
-								aggregate[ingredient.id] = { 'id' : ingredient.id, 'name' : ingredient.name, 'total' : ingredient.total, 'color' : ingredient.color }
+								aggregate[ingredient.id] = { 'id' : ingredient.id, 'name' : ingredient.name, 'total' : ingredient.total, 'color' : ingredient.color, 'image' : ingredient.image }
 							} else {
 								aggregate[ingredient.id].total += ingredient.total;
 							}
@@ -215,7 +227,7 @@
 			)
 			list = '';
 			$.each(sortable, function(k, item) {
-				list += '<li class="color' + item.color + '">' + item.total + 'x ' + item.name + '</li>';
+				list += '<li class="bg' + item.color + '"><img src="' + item.image + '" name="' + item.name + '" /><br />' + item.total + 'x</li>';
 			});
 			$('#items').html(list);
 			calculate_scheduler = null;
@@ -228,15 +240,15 @@
 					$.each(hero.rarities, function(k, rarity) {
 						if(null != progress[rarity.id]) {
 							for(i = 1; i < 7; i++) {
-								if(null != progress[rarity.id][i]) {
-									$('#' + hero.id + '_' + rarity.id + '_' + i).prop('checked', (progress[rarity.id][i] ? true : false));
+								if(null != progress[rarity.id][i] && 1 == progress[rarity.id][i]) {
+									$('#' + hero.id + '_' + rarity.id + '_' + i).addClass('complete');
 								}
 							}
 						}
 					});
 					$.each(hero.quests, function(k, quest) {
-						if(null != progress['quest' + quest]) {
-							$('#' + hero.id + '_quest' + quest).prop('checked', (progress['quest' + quest] ? true : false));
+						if(null != progress['quest' + quest] && 1 == progress['quest' + quest]) {
+							$('#' + hero.id + '_quest' + quest).parent().addClass('complete');
 						}
 					});
 				}
@@ -278,12 +290,20 @@
 			$('#' + hero + ' .rarity').each(function() {
 				update_rarity($(this)[0].id, checked);
 			});
-			$('#' + hero + ' .quest input').prop('checked', checked);
+			if(checked) {
+				$('#' + hero + ' .quest li').addClass('complete');
+			} else {
+				$('#' + hero + ' .quest li').removeClass('complete');
+			}
 			schedule_gear_check();
 		}
 
 		function update_rarity(rarity, checked) {
-			$('#' + rarity + ' input').prop('checked', checked);
+			if(checked) {
+				$('#' + rarity + ' img').addClass('complete');
+			} else {
+				$('#' + rarity + ' img').removeClass('complete');
+			}
 			schedule_gear_check();
 		}
 

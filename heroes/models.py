@@ -85,6 +85,9 @@ class Quest(models.Model):
 	hero = models.ForeignKey(Hero, on_delete = models.CASCADE, related_name="quests")
 	#name = models.CharField(max_length = 200, unique = True, null = True)
 	#description = models.CharField(max_length = 200, unique = True, null = True)
+	color = models.IntegerField(default = 5, choices = [
+		(5,'Orange'),
+	])
 	sacrifice = models.ForeignKey(
 		Item,
 		limit_choices_to={'equippable': True},
