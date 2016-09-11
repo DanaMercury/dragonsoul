@@ -1,0 +1,45 @@
+<html><head><title>DragonSoul Gear Catalog</title>
+	<style>
+		html { font-family: sans-serif; }
+		.color1 { color: #333333; }
+		.color2 { color: #10E310; }
+		.color3 { color: #107DB2; }
+		.color4 { color: #8C4BC6; }
+		.color5 { color: #F28200; }
+		.bg1 { background: rgba(237,237,238,.5); border: solid 1px #333333; }
+		.bg2 { background: rgba(16,227,16,.1); border: solid 1px #10E310; }
+		.bg3 { background: rgba(16,125,178,.1); border: solid 1px #107DB2; }
+		.bg4 { background: rgba(140,75,198,.1); border: solid 1px #8C4BC6; }
+		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
+		h2 { clear: both; }
+		ul { list-style: none; padding: 0; margin: 0 auto 40px; }
+		ul li { display: inline-block; margin: 3px; width: 70px; height: 70px; padding: 5px; }
+		ul li img { width: 60px; margin: 5px; cursor: pointer; }
+	</style>
+</head><body>
+	<h1>Items Catalogue</h1>
+	<h2>Equippables</h2>
+	<ul>
+		{% for item in equippables %}
+			<li class="bg{{ item.color }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></li>
+		{% endfor %}
+	</ul>
+	<h2>Scrolls</h2>
+	<ul>
+		{% for item in scrolls %}
+			<li class="bg{{ item.color }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></li>
+		{% endfor %}
+	</ul>
+	<h2>Scroll Scraps</h2>
+	<ul>
+		{% for item in scroll_scraps %}
+			<li class="bg{{ item.color }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></li>
+		{% endfor %}
+	</ul>
+	<h2>Scraps</h2>
+	<ul>
+		{% for item in scraps %}
+			<li class="bg{{ item.color }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></li>
+		{% endfor %}
+	</ul>
+</body></html>

@@ -44,3 +44,26 @@ def index(request):
 		'items' : items,
 	}
 	return render(request, 'gear/index.html', context)
+
+def catalog(request):
+	equippables = []
+	scrolls = []
+	scroll_scraps = []
+	scraps = []
+	items = Item.objects.all().order_by('-color', 'name')
+	for item in items:
+		if item.equippable:
+			equippables.append(item)
+		elif -1 != item.name.lower().find('scrap') and -1 != item.name.lower().find('scroll'):
+			scroll_scraps.append(item)
+		elif -1 != item.name.lower().find('scroll'):
+			scrolls.append(item)
+		elif -1 != item.name.lower().find('scrap'):
+			scraps.append(item)
+	context = {
+		'equippables' : equippables,
+		'scrolls' : scrolls,
+		'scroll_scraps' : scroll_scraps,
+		'scraps' : scraps,
+	}
+	return render(request, 'gear/catalog.html', context)
