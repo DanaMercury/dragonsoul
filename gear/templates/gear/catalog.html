@@ -15,9 +15,11 @@
 		ul { list-style: none; padding: 0; margin: 0 auto 40px; }
 		ul li { display: inline-block; margin: 3px; width: 70px; height: 70px; padding: 5px; }
 		ul li img { width: 60px; margin: 5px; cursor: pointer; }
+		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
+		.toggle:hover { color: grey; text-decoration: underline; } 
 	</style>
 </head><body>
-	<h1>Items Catalogue</h1>
+<h1>Items Catalogue <a class="toggle" href="/gear">back to Gear Calculator</a></h1>
 	<h2>Equippables</h2>
 	<ul>
 		{% for item in equippables %}
