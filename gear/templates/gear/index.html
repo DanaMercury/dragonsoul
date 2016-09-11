@@ -41,7 +41,7 @@
 	<div id="heronav">
 		<ul id="herolist">
 			{% for hero in heroes %}
-				<li><a href="#{{hero.id}}"><img src="{{ hero.image.url }}" /></a></li>
+				<li><a href="#{{hero.id}}"><img src="{{ hero.image.url }}" alt="{{ hero.name }}" title="{{ hero.name }}" /></a></li>
 			{% endfor %}
 		</ul>
 	</div>
@@ -69,8 +69,8 @@
 		</h1>
 
 		{% for hero in heroes %}
-			<div id="{{ hero.id }}" name="{{ hero.id }}" class="hero">
-				<img src="{{ hero.image.url }}" />
+			<div id="{{ hero.id }}" class="hero">
+				<img src="{{ hero.image.url }}" alt="{{ hero.name }}" title="{{ hero.name }}" />
 				<h2>{{ hero.name }}
 					<span class="toggle" onclick="update_hero('{{ hero.id }}', true)">Mark Complete</span> &#x00A0; 
 					<select id="bulk_{{ hero.id }}" onchange="bulk_hero('{{ hero.id }}')">
@@ -97,12 +97,12 @@
 					<div class="rarity bg{{ rarity.color }}" id="{{ hero.id }}_{{ rarity.id }}">
 						<h3 class="color{{ rarity.color }}"><span onclick="$(this).parent().parent().toggleClass('complete');">{{ rarity }}</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', true)">Complete</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', false)">Reset</span></h3>
 						<ul>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_1" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear1 }}" src="{{ rarity.gear1.image.url }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_2" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear2 }}" src="{{ rarity.gear2.image.url }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_3" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear3 }}" src="{{ rarity.gear3.image.url }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_4" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear4 }}" src="{{ rarity.gear4.image.url }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_5" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear5 }}" src="{{ rarity.gear5.image.url }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_6" onclick="$(this).toggleClass('complete'); calculate_gear();" name="{{ rarity.gear6 }}" src="{{ rarity.gear6.image.url }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_1" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear1 }}" src="{{ rarity.gear1.image.url }}" alt="{{ rarity.gear1 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_2" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear2 }}" src="{{ rarity.gear2.image.url }}" alt="{{ rarity.gear2 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_3" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear3 }}" src="{{ rarity.gear3.image.url }}" alt="{{ rarity.gear3 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_4" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear4 }}" src="{{ rarity.gear4.image.url }}" alt="{{ rarity.gear4 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_5" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear5 }}" src="{{ rarity.gear5.image.url }}" alt="{{ rarity.gear5 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_6" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear6 }}" src="{{ rarity.gear6.image.url }}" alt="{{ rarity.gear6 }}" /></li>
 						</ul>
 					</div>
 				{% endfor %}
@@ -111,7 +111,7 @@
 					{% for quest in hero.quests.all %}
 						<div class="quest">
 							<ul>
-								<li class="bg{{ quest.color }}"><img id="{{ hero.id }}_quest{{ quest.id }}" onclick="$(this).parent().toggleClass('complete'); calculate_gear();" name="{{ quest.sacrifice }}" src="{{ quest.sacrifice.image.url }}" /><br /> {{ quest.quantity }}x</li>
+								<li class="bg{{ quest.color }}"><img id="{{ hero.id }}_quest{{ quest.id }}" onclick="$(this).parent().toggleClass('complete'); calculate_gear();" title="{{ quest.sacrifice }}" src="{{ quest.sacrifice.image.url }}" alt="{{ quest.sacrifice }}" /><br /> {{ quest.quantity }}x</li>
 							</ul>
 						</div>
 					{% endfor %}
@@ -228,7 +228,7 @@
 			)
 			list = '';
 			$.each(sortable, function(k, item) {
-				list += '<li class="bg' + item.color + '"><img src="' + item.image + '" name="' + item.name + '" /><br />' + item.total + 'x</li>';
+				list += '<li class="bg' + item.color + '"><img src="' + item.image + '" title="' + item.name + '" alt="' + item.name + '" /><br />' + item.total + 'x</li>';
 			});
 			$('#items').html(list);
 			calculate_scheduler = null;
