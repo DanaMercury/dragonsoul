@@ -23,25 +23,25 @@
 	<h2>Equippables</h2>
 	<ul>
 		{% for item in equippables %}
-			<li class="bg{{ item.color }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></li>
-		{% endfor %}
+			<li class="bg{{ item.color }}"><a href="/gear/catalog/{{ item.id }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></a></li>
+			{% endfor %}
 	</ul>
 	<h2>Scrolls</h2>
 	<ul>
 		{% for item in scrolls %}
-			<li class="bg{{ item.color }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></li>
+			<li class="bg{{ item.color }}"><a href="/gear/catalog/{{ item.id }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></a></li>
 		{% endfor %}
 	</ul>
 	<h2>Scroll Scraps</h2>
 	<ul>
 		{% for item in scroll_scraps %}
-			<li class="bg{{ item.color }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></li>
+			<li class="bg{{ item.color }}"><a href="/gear/catalog/{{ item.id }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></a></li>
 		{% endfor %}
 	</ul>
 	<h2>Scraps</h2>
 	<ul>
 		{% for item in scraps %}
-			<li class="bg{{ item.color }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></li>
+			<li class="bg{{ item.color }}"><a href="/gear/catalog/{{ item.id }}"><img src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" /></a></li>
 		{% endfor %}
 	</ul>
 </body></html>

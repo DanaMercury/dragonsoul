@@ -16,15 +16,15 @@
 		h3 { padding-top: 20px; }
 		#heronav { position: fixed; top: 0; left: 0; height: 100px; padding: 1vw; overflow: scroll; }
 		#heronav img { width: 40px; }
-		#herogear { position: fixed; top: 110px; left: 0; bottom: 0; width: 63%; padding: 1vw; overflow: scroll; }
-		#itemlist { position: fixed; top: 110px; right: 0; bottom: 0; width: 33%; padding: 1vw; overflow: scroll; }
+		#heronav ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
+		#heronav ul li { display: inline-block; padding: 0; }
+		#herogear { position: fixed; top: 130px; left: 0; bottom: 0; width: 63%; padding: 1vw; overflow: scroll; }
+		#itemlist { position: fixed; top: 130px; right: 0; bottom: 0; width: 33%; padding: 1vw; overflow: scroll; }
 		.hero { border-top: solid 1px #333; margin-top: 20px; padding-top: 20px; clear: both; }
 		#herogear h2 + div { clear: both; }
 		#herogear img { width: 80px; clear: both; margin: 0 10px 10px 0; }
 		#herogear .rarity { width: 220px; margin: 10px; padding: 10px; float: left; }
 		#herogear .rarity h3 { margin: 0 0 5px; 0; padding: 0; }
-		#heronav ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
-		#heronav ul li { display: inline-block; margin: 3px; padding: 0; }
 		.rarity ul { list-style: none; padding: 0; width: 190px; margin: 0 auto; }
 		.rarity ul li { display: inline-block; height: 60px; width: 60px; }
 		.quest ul, #items { list-style: none; padding: 0; margin: 0 auto 10px; }
@@ -229,7 +229,7 @@
 			)
 			list = '';
 			$.each(sortable, function(k, item) {
-				list += '<li class="bg' + item.color + '"><img src="' + item.image + '" title="' + item.name + '" alt="' + item.name + '" /><br />' + item.total + 'x</li>';
+				list += '<li class="bg' + item.color + ' color' + item.color + '"><a href="/gear/catalog/' + item.id + '"><img src="' + item.image + '" title="' + item.name + '" alt="' + item.name + '" /></a><br />' + item.total + 'x</li>';
 			});
 			$('#items').html(list);
 			calculate_scheduler = null;

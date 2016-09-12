@@ -1,0 +1,57 @@
+<html><head><title>DragonSoul Gear Catalog: {{ item.name }}</title>
+	<style>
+		html { font-family: sans-serif; }
+		.color1 { color: #333333; }
+		.color2 { color: #10E310; }
+		.color3 { color: #107DB2; }
+		.color4 { color: #8C4BC6; }
+		.color5 { color: #F28200; }
+		.bg1 { background: rgba(237,237,238,.5); border: solid 1px #333333; }
+		.bg2 { background: rgba(16,227,16,.1); border: solid 1px #10E310; }
+		.bg3 { background: rgba(16,125,178,.1); border: solid 1px #107DB2; }
+		.bg4 { background: rgba(140,75,198,.1); border: solid 1px #8C4BC6; }
+		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
+		img.title { width: 80px; float: left; margin: 0 10px 20px; 0; }
+		h1 { padding: 20px 0 0; }
+		h2 { margin: 30px 0 5px; }
+		p { clear: both }
+		ul.recipe, ul.ingredient { list-style: none; padding: 0; margin: 0 auto 40px; }
+		ul.recipe li, ul.ingredient li { display: inline-block; margin: 3px; width: 70px; height: 85px; padding: 5px; text-align: center; }
+		ul.ingredient li { height: 70px; }
+		ul.recipe li img, ul.ingredient li img { width: 60px; margin: 5px; cursor: pointer; }
+		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
+		.toggle:hover { color: grey; text-decoration: underline; } 
+	</style>
+</head><body>
+<img class="title" src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" />
+<h1 class="color{{ item.color }}">{{ item.name }} <a class="toggle" href="/gear/catalog">back to Item Catalog</a> <a class="toggle" href="/gear">back to Gear Calculator</a></h1>
+<p><strong>Classification:</strong> {{ classification }}</p>
+{% if item.equippable %}
+	<p><strong>Requires Level:</strong> {{ item.level }}</p>
+	{% if item.stats.all %}
+		<p><strong>Stats:</strong></p>
+		<ul>
+			{% for stat in item.stats.all %}
+				<li>{{ stat.quantity }} {{ stat.stat.name }}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+{% endif %}
+<p><strong>Description:</strong> {{ item.description }}</p>
+{% if item.recipe %}
+<h2>Recipe</h2>
+<ul class="recipe">
+	{% for ingredient in item.recipe.ingredients.all %}
+		<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" alt="{{ ingredient.item.name }}" title="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}</li>
+	{% endfor %}
+</ul>
+{% endif %}
+{% if item.ingredients.all %}
+<h2>Ingredient For</h2>
+<ul class="ingredient">
+	{% for ingredient in item.ingredients.all %}
+		<li class="bg{{ ingredient.recipe.item.color }} color{{ ingredient.recipe.item.color }}"><a href="/gear/catalog/{{ ingredient.recipe.item.id }}"><img src="{{ ingredient.recipe.item.image.url }}" alt="{{ ingredient.recipe.item.name }}" title="{{ ingredient.recipe.item.name }}" /></a></li>
+	{% endfor %}
+</ul>
+{% endif %}
+</body></html>

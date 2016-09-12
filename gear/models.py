@@ -38,7 +38,7 @@ class Recipe(models.Model):
 class Ingredient(models.Model):
 	"""Add Ingredient def"""
 	recipe = models.ForeignKey(Recipe, on_delete = models.CASCADE, related_name='ingredients')
-	item = models.ForeignKey(Item, on_delete = models.CASCADE)
+	item = models.ForeignKey(Item, on_delete = models.CASCADE, related_name='ingredients')
 	quantity = models.IntegerField(null = True)
 
 	def __str__(self):
@@ -47,7 +47,7 @@ class Ingredient(models.Model):
 
 class GearStat(models.Model):
 	"""Add Stat def"""
-	item = models.ForeignKey(Item, on_delete = models.CASCADE)
+	item = models.ForeignKey(Item, on_delete = models.CASCADE, related_name="stats")
 	stat = models.ForeignKey(Stat, on_delete = models.CASCADE)
 	quantity = models.IntegerField(null = True)
 

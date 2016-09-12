@@ -67,3 +67,20 @@ def catalog(request):
 		'scraps' : scraps,
 	}
 	return render(request, 'gear/catalog.html', context)
+
+def detail(request, item_id):
+	item = Item.objects.get(id=item_id)
+	classification = ''
+	if item.equippable:
+		classification = 'Equippable'
+	elif -1 != item.name.lower().find('scrap') and -1 != item.name.lower().find('scroll'):
+		classification = 'Scroll Scrap'
+	elif -1 != item.name.lower().find('scroll'):
+		classification = 'Scroll'
+	elif -1 != item.name.lower().find('scrap'):
+		classification = 'Scrap'
+	context = {
+		'item' : item,
+		'classification' : classification,
+	}
+	return render(request, 'gear/detail.html', context)
