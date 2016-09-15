@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from heroes.models import Hero
+from heroes.models import Hero, Rarity
 from .models import Item, Recipe
 
 def processItems(item, items, multiplier, master_items):
@@ -70,6 +70,7 @@ def catalog(request):
 
 def detail(request, item_id):
 	item = Item.objects.get(id=item_id)
+	rarities = Rarity.objects.all()
 	classification = ''
 	if item.equippable:
 		classification = 'Equippable'
@@ -82,5 +83,6 @@ def detail(request, item_id):
 	context = {
 		'item' : item,
 		'classification' : classification,
+		'rarities' : rarities,
 	}
 	return render(request, 'gear/detail.html', context)
