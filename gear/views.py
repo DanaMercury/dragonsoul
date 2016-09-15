@@ -70,7 +70,7 @@ def catalog(request):
 
 def detail(request, item_id):
 	item = Item.objects.get(id=item_id)
-	rarities = Rarity.objects.all()
+	rarities = Rarity.objects.all().prefetch_related('hero','gear1','gear2','gear3','gear4','gear5','gear6')
 	classification = ''
 	if item.equippable:
 		classification = 'Equippable'
