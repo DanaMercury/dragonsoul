@@ -5,6 +5,9 @@ from stats.models import Stat
 class Item(models.Model):
 	"""The smallest denominator. Could be scraps, scrolls, or equippable items"""
 	name = models.CharField(max_length = 200, unique = True, null = True)
+	image = models.ImageField(upload_to = 'items', height_field = 'height', width_field = 'width', null = True)
+	height = models.IntegerField(default = 0)
+	width = models.IntegerField(default = 0)
 	color = models.IntegerField(default = 1, choices = [
 		(1, 'White'),
 		(2, 'Green'),
@@ -35,7 +38,7 @@ class Recipe(models.Model):
 class Ingredient(models.Model):
 	"""Add Ingredient def"""
 	recipe = models.ForeignKey(Recipe, on_delete = models.CASCADE, related_name='ingredients')
-	item = models.ForeignKey(Item, on_delete = models.CASCADE)
+	item = models.ForeignKey(Item, on_delete = models.CASCADE, related_name='ingredients')
 	quantity = models.IntegerField(null = True)
 
 	def __str__(self):
@@ -44,7 +47,7 @@ class Ingredient(models.Model):
 
 class GearStat(models.Model):
 	"""Add Stat def"""
-	item = models.ForeignKey(Item, on_delete = models.CASCADE)
+	item = models.ForeignKey(Item, on_delete = models.CASCADE, related_name="stats")
 	stat = models.ForeignKey(Stat, on_delete = models.CASCADE)
 	quantity = models.IntegerField(null = True)
 
