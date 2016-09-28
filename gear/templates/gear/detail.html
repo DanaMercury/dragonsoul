@@ -66,21 +66,35 @@
 {% if item.gear1.all or item.gear2.all or item.gear3.all or item.gear4.all or item.gear5.all or item.gear6.all %}
 	{% for rarity in rarities %}
 		{% if rarity.gear1.id == item.id %}
-		<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 1)</li>
+			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 1)</li>
 		{% elif rarity.gear2.id == item.id %}
-		<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 2)</li>
+			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 2)</li>
 		{% elif rarity.gear3.id == item.id %}
-		<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 3)</li>
+			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 3)</li>
 		{% elif rarity.gear4.id == item.id %}
-		<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 4)</li>
+			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 4)</li>
 		{% elif rarity.gear5.id == item.id %}
-		<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 5)</li>
+			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 5)</li>
 		{% elif rarity.gear6.id == item.id %}
-		<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 6)</li>
+			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 6)</li>
 		{% endif %}
 	{% endfor %}
 {% else %}
 	<li class="none">None</li>
+{% endif %}
+</ul>
+<h2>Grindable At</h2>
+<ul class="stages">
+{% if item.drops.all %}
+	{% for stage in stages %}
+		{% for drop in stage.drops.all %}
+			{% if drop.item.id == item.id %}
+				<li>Chapter {{ stage.chapter.name }} &#x2014; Stage {{ stage.level }}: {{ stage.name }}</li>
+			{% endif %}
+		{% endfor %}
+	{% endfor %}
+{% else %}
+	<li>None</li>
 {% endif %}
 </ul>
 </body></html>

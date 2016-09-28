@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from heroes.models import Hero, Rarity
+from drops.models import Stage
 from .models import Item, Recipe
 
 def processItems(item, items, multiplier, master_items):
@@ -71,6 +72,7 @@ def catalog(request):
 def detail(request, item_id):
 	item = Item.objects.get(id=item_id)
 	rarities = Rarity.objects.all().prefetch_related('hero','gear1','gear2','gear3','gear4','gear5','gear6')
+	stages = Stage.objects.all().prefetch_related('chapter', 'drops')
 	classification = ''
 	if item.equippable:
 		classification = 'Equippable'
@@ -84,5 +86,6 @@ def detail(request, item_id):
 		'item' : item,
 		'classification' : classification,
 		'rarities' : rarities,
+		'stages' : stages,
 	}
 	return render(request, 'gear/detail.html', context)
