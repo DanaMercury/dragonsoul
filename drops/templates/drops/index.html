@@ -1,0 +1,163 @@
+<html><head><title>DragonSoul Gear Grind Optimizer</title>
+	<script src="https://code.jquery.com/jquery-3.1.0.slim.min.js" integrity="sha256-cRpWjoSOw5KcyIOaZNo4i6fZ9tKPhYYb6i5T9RSVJG8=" crossorigin="anonymous"></script>
+	<style>
+		html { font-family: sans-serif; }
+		.color1 { color: #333333; }
+		.color2 { color: #10E310; }
+		.color3 { color: #107DB2; }
+		.color4 { color: #8C4BC6; }
+		.color5 { color: #F28200; }
+		.bg1 { background: rgba(237,237,238,.5); border: solid 1px #333333; }
+		.bg2 { background: rgba(16,227,16,.1); border: solid 1px #10E310; }
+		.bg3 { background: rgba(16,125,178,.1); border: solid 1px #107DB2; }
+		.bg4 { background: rgba(140,75,198,.1); border: solid 1px #8C4BC6; }
+		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
+		h3 { clear: both; }
+		h3 { padding-top: 20px; }
+		#heronav { position: fixed; top: 0; left: 0; height: 140px; padding: 1vw; overflow: scroll; }
+		#heronav ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
+		#heronav ul li { display: inline-block; padding: 0; }
+		#rarities { position: fixed; top: 170px; left: 0; bottom: 0; width: 63%; padding: 1vw; overflow: scroll; }
+		#itemlist { position: fixed; top: 170px; right: 0; bottom: 0; width: 33%; padding: 1vw; overflow: scroll; }
+		#rarities img { width: 80px; clear: both; margin: 0 10px 10px 0; }
+		#rarities .rarity { width: 250px; margin: 10px; padding: 10px; float: left; position: relative; }
+		#rarities .rarity h3 { margin: 10px 0 15px 45px; padding: 0; }
+		.rarity ul { list-style: none; padding: 0; width: 190px; margin: 0 auto; }
+		.rarity ul li { display: inline-block; height: 60px; width: 60px; }
+		#items { list-style: none; padding: 0; margin: 0 auto 10px; }
+		#items li { display: inline-block; margin: 3px; width: 70px; height: 95px; float: left; padding: 5px; text-align: center; }
+		#rarities ul li img, #items li img, #heronav ul li img { width: 60px; margin: 0; opacity: 0.3; filter: grayscale(.7); cursor: pointer; }
+		#rarities ul li img.complete, #items li img, #heronav ul li img.selected { opacity: 1; filter: grayscale(0); }
+		#heronav ul li img, #rarities .rarity img.hero { width: 40px; }
+		#rarities .rarity img.hero { position: absolute; top: 10px; left: 10px; }
+		#items li img { margin: 5px; }
+	</style>
+	</head><body>
+	<div id="heronav">
+		<p>Select heroes to optimize gear grinding to complete their current rarity.</p>
+		<ul id="herolist">
+			{% for hero in heroes %}
+			<li><img id="{{ hero.id }}" src="{{ hero.image.url }}" alt="{{ hero.name }}" title="{{ hero.name }}" onclick="$(this).toggleClass('selected'); schedule_scrap_checks();" /></li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div id="rarities"></div>
+	<script>
+		items = {{ items | safe }};
+		heroes = {};
+		{% for hero in heroes %}
+			heroes['{{ hero.id | safe }}'] = {
+				'name' : '{{ hero.name | safe }}', 
+				'image' : '{{ hero.image.url | safe }}',
+				'id' : {{ hero.id | safe }}, 
+				'rarities' : [], 
+			};
+			{% for rarity in hero.rarities.all %}
+				heroes['{{ hero.id | safe }}']['rarities'].push({
+					'name' : '{{ rarity | safe }}',
+					'id' : {{ rarity.id | safe }},
+					'color' : {{ rarity.color | safe }},
+					'level' : {{ rarity.level | safe }},
+					'gear1' : { 'name' : '{{ rarity.gear1 }}', 'image' : '{{ rarity.gear1.image.url }}' },
+					'gear2' : { 'name' : '{{ rarity.gear2 }}', 'image' : '{{ rarity.gear2.image.url }}' },
+					'gear3' : { 'name' : '{{ rarity.gear3 }}', 'image' : '{{ rarity.gear3.image.url }}' },
+					'gear4' : { 'name' : '{{ rarity.gear4 }}', 'image' : '{{ rarity.gear4.image.url }}' },
+					'gear5' : { 'name' : '{{ rarity.gear5 }}', 'image' : '{{ rarity.gear5.image.url }}' },
+					'gear6' : { 'name' : '{{ rarity.gear6 }}', 'image' : '{{ rarity.gear6.image.url }}' },
+				});
+			{% endfor %}
+		{% endfor %}
+
+
+		function schedule_scrap_checks() {
+			if(null !== calculate_scheduler) {
+				clearTimeout(calculate_scheduler);
+			}
+			calculate_scheduler = setTimeout(calculate_scraps, 100);
+		}
+
+		function calculate_scraps() {
+			var progress = { 'heroes' : [], 'scraps' : {}};
+			var rarities = '';
+			var aggregate = {};
+			$('#heronav .selected').each(function() {
+				var hero = heroes[$(this)[0].id];
+				progress.heroes.push(hero.id);
+				var hero_data = determine_rarity(hero);
+				console.log(hero_data);
+				if(false === hero_data) { return; }
+				rarities += '<div class="rarity bg' + hero_data.rarity.color + '" id="' + hero.id + '_' + hero_data.rarity.id + '">';
+				rarities += '<img class="hero" src="' + hero.image + '" title="' + hero.name + '" alt="' + hero.name + '" />';
+				rarities += '<h3 class="color' + hero_data.rarity.color +'">' + hero_data.rarity.name +'</h3><ul>';
+				for(i = 1; i < 7; i++) {
+					var itemkey = hero.id + '_' + hero_data.rarity.id + '_' + i;
+					rarities += '<li><img id="' + itemkey + '" onclick="$(this).toggleClass(\'complete\'); update_gear();" title="' + hero_data.rarity.gear1.name + '" src="' + hero_data.rarity.gear1.image + '" alt="' + hero_data.rarity.gear1.name + '"';
+					if(null != hero_data.progress[i] && 0 == hero_data.progress[i]) {
+						var ingredients = items[itemkey];
+						$.each(ingredients, function(k, ingredient) {
+							if (!(ingredient.id in aggregate)) {
+								aggregate[ingredient.id] = { 'id' : ingredient.id, 'name' : ingredient.name, 'total' : ingredient.total, 'color' : ingredient.color, 'image' : ingredient.image }
+							} else {
+								aggregate[ingredient.id].total += ingredient.total;
+							}
+						});
+					} else {
+						rarities += ' class="complete"';
+					}
+					rarities += ' /></li>';
+				}
+				rarities += '</ul></div>';
+			});
+			$('#rarities').html(rarities);
+			calculate_scheduler = null;
+		}
+
+		function determine_rarity(hero) {
+			var progress = JSON.parse(localStorage.getItem(hero.id));
+			var final = false;
+			if(null !== progress) {
+				$.each(hero.rarities, function(k, rarity) {
+					if(null !== progress[rarity.id]) {
+						var litmus = 0;
+						for(i = 1; i < 7; i++) {
+							if(null != progress[rarity.id][i] && 1 == progress[rarity.id][i]) {
+								litmus++;
+							}
+						}
+						if(6 > litmus) {
+							final = {'rarity' : rarity, 'progress' : progress[rarity.id]};
+							return false;
+						}
+					} else {
+						var rarity = hero.rarities[0];
+						final = {'rarity' : rarity, 'progress' : progress[rarity.id]};
+						return false;
+					}
+				});
+			} else {
+				var rarity = hero.rarities[0];
+				final = {'rarity' : rarity, 'progress' : progress[rarity.id]};
+			}
+			return final;
+		}
+
+		function remember() {
+			var progress = JSON.parse(localStorage.getItem('grind'));
+			if(null !== progress) {
+			}
+			schedule_scrap_checks();
+		}
+
+		calculate_scheduler = null;
+		remember();
+	</script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-77025911-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+</body></html>

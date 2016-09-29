@@ -24,7 +24,7 @@
 		#herogear h2 + div { clear: both; }
 		#herogear img { width: 80px; clear: both; margin: 0 10px 10px 0; }
 		#herogear .rarity { width: 220px; margin: 10px; padding: 10px; float: left; }
-		#herogear .rarity h3 { margin: 0 0 5px; 0; padding: 0; }
+		#herogear .rarity h3 { margin: 0 0 5px 0; padding: 0; }
 		.rarity ul { list-style: none; padding: 0; width: 190px; margin: 0 auto; }
 		.rarity ul li { display: inline-block; height: 60px; width: 60px; }
 		.quest ul, #items { list-style: none; padding: 0; margin: 0 auto 10px; }
@@ -98,12 +98,12 @@
 					<div class="rarity bg{{ rarity.color }}" id="{{ hero.id }}_{{ rarity.id }}">
 						<h3 class="color{{ rarity.color }}"><span onclick="$(this).parent().parent().toggleClass('complete');">{{ rarity }}</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', true)">Complete</span> <span class="toggle" onclick="update_rarity('{{ hero.id }}_{{ rarity.id }}', false)">Reset</span></h3>
 						<ul>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_1" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear1 }}" src="{{ rarity.gear1.image.url }}" alt="{{ rarity.gear1 }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_2" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear2 }}" src="{{ rarity.gear2.image.url }}" alt="{{ rarity.gear2 }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_3" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear3 }}" src="{{ rarity.gear3.image.url }}" alt="{{ rarity.gear3 }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_4" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear4 }}" src="{{ rarity.gear4.image.url }}" alt="{{ rarity.gear4 }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_5" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear5 }}" src="{{ rarity.gear5.image.url }}" alt="{{ rarity.gear5 }}" /></li>
-							<li><img id="{{ hero.id }}_{{ rarity.id }}_6" onclick="$(this).toggleClass('complete'); calculate_gear();" title="{{ rarity.gear6 }}" src="{{ rarity.gear6.image.url }}" alt="{{ rarity.gear6 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_1" onclick="$(this).toggleClass('complete'); schedule_gear_check();" title="{{ rarity.gear1 }}" src="{{ rarity.gear1.image.url }}" alt="{{ rarity.gear1 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_2" onclick="$(this).toggleClass('complete'); schedule_gear_check();" title="{{ rarity.gear2 }}" src="{{ rarity.gear2.image.url }}" alt="{{ rarity.gear2 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_3" onclick="$(this).toggleClass('complete'); schedule_gear_check();" title="{{ rarity.gear3 }}" src="{{ rarity.gear3.image.url }}" alt="{{ rarity.gear3 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_4" onclick="$(this).toggleClass('complete'); schedule_gear_check();" title="{{ rarity.gear4 }}" src="{{ rarity.gear4.image.url }}" alt="{{ rarity.gear4 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_5" onclick="$(this).toggleClass('complete'); schedule_gear_check();" title="{{ rarity.gear5 }}" src="{{ rarity.gear5.image.url }}" alt="{{ rarity.gear5 }}" /></li>
+							<li><img id="{{ hero.id }}_{{ rarity.id }}_6" onclick="$(this).toggleClass('complete'); schedule_gear_check();" title="{{ rarity.gear6 }}" src="{{ rarity.gear6.image.url }}" alt="{{ rarity.gear6 }}" /></li>
 						</ul>
 					</div>
 				{% endfor %}
@@ -112,7 +112,7 @@
 					{% for quest in hero.quests.all %}
 						<div class="quest">
 							<ul>
-								<li class="bg{{ quest.color }}"><img id="{{ hero.id }}_quest{{ quest.id }}" onclick="$(this).parent().toggleClass('complete'); calculate_gear();" title="{{ quest.sacrifice }}" src="{{ quest.sacrifice.image.url }}" alt="{{ quest.sacrifice }}" /><br /> {{ quest.quantity }}x</li>
+								<li class="bg{{ quest.color }}"><img id="{{ hero.id }}_quest{{ quest.id }}" onclick="$(this).parent().toggleClass('complete'); schedule_gear_check();" title="{{ quest.sacrifice }}" src="{{ quest.sacrifice.image.url }}" alt="{{ quest.sacrifice }}" /><br /> {{ quest.quantity }}x</li>
 							</ul>
 						</div>
 					{% endfor %}

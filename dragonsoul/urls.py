@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^nested_admin/', include('nested_admin.urls')),
 	url(r'^gear/', include('gear.urls')),
+	url(r'^drops/', include('drops.urls')),
     url(r'^$', RedirectView.as_view(url='/gear')),
 ]
