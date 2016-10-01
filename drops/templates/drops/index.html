@@ -1,5 +1,7 @@
 <html><head><title>DragonSoul Gear Grind Optimizer</title>
-	<script src="https://code.jquery.com/jquery-3.1.0.slim.min.js" integrity="sha256-cRpWjoSOw5KcyIOaZNo4i6fZ9tKPhYYb6i5T9RSVJG8=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css" />
 	<style>
 		html { font-family: sans-serif; }
 		.color1 { color: #333333; }
@@ -14,25 +16,33 @@
 		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
 		h3 { clear: both; }
 		h3 { padding-top: 20px; }
-		#heronav { position: fixed; top: 0; left: 0; height: 140px; padding: 1vw; overflow: scroll; }
+		#mainnav { position: fixed; top: 0; left: 0; height: 60px; }
+		#heronav { position: fixed; top: 60px; left: 0; height: 140px; padding: 1vw; overflow: scroll; }
+		#heronav p { margin: 0; }
 		#heronav ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
 		#heronav ul li { display: inline-block; padding: 0; }
-		#rarities { position: fixed; top: 170px; left: 0; bottom: 0; width: 63%; padding: 1vw; overflow: scroll; }
-		#itemlist { position: fixed; top: 170px; right: 0; bottom: 0; width: 33%; padding: 1vw; overflow: scroll; }
+		#raritieslist { position: fixed; top: 230px; left: 0; bottom: 0; width: 63%; padding: 1vw; overflow: scroll; }
+		#itemlist { position: fixed; top: 230px; right: 0; bottom: 0; width: 33%; padding: 1vw; overflow: scroll; }
 		#rarities img { width: 80px; clear: both; margin: 0 10px 10px 0; }
-		#rarities .rarity { width: 250px; margin: 10px; padding: 10px; float: left; position: relative; }
+		#rarities .rarity { width: 180px; margin: 10px; padding: 10px; float: left; position: relative; }
 		#rarities .rarity h3 { margin: 10px 0 15px 45px; padding: 0; }
 		.rarity ul { list-style: none; padding: 0; width: 190px; margin: 0 auto; }
 		.rarity ul li { display: inline-block; height: 60px; width: 60px; }
 		#items { list-style: none; padding: 0; margin: 0 auto 10px; }
 		#items li { display: inline-block; margin: 3px; width: 70px; height: 95px; float: left; padding: 5px; text-align: center; }
-		#rarities ul li img, #items li img, #heronav ul li img { width: 60px; margin: 0; opacity: 0.3; filter: grayscale(.7); cursor: pointer; }
-		#rarities ul li img.complete, #items li img, #heronav ul li img.selected { opacity: 1; filter: grayscale(0); }
-		#heronav ul li img, #rarities .rarity img.hero { width: 40px; }
+		#rarities ul li img, #heronav ul li img { width: 60px; margin: 0; opacity: 0.3; filter: grayscale(.7); cursor: pointer; }
+		#rarities ul li img.complete, #heronav ul li img.selected { opacity: 1; filter: grayscale(0); }
+		#heronav ul li img, #rarities .rarity img.hero, #items img { width: 40px; }
 		#rarities .rarity img.hero { position: absolute; top: 10px; left: 10px; }
-		#items li img { margin: 5px; }
+		table { text-align: center; margin: 0 auto; }
+		table tr, table td { padding: 5px; }
+		#items input { width: 50px; }
+		#optimize { margin: 20px auto; width: 200px; display: block; }
+		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
+		.toggle:hover { color: grey; text-decoration: underline; } 
 	</style>
 	</head><body>
+	<div id="mainnav"><h1>Grind Optimizer <a class="toggle" href="/gear">Gear Calculator</a> <a class="toggle" href="/gear/catalog">Gear Catalog</a> <a class="toggle" href="/drops">Grind Optimizer</a></h1></div>
 	<div id="heronav">
 		<p>Select heroes to optimize gear grinding to complete their current rarity.</p>
 		<ul id="herolist">
@@ -41,7 +51,19 @@
 			{% endfor %}
 		</ul>
 	</div>
-	<div id="rarities"></div>
+	<div id="raritieslist">
+		<h1>Rarities List</h1>
+		<div id="rarities"></div>
+	</div>
+	<div id="itemlist">
+		<h1>Grinding List</h1>
+		<p>To avoid double representation, this list is only the grindable items. For example, a Head Banger requires 20 Head Banger scraps, but this list will only show the 20 scraps, not the resulting Head Banger. Keep this in mind as you choose to buy, sell, or use items and scraps for enchantments.</p>
+		<table>
+			<thead><tr><th>Item</th><th>Needed</th><th>Have</th></tr></thead>
+			<tbody id="items"></tbody>
+		</table>
+		<input id="optimize" type="submit" value="Optimize My Grind!" disabled="disabled" onclick="optimize()" />	
+	</div>
 	<script>
 		items = {{ items | safe }};
 		heroes = {};
@@ -70,28 +92,27 @@
 
 
 		function schedule_scrap_checks() {
-			if(null !== calculate_scheduler) {
+			if(null != calculate_scheduler) {
 				clearTimeout(calculate_scheduler);
 			}
 			calculate_scheduler = setTimeout(calculate_scraps, 100);
 		}
 
 		function calculate_scraps() {
-			var progress = { 'heroes' : [], 'scraps' : {}};
+			var progress = { 'heroes' : [], 'scraps' : []};
 			var rarities = '';
 			var aggregate = {};
 			$('#heronav .selected').each(function() {
 				var hero = heroes[$(this)[0].id];
 				progress.heroes.push(hero.id);
 				var hero_data = determine_rarity(hero);
-				console.log(hero_data);
 				if(false === hero_data) { return; }
 				rarities += '<div class="rarity bg' + hero_data.rarity.color + '" id="' + hero.id + '_' + hero_data.rarity.id + '">';
 				rarities += '<img class="hero" src="' + hero.image + '" title="' + hero.name + '" alt="' + hero.name + '" />';
 				rarities += '<h3 class="color' + hero_data.rarity.color +'">' + hero_data.rarity.name +'</h3><ul>';
 				for(i = 1; i < 7; i++) {
 					var itemkey = hero.id + '_' + hero_data.rarity.id + '_' + i;
-					rarities += '<li><img id="' + itemkey + '" onclick="$(this).toggleClass(\'complete\'); update_gear();" title="' + hero_data.rarity.gear1.name + '" src="' + hero_data.rarity.gear1.image + '" alt="' + hero_data.rarity.gear1.name + '"';
+					rarities += '<li><img id="' + itemkey + '" onclick="$(this).toggleClass(\'complete\'); update_gear(' + hero.id + ', ' + hero_data.rarity.id + ', ' + i + ');" title="' + hero_data.rarity['gear' + i].name + '" src="' + hero_data.rarity['gear' + i].image + '" alt="' + hero_data.rarity['gear' + i].name + '"';
 					if(null != hero_data.progress[i] && 0 == hero_data.progress[i]) {
 						var ingredients = items[itemkey];
 						$.each(ingredients, function(k, ingredient) {
@@ -109,15 +130,64 @@
 				rarities += '</ul></div>';
 			});
 			$('#rarities').html(rarities);
+			sortable = [];
+			$.each(aggregate, function(k, item) {
+				sortable.push(item);
+			});
+			sortable.sort(
+				function(a, b) {
+					n = b.total - a.total;
+					if (n != 0) {
+						return n;
+					}
+					x = b.color - a.color;
+					if (x != 0) {
+						return x
+					}
+					if (a.name < b.name) {
+						return -1;
+					}
+					if (a.name > b.name) {
+						return 1
+					}
+					return 0
+				}
+			)
+			rows = '';
+			var current = JSON.parse(localStorage.getItem('grind'));
+			$.each(sortable, function(k, item) {
+				have = (null != current ? (null != current.scraps[item.id] ? (null != current.scraps[item.id].have ? current.scraps[item.id].have : 0) : 0) : 0);
+				progress.scraps[item.id] = {'id' : item.id, 'quantity' : item.total, 'have' : have};
+				rows += '<tr class="bg' + item.color + ' color' + item.color + '"><td><a href="/gear/catalog/' + item.id + '"><img src="' + item.image + '" title="' + item.name + '" alt="' + item.name + '" name="' + item.id + '" /></a></td><td>' + item.total + '</td><td><input id="item' + item.id + '" type="text" value="' + have + '" name="' + item.id + '" /></td></tr>';
+			});
+			$('#items').html(rows);
+			$('#items input').spinner({min : 0, change : function() { update_scrap_count($(this).attr('name')); }});
+			localStorage.setItem('grind', JSON.stringify(progress));
+			$('#optimize').prop('disabled', (0 < sortable.length ? false : true));
 			calculate_scheduler = null;
+		}
+
+		function update_gear(hero, rarity, slot) {
+			var progress = JSON.parse(localStorage.getItem(hero));
+			if(null != progress && null != progress[rarity] && null != progress[rarity][slot]) {
+				progress[rarity][slot] = $('#' + hero + '_' + rarity + '_' + slot).hasClass('complete') ? 1 : 0;
+				localStorage.setItem(hero, JSON.stringify(progress));
+				schedule_scrap_checks();
+			}
+		}
+
+		function update_scrap_count(id) {
+			var progress = JSON.parse(localStorage.getItem('grind'));
+			progress.scraps[id].have = $('#item' + id).val();
+			localStorage.setItem('grind', JSON.stringify(progress));
 		}
 
 		function determine_rarity(hero) {
 			var progress = JSON.parse(localStorage.getItem(hero.id));
 			var final = false;
-			if(null !== progress) {
+			if(null != progress) {
 				$.each(hero.rarities, function(k, rarity) {
-					if(null !== progress[rarity.id]) {
+					if(null != progress[rarity.id]) {
 						var litmus = 0;
 						for(i = 1; i < 7; i++) {
 							if(null != progress[rarity.id][i] && 1 == progress[rarity.id][i]) {
@@ -141,9 +211,24 @@
 			return final;
 		}
 
+		function optimize() {
+			var deets = '';
+			$('#items tr').each(function() {
+				if(parseInt($(this.children[1])[0].innerHTML) > parseInt($(this.children[2].children[0].children[0]).val())) {
+					deets += $(this.children[0].children[0].children[0]).attr('name') + ':';
+					deets += (parseInt($(this.children[1])[0].innerHTML) - parseInt($(this.children[2].children[0].children[0]).val())) + '_';
+				}
+			});
+			deets = deets.replace(/_$/, '');
+			$(location).attr('href', '/drops/results/' + deets)
+		}
+
 		function remember() {
 			var progress = JSON.parse(localStorage.getItem('grind'));
-			if(null !== progress) {
+			if(null != progress) {
+				$.each(progress.heroes, function(k, v) {
+					$('#herolist #' + v).addClass('selected');
+				});
 			}
 			schedule_scrap_checks();
 		}
