@@ -2,8 +2,9 @@ from django.shortcuts import render
 from gear.models import Item
 from heroes.models import Hero, Rarity
 from gear.views import processItems
+from .models import Stage
 
-def index(request):
+def index(request, ingredients_raw = ''):
 	heroes = Hero.objects.all().prefetch_related(
 		'rarities__gear1',
 		'rarities__gear2',
@@ -24,26 +25,30 @@ def index(request):
 				items[label + '_' + str(i)] = {}
 				item_id = getattr(rarity, 'gear' + str(i)).id
 				processItems(master_items[item_id], items[label + '_' + str(i)], 1, master_items)
+	next_step = ''
+	if('' != ingredients_raw):
+		sets = ingredients_raw.split('_')
+		ingredients = []
+		for pair in sets:
+			values = pair.split(':');
+			ingredients.append({ 'item' : values[0], 'quantity' : values[1] });
+
+		# THIS IS WHERE YOU CODE GOES -- INSIDE THIS IF STATEMENT
+
+
+
+
+		# FAKE DATA
+		next_step = {
+			'stage' : Stage.objects.get(id = 1),
+			'scraps' : [{
+				'item' : Item.objects.get(id = 1),
+				'quantity' : 1
+			}]}
+
 	context = {
 		'heroes' : heroes,
 		'items' : items,
+		'next' : next_step,
 	}
 	return render(request, 'drops/index.html', context)
-
-def results(request, ingredients_raw):
-	sets = ingredients_raw.split('_')
-	ingredients = []
-	for pair in sets:
-		values = pair.split(':');
-		ingredients.append({ 'item' : values[0], 'quantity' : values[1] });
-
-
-
-
-
-
-
-	context = {
-		'ingredients' : ingredients,
-	}
-	return render(request, 'drops/results.html', context)

@@ -20,7 +20,7 @@ class Stage(models.Model):
 
 	def __str__(self):
 		#fullname = str(self.level) + ':' + self.name
-		return self.name #fullname + ' ins ' + self.get_chapter_display()
+		return self.chapter.name + ' — ' + str(self.level) + ': ' + self.name
 
 
 class Drop(models.Model):
