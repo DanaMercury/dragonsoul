@@ -40,23 +40,20 @@ def index(request, ingredients_raw = ''):
 		# THIS IS CURRENTLY TEMPORARY CODE
 
 		ingredients = sorted(ingredients, key=lambda k: k['quantity'], reverse=True)
-		drops_raw = Drop.objects.filter(item = ingredients[0]['item']);
-		drops_processed = []
-		for drop in drops_raw.all():
-			drops_processed.append(drop)
-		if 1 != len(drops_processed):
+		drops = Drop.objects.filter(item = ingredients[0]['item']).order_by('-id')
+		if 1 != len(drops):
 			for ingredient in ingredients[1:]:
 				drops_new = []
-				for drop in drops_processed:
+				for drop in drops:
 					for item in drop.stage.drops.all():
 						if item.item.id == ingredient['item']:
 							drops_new.append(drop)
 							break
 				if 0 < len(drops_new):
-					drops_processed = copy.deepcopy(drops_new)
+					drops = copy.deepcopy(drops_new)
 					if 1 == len(drops_new):
 						break
-		stage = drops_processed[0].stage
+		stage = drops[0].stage
 		scraps = []
 		drop_items = {}
 		for drop in stage.drops.all():
