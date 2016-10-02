@@ -34,7 +34,7 @@ def index(request, ingredients_raw = ''):
 		ingredients = []
 		for pair in sets:
 			values = pair.split(':');
-			ingredients.append({ 'item' : values[0], 'quantity' : values[1] });
+			ingredients.append({ 'item' : int(values[0]), 'quantity' : int(values[1]) });
 
 		# THIS IS WHERE YOUR CODE GOES -- INSIDE THIS IF STATEMENT
 		# THIS IS CURRENTLY TEMPORARY CODE
@@ -45,13 +45,11 @@ def index(request, ingredients_raw = ''):
 		for drop in drops_raw.all():
 			drops_processed.append(drop)
 		if 1 != len(drops_processed):
-			for k, ingredient in ingredients:
+			for ingredient in ingredients[1:]:
 				drops_new = []
-				if 0 == k:
-					continue
 				for drop in drops_processed:
 					for item in drop.stage.drops.all():
-						if str(item.item.id) == ingredient['item']:
+						if item.item.id == ingredient['item']:
 							drops_new.append(drop)
 							break
 				if 0 < len(drops_new):
@@ -62,7 +60,7 @@ def index(request, ingredients_raw = ''):
 		scraps = []
 		drop_items = {}
 		for drop in stage.drops.all():
-			drop_items[str(drop.item.id)] = drop.item
+			drop_items[drop.item.id] = drop.item
 		for ingredient in ingredients:
 			if ingredient['item'] in drop_items:
 				scraps.append({'item' : drop_items[ingredient['item']], 'quantity' : ingredient['quantity']})
