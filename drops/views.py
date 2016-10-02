@@ -2,7 +2,8 @@ from django.shortcuts import render
 from gear.models import Item
 from heroes.models import Hero, Rarity
 from gear.views import processItems
-from .models import Stage
+from .models import Drop
+import copy
 
 def index(request, ingredients_raw = ''):
 	heroes = Hero.objects.all().prefetch_related(
@@ -26,6 +27,8 @@ def index(request, ingredients_raw = ''):
 				item_id = getattr(rarity, 'gear' + str(i)).id
 				processItems(master_items[item_id], items[label + '_' + str(i)], 1, master_items)
 	next_step = ''
+	ingredients = ''
+	drops = ''
 	if('' != ingredients_raw):
 		sets = ingredients_raw.split('_')
 		ingredients = []
@@ -33,19 +36,43 @@ def index(request, ingredients_raw = ''):
 			values = pair.split(':');
 			ingredients.append({ 'item' : values[0], 'quantity' : values[1] });
 
-		# THIS IS WHERE YOU CODE GOES -- INSIDE THIS IF STATEMENT
+		# THIS IS WHERE YOUR CODE GOES -- INSIDE THIS IF STATEMENT
+		# THIS IS CURRENTLY TEMPORARY CODE
 
+		ingredients = sorted(ingredients, key=lambda k: k['quantity'], reverse=True)
+		drops_raw = Drop.objects.filter(item = ingredients[0]['item']);
+		drops_processed = []
+		for drop in drops_raw.all():
+			drops_processed.append(drop)
+		if 1 != len(drops_processed):
+			for k, ingredient in ingredients:
+				drops_new = []
+				if 0 == k:
+					continue
+				for drop in drops_processed:
+					for item in drop.stage.drops.all():
+						if item.item.id == ingredient.item:
+							drops_new.append(drop)
+							break
+				if 0 < len(drops_new):
+					drops_processed = copy.deepcopy(drops_new)
+					if 1 == len(drops_new):
+						break
+		stage = drops_processed[0].stage
+		scraps = []
+		drop_items = {}
+		for drop in stage.drops.all():
+			drop_items[str(drop.item.id)] = drop.item
+		for ingredient in ingredients:
+			if ingredient['item'] in drop_items:
+				scraps.append({'item' : drop_items[ingredient['item']], 'quantity' : ingredient['quantity']})
 
+		# THIS IS THE END OF THE TEMPORARY CODE
 
-
-		# FAKE DATA
 		next_step = {
-			'stage' : Stage.objects.get(id = 1),
-			'scraps' : [{
-				'item' : Item.objects.get(id = 1),
-				'quantity' : 1
-			}]}
-
+			'stage' : stage,
+			'scraps' : scraps
+		}
 	context = {
 		'heroes' : heroes,
 		'items' : items,
