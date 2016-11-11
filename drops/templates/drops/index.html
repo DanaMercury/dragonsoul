@@ -97,12 +97,12 @@
 					'id' : {{ rarity.id | safe }},
 					'color' : {{ rarity.color | safe }},
 					'level' : {{ rarity.level | safe }},
-					'gear1' : { 'name' : '{{ rarity.gear1 }}', 'image' : '{{ rarity.gear1.image.url }}' },
-					'gear2' : { 'name' : '{{ rarity.gear2 }}', 'image' : '{{ rarity.gear2.image.url }}' },
-					'gear3' : { 'name' : '{{ rarity.gear3 }}', 'image' : '{{ rarity.gear3.image.url }}' },
-					'gear4' : { 'name' : '{{ rarity.gear4 }}', 'image' : '{{ rarity.gear4.image.url }}' },
-					'gear5' : { 'name' : '{{ rarity.gear5 }}', 'image' : '{{ rarity.gear5.image.url }}' },
-					'gear6' : { 'name' : '{{ rarity.gear6 }}', 'image' : '{{ rarity.gear6.image.url }}' },
+					'gear1' : { 'name' : '{{ rarity.gear1 }}', 'image' : '{{ rarity.gear1.image.url }}', 'id' : {{ rarity.gear1.id }} },
+					'gear2' : { 'name' : '{{ rarity.gear2 }}', 'image' : '{{ rarity.gear2.image.url }}', 'id' : {{ rarity.gear2.id }} },
+					'gear3' : { 'name' : '{{ rarity.gear3 }}', 'image' : '{{ rarity.gear3.image.url }}', 'id' : {{ rarity.gear3.id }} },
+					'gear4' : { 'name' : '{{ rarity.gear4 }}', 'image' : '{{ rarity.gear4.image.url }}', 'id' : {{ rarity.gear4.id }} },
+					'gear5' : { 'name' : '{{ rarity.gear5 }}', 'image' : '{{ rarity.gear5.image.url }}', 'id' : {{ rarity.gear5.id }} },
+					'gear6' : { 'name' : '{{ rarity.gear6 }}', 'image' : '{{ rarity.gear6.image.url }}', 'id' : {{ rarity.gear6.id }} },
 				});
 			{% endfor %}
 		{% endfor %}
@@ -187,8 +187,17 @@
 		function update_gear(hero, rarity, slot) {
 			var progress = JSON.parse(localStorage.getItem(hero));
 			if(null != progress && null != progress[rarity] && null != progress[rarity][slot]) {
-				progress[rarity][slot] = $('#' + hero + '_' + rarity + '_' + slot).hasClass('complete') ? 1 : 0;
+				var status = $('#' + hero + '_' + rarity + '_' + slot).hasClass('complete') ? 1 : 0;
+				progress[rarity][slot] = status;
+				var current = JSON.parse(localStorage.getItem('grind'));
+				var itemkey = hero + '_' + rarity + '_' + slot;
+				var ingredients = items[itemkey];
+				$.each(ingredients, function(k, item) {
+					have = (null != current ? (null != current.scraps[item.id] ? (null != current.scraps[item.id].have ? current.scraps[item.id].have : 0) : 0) : 0);
+					current.scraps[item.id] = {'id' : item.id, 'quantity' : item.total, 'have' : (status ? (have - item.total < 0 ? 0 : have - item.total) : have + item.total)};
+				});
 				localStorage.setItem(hero, JSON.stringify(progress));
+				localStorage.setItem('grind', JSON.stringify(current));
 				schedule_scrap_checks();
 			}
 		}
