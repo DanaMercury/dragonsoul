@@ -8,7 +8,7 @@ def processItems(item, items, multiplier, master_items):
 		for ingredient in item.recipe.ingredients.all():
 			processItems(master_items[ingredient.item.id], items, multiplier * ingredient.quantity, master_items)
 	except Recipe.DoesNotExist:
-		if item.name not in items:
+		if item.id not in items:
 			items[item.id] = { 'total' : 0, 'color' : item.color, 'name' : item.name, 'id' : item.id, 'image' : item.image.url }
 		items[item.id]['total'] += multiplier
 		pass
