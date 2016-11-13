@@ -43,6 +43,7 @@
 		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
 		.toggle:hover { color: grey; text-decoration: underline; } 
 		#itemside, #stageside { width: 50%; float: left; }
+		.fresh { background: grey; }
 	</style>
 	</head><body>
 	<div id="mainnav"><h1>Grind Optimizer <a class="toggle" href="/gear">Gear Calculator</a> <a class="toggle" href="/gear/catalog">Gear Catalog</a> <a class="toggle" href="/drops">Grind Optimizer</a></h1></div>
@@ -174,8 +175,9 @@
 			var current = JSON.parse(localStorage.getItem('grind'));
 			$.each(sortable, function(k, item) {
 				have = (null != current ? (null != current.scraps[item.id] ? (null != current.scraps[item.id].have ? current.scraps[item.id].have : 0) : 0) : 0);
+				fresh = (null != current ? (null != current.scraps[item.id] ? (null != current.scraps[item.id].have ? '' : 'fresh') : 'fresh') : 'fresh');
 				progress.scraps[item.id] = {'id' : item.id, 'quantity' : item.total, 'have' : have};
-				rows += '<tr class="bg' + item.color + ' color' + item.color + '"><td><a href="/gear/catalog/' + item.id + '"><img src="' + item.image + '" title="' + item.name + '" alt="' + item.name + '" name="' + item.id + '" /></a></td><td>' + item.total + '</td><td><input id="item' + item.id + '" type="text" value="' + have + '" name="' + item.id + '" /></td></tr>';
+				rows += '<tr class="bg' + item.color + ' color' + item.color + '"><td><a href="/gear/catalog/' + item.id + '"><img src="' + item.image + '" title="' + item.name + '" alt="' + item.name + '" name="' + item.id + '" /></a></td><td>' + item.total + '</td><td><input class="' + fresh + '" id="item' + item.id + '" type="text" value="' + have + '" name="' + item.id + '" /></td></tr>';
 			});
 			$('#items').html(rows);
 			$('#items input').spinner({min : 0, change : function() { update_scrap_count($(this).attr('name')); }});
