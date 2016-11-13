@@ -5,7 +5,15 @@ from .models import Drop
 import copy
 
 def index(request, ingredients_raw = ''):
-	heroes = Hero.objects.all()
+	heroes = Hero.objects.all().prefetch_related(
+		'rarities__gear1',
+		'rarities__gear2',
+		'rarities__gear3',
+		'rarities__gear4',
+		'rarities__gear5',
+		'rarities__gear6',
+		'quests'
+	)
 	next_step = ''
 	ingredients = ''
 	drops = ''

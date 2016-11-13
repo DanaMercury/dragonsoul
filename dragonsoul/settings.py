@@ -153,5 +153,5 @@ def show_toolbar(request):
 
 DEBUG_TOOLBAR_CONFIG = {
     # ...
-#    'SHOW_TOOLBAR_CALLBACK': 'dragonsoul.settings.show_toolbar',
+    'SHOW_TOOLBAR_CALLBACK': 'dragonsoul.settings.show_toolbar',
 }

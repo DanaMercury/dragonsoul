@@ -14,7 +14,15 @@ def processItems(item, items, multiplier, master_items):
 		pass
 
 def index(request):
-	heroes = Hero.objects.all()
+	heroes = Hero.objects.all().prefetch_related(
+		'rarities__gear1',
+		'rarities__gear2',
+		'rarities__gear3',
+		'rarities__gear4',
+		'rarities__gear5',
+		'rarities__gear6',
+		'quests'
+	)
 	context = {
 		'heroes' : heroes,
 	}
