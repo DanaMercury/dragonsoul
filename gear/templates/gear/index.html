@@ -1,4 +1,5 @@
 <html><head><title>DragonSoul Gear Calculator</title>
+	<script src="http://dragonsoul.s3.amazonaws.com/items.json"></script>
 	<script src="https://code.jquery.com/jquery-3.1.0.slim.min.js" integrity="sha256-cRpWjoSOw5KcyIOaZNo4i6fZ9tKPhYYb6i5T9RSVJG8=" crossorigin="anonymous"></script>
 	<style>
 		html { font-family: sans-serif; }
@@ -129,7 +130,6 @@
 	</div>
 
 	<script>
-		items = {{ items | safe }};
 		heroes = {};
 		{% for hero in heroes %}
 			heroes['{{ hero.id | safe }}'] = {
