@@ -4,23 +4,28 @@ from gear.models import Item, Recipe, Ingredient
 
 class Chapter(models.Model):
 	"""A group of stages = chapter, in the campaign """
+	number = models.IntegerField(null = True, blank = False)
 	name = models.CharField(max_length = 200, unique = True, null = True)
 	minlevel = models.IntegerField(null = True)
 	cost = models.IntegerField(null = True)
+	
+	class Meta:
+		ordering = ['number']
 
 	def __str__(self):
-		return self.name
+		#fullname = str(self.level) + ':' + self.name
+		return str(self.number) + ': ' + str(self.name)
 
 
 class Stage(models.Model):
 	#A stage in the campaign
 	chapter = models.ForeignKey(Chapter, null = True, on_delete = models.CASCADE, related_name='chapter')
-	level = models.IntegerField(null = True, blank = True)
+	number = models.IntegerField(null = True, blank = False)
 	name = models.CharField(max_length = 200, unique = True, null = True)
 
 	def __str__(self):
 		#fullname = str(self.level) + ':' + self.name
-		return self.chapter.name + ' — ' + str(self.level) + ': ' + self.name
+		return str(self.chapter.number) + '-' + str(self.number) + ': ' + self.name
 
 
 class Drop(models.Model):

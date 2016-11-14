@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'debug_toolbar',
     'gear.apps.GearConfig',
+	'runes.apps.RunesConfig',
     'stats.apps.StatsConfig',
     'heroes.apps.HeroesConfig',
     'drops.apps.DropsConfig',
