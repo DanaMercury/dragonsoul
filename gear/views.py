@@ -71,3 +71,6 @@ def detail(request, item_id):
 		'stages' : stages,
 	}
 	return render(request, 'gear/detail.html', context)
+
+def splash(request):
+	return render(request, 'gear/splash.html', {})

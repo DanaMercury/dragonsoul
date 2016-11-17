@@ -1,0 +1,45 @@
+<html><head><title>DragonSoul Gear Calculator</title>
+	<script src="http://dragonsoul.s3.amazonaws.com/items.json"></script>
+	<script src="https://code.jquery.com/jquery-3.1.0.slim.min.js" integrity="sha256-cRpWjoSOw5KcyIOaZNo4i6fZ9tKPhYYb6i5T9RSVJG8=" crossorigin="anonymous"></script>
+	<style>
+		html { font-family: sans-serif; }
+		.color1 { color: #333333; }
+		.color2 { color: #10E310; }
+		.color3 { color: #107DB2; }
+		.color4 { color: #8C4BC6; }
+		.color5 { color: #F28200; }
+		.bg1 { background: rgba(237,237,238,.5); border: solid 1px #333333; }
+		.bg2 { background: rgba(16,227,16,.1); border: solid 1px #10E310; }
+		.bg3 { background: rgba(16,125,178,.1); border: solid 1px #107DB2; }
+		.bg4 { background: rgba(140,75,198,.1); border: solid 1px #8C4BC6; }
+		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
+		h2 { margin-top: 40px; }
+		div + h2 { margin-top: 0; }
+		#mainnav { position: fixed; top: 0; left: 0; height: 30px; }
+		#content { position: fixed; top: 40px; left: 0; bottom: 0; right: 0; padding: 1vw; overflow: scroll; }
+		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
+		.toggle:hover { color: grey; text-decoration: underline; } 
+	</style>
+	</head><body>
+		<div id="mainnav"><h1>Dragonsoul Info <a class="toggle" href="/gear">Gear Calculator</a> <a class="toggle" href="/gear/catalog">Items Catalog</a> <a class="toggle" href="/drops">Grind Optimizer</a></h1></div>
+	<div id="content">
+		<h2><a href="/gear">Gear Calculator</a></h1>
+		<p>Ever wonder how much grinding you have to do to get every hero to <span class="color5">Orange +4</span>? Brace yourself. It's a lot. But this tool can help you decide which scraps you need to hang onto and which ones can be sold or used for enchanting. Just update each of the heroes to reflect that items you've already equipped (including items you've already sacrificed for <span class="color5">Orange</span> Legendary Quests.</p>
+		<h2><a href="/gear/catalog">Items Catalog</a></h1>
+		<p>Need to look up info on any given item, scrap, scroll, etc.? Like where to get it, what's it used for, who can equip it, etc.? Look no further. We have plans to add more data here in the future like how much it is worth when enchanting.</p>
+		<h2><a href="/drops">Grind Optimizer</a></h1>
+		<p>Want to know where the best place is to get all the gear you currently need to complete specific heroes' current rarities? Pick the heroes you want to focus on and then input how many of the necessary scraps you need to complete their current rarities, hit "Optimize My Grind" and it will tell you which stages have the most efficient path forward for you. Note that marking gear complete for a given hero on either this tool or the <a href="/gear">Gear Calculator</a> will effect both
+		tools!</p>
+		<h2>Rune Optimizer <em>(Coming Soon!</em></h1>
+		<p>If you've ever needed help deciding which hero should get which rune, this tool will be for you. Simply quickly select which stats and what type of rune you have and we will show you which heroes would most benefit from that rune.</p>
+	</div>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-77025911-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+</body></html>
+

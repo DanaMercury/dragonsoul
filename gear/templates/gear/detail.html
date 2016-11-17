@@ -1,4 +1,4 @@
-<html><head><title>DragonSoul Gear Catalog: {{ item.name }}</title>
+<html><head><title>DragonSoul Items Catalog: {{ item.name }}</title>
 	<style>
 		html { font-family: sans-serif; }
 		.color1 { color: #333333; }
@@ -27,7 +27,7 @@
 	</style>
 </head><body class="bg{{ item.color }}">
 <img class="title" src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" />
-<h1 class="color{{ item.color }}">{{ item.name }} <a class="toggle" href="/gear/catalog">back to Item Catalog</a> <a class="toggle" href="/gear">back to Gear Calculator</a></h1>
+<h1 class="color{{ item.color }}">{{ item.name }} <a class="toggle" href="/gear/catalog">Items Catalog</a> <a class="toggle" href="/gear">Gear Calculator</a> <a class="toggle" href="/drops">Grind Optimizer</a></h1>
 <p><strong>Classification:</strong> {{ classification }}</p>
 {% if item.equippable %}
 	<p><strong>Requires Level:</strong> {{ item.level }}</p>

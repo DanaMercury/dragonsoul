@@ -18,12 +18,11 @@
 		h3 { clear: both; }
 		h3 { padding-top: 20px; }
 		#mainnav { position: fixed; top: 0; left: 0; height: 60px; }
-		#heronav { position: fixed; top: 60px; left: 0; height: 140px; padding: 1vw; overflow: scroll; }
-		#heronav p { margin: 0; }
+		#heronav { position: fixed; top: 60px; left: 0; height: 100px; padding: 1vw; overflow: scroll; }
 		#heronav ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
 		#heronav ul li { display: inline-block; padding: 0; }
-		#raritieslist { position: fixed; top: 230px; left: 0; bottom: 0; width: 50%; padding: 1vw; overflow: scroll; }
-		#itemlist { position: fixed; top: 230px; right: 0; bottom: 0; width: 50%; padding: 1vw; overflow: scroll; }
+		#raritieslist { position: fixed; top: 230px; left: 0; bottom: 0; width: 40%; padding: 1vw; overflow: scroll; }
+		#itemlist { position: fixed; top: 230px; right: 0; bottom: 0; width: 60%; padding: 1vw; overflow: scroll; }
 		#rarities img { width: 80px; clear: both; margin: 0 10px 10px 0; }
 		#rarities .rarity { width: 180px; margin: 10px; padding: 10px; float: left; position: relative; }
 		#rarities .rarity h3 { margin: 10px 0 15px 45px; padding: 0; }
@@ -43,13 +42,13 @@
 		#optimize { margin: 20px auto; width: 200px; display: block; }
 		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
 		.toggle:hover { color: grey; text-decoration: underline; } 
-		#itemside, #stageside { width: 50%; float: left; }
+		#itemside, #stageside { width: 40%; float: left; }
+		#stageside { width: 60%; }
 		.fresh { background: grey; }
 	</style>
 	</head><body>
-	<div id="mainnav"><h1>Grind Optimizer <a class="toggle" href="/gear">Gear Calculator</a> <a class="toggle" href="/gear/catalog">Gear Catalog</a> <a class="toggle" href="/drops">Grind Optimizer</a></h1></div>
+	<div id="mainnav"><h1>Grind Optimizer <a class="toggle" href="/gear">Gear Calculator</a> <a class="toggle" href="/gear/catalog">Items Catalog</a></h1></div>
 	<div id="heronav">
-		<p>Select heroes to optimize gear grinding to complete their current rarity.</p>
 		<ul id="herolist">
 			{% for hero in heroes %}
 			<li><img id="{{ hero.id }}" src="{{ hero.image.url }}" alt="{{ hero.name }}" title="{{ hero.name }}" onclick="$(this).toggleClass('selected'); schedule_scrap_checks();" /></li>
@@ -62,7 +61,7 @@
 	</div>
 	<div id="itemlist">
 		<h1>Grinding List</h1>
-		<p>To avoid double representation, this list is only the grindable items. For example, a Head Banger requires 20 Head Banger scraps, but this list will only show the 20 scraps, not the resulting Head Banger. Keep this in mind as you choose to buy, sell, or use items and scraps for enchantments.</p>
+		<p>After you enter the amount you have of the needed scraps and optimize your grind this will tell you where to go next to most efficiently get what you need. Don't forget that there are other sources for the items you might need like Boss Pits, etc.</p>
 		<div id="itemside">
 			<table>
 				<thead><tr><th>Item</th><th>Needed</th><th>Have</th></tr></thead>
@@ -73,7 +72,7 @@
 			<input id="optimize" type="submit" value="Optimize My Grind!" disabled="disabled" onclick="optimize()" />	
 			<div id="next">
 				{% if '' != next %}
-					<h2>Next Stage: {{ next.stage }}</h2>
+					<h2>{{ next.stage }}</h2>
 					<ul id="ingredients">
 						{% for ingredient in next.scraps %}
 							<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" title="{{ ingredient.item.name }}" alt="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
