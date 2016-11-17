@@ -17,7 +17,7 @@
 		#heroside { position: fixed; top: 70px; right: 0; bottom: 0; width: 35%; padding: 1vw; overflow: scroll; }
 		#heroside ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
 		#heroside ul li { display: inline-block; padding: 0; }
-		#heroside ul li img { width: 50px; margin: 0; opacity: 0.6; filter: grayscale(.7); cursor: pointer; }
+		#heroside ul li img { width: 50px; margin: 0; opacity: 0.4; filter: grayscale(.5); cursor: pointer; }
 		#heroside ul li img.match { opacity: 1; filter: grayscale(0); }
 		div h2:first-of-type { margin-top: 0; }
 		select { display: block; margin-bottom: 40px;}
@@ -99,7 +99,10 @@
 			var matches = []
 			if(collection != -1) {
 				matches = collections[collection]['heroes'];
+			} else {
+				matches = heroes.slice();
 			}
+
 
 			$('input.stat').each(function() {
 				if($(this).is(':checked')) {
@@ -121,6 +124,8 @@
 				$('#hero' + matches[i]).addClass('match');
 			}
 		}
+
+		update();
 	</script>
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
