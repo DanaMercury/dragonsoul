@@ -1,0 +1,138 @@
+<html><head><title>DragonSoul Runes Optimizer</title>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<style>
+		html { font-family: sans-serif; }
+		.color1 { color: #333333; }
+		.color2 { color: #10E310; }
+		.color3 { color: #107DB2; }
+		.color4 { color: #8C4BC6; }
+		.color5 { color: #F28200; }
+		.bg1 { background: rgba(237,237,238,.5); border: solid 1px #333333; }
+		.bg2 { background: rgba(16,227,16,.1); border: solid 1px #10E310; }
+		.bg3 { background: rgba(16,125,178,.1); border: solid 1px #107DB2; }
+		.bg4 { background: rgba(140,75,198,.1); border: solid 1px #8C4BC6; }
+		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
+		#mainnav { position: fixed; top: 0; left: 0; height: 60px; }
+		#runeside { position: fixed; top: 90px; left: 0; bottom: 0; width: 60%; padding: 1vw; overflow: scroll; }
+		#heroside { position: fixed; top: 90px; right: 0; bottom: 0; width: 35%; padding: 1vw; overflow: scroll; }
+		#heroside ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
+		#heroside ul li { display: inline-block; padding: 0; }
+		#heroside ul li img { width: 50px; margin: 0; opacity: 0.6; filter: grayscale(.7); cursor: pointer; }
+		#heroside ul li img.match { opacity: 1; filter: grayscale(0); }
+		select { display: block; margin-bottom: 40px;}
+		label { display: inline-block; margin-bottom: 10px; width: 32%; }
+		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
+		.toggle:hover { color: grey; text-decoration: underline; } 
+	</style>
+	</head><body>
+	<div id="mainnav"><h1>Grind Optimizer <a class="toggle" href="/gear">Gear Calculator</a> <a class="toggle" href="/gear/catalog">Items Catalog</a></h1></div>
+	<div id="runeside">
+		<h2>Collection</h2>
+		<select id="collection" onchange="update();">
+			<option value="-1">Select a Rune Collection</option>
+			{% for collection in collections %}
+			<option value="{{ collection.id }}">{{ collection.name }}</option>
+			{% endfor %}
+		</select>
+		<h2>Stats</h2>
+		{% for stat in stats %}
+		<label><input class="stat" type="checkbox" id="{{ stat.id }}" onchange="update();"> {{ stat.name }}</label>
+		{% endfor %}
+	</div>
+	<div id="heroside">
+		<ul>
+			{% for hero in heroes %}
+			<li><img id="hero{{ hero.id }}" src="{{ hero.image.url }}" alt="{{ hero.name }}" title="{{ hero.name }}" /></li>
+			{% endfor %}
+		</ul>
+	</div>
+	<script>
+		collections = {}
+		{% for collection in collections %}
+		collections[{{ collection.id | safe }}] = {
+			'id' : {{ collection.id | safe }},
+			'heroes' : []
+		};
+		/*
+			{% for hero in collection.heroes.all %}
+			collections[{{ collection.id | safe }}].heroes.push({{ hero.id | safe }});
+			{% endfor %}
+	   	*/
+		// fake data
+		{% for hero in heroes %}
+			if(Math.random() > .5) {
+				collections[{{ collection.id | safe }}].heroes.push({{ hero.id | safe }});
+			}
+		{% endfor %}
+		// end fake data
+		{% endfor %}
+
+		stats = {}
+		{% for stat in stats %}
+		stats[{{ stat.id | safe }}] = {
+			'id' : {{ stat.id | safe }},
+			'heroes' : []
+		};
+		/*
+			{% for hero in stat.heroes.all %}
+			stats[{{ stat.id | safe }}].heroes.push({{ hero.id | safe }});
+			{% endfor %}
+	   	*/
+		// fake data
+		{% for hero in heroes %}
+			if(Math.random() > .5) {
+				stats[{{ stat.id | safe }}].heroes.push({{ hero.id | safe }});
+			}
+		{% endfor %}
+		// end fake data
+		{% endfor %}
+
+		heroes = [];
+		{% for hero in heroes %}
+			heroes.push({{ hero.id | safe }});
+		{% endfor %}
+
+
+		function update() {
+			console.log('update');
+			var collection = $('#collection').val();
+			var matches = []
+			if(collection != -1) {
+				matches = collections[collection]['heroes'];
+			}
+
+			$('input.stat').each(function() {
+				if($(this).is(':checked')) {
+					var new_matches = []
+					var stat = stats[this.id];
+					for(var i = 0; i < stat.heroes.length; i++) {
+						console.log(stat.heroes[i]);
+						if(matches.indexOf(stat.heroes[i]) > -1) {
+							new_matches.push(stat.heroes[i]);
+						}
+					}
+					matches = new_matches.slice();
+				}
+			});
+
+			console.log(matches);
+
+			$("img").each(function() {
+				$(this).removeClass('match');
+			});
+			for(var i = 0; i < matches.length; i++) {
+				$('#hero' + matches[i]).addClass('match');
+			}
+		}
+	</script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-77025911-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+</body></html>
+
