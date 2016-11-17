@@ -13,12 +13,13 @@
 		.bg4 { background: rgba(140,75,198,.1); border: solid 1px #8C4BC6; }
 		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
 		#mainnav { position: fixed; top: 0; left: 0; height: 60px; }
-		#runeside { position: fixed; top: 90px; left: 0; bottom: 0; width: 60%; padding: 1vw; overflow: scroll; }
-		#heroside { position: fixed; top: 90px; right: 0; bottom: 0; width: 35%; padding: 1vw; overflow: scroll; }
+		#runeside { position: fixed; top: 70px; left: 0; bottom: 0; width: 60%; padding: 1vw; overflow: scroll; }
+		#heroside { position: fixed; top: 70px; right: 0; bottom: 0; width: 35%; padding: 1vw; overflow: scroll; }
 		#heroside ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
 		#heroside ul li { display: inline-block; padding: 0; }
 		#heroside ul li img { width: 50px; margin: 0; opacity: 0.6; filter: grayscale(.7); cursor: pointer; }
 		#heroside ul li img.match { opacity: 1; filter: grayscale(0); }
+		div h2:first-of-type { margin-top: 0; }
 		select { display: block; margin-bottom: 40px;}
 		label { display: inline-block; margin-bottom: 10px; width: 32%; }
 		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
@@ -94,7 +95,6 @@
 
 
 		function update() {
-			console.log('update');
 			var collection = $('#collection').val();
 			var matches = []
 			if(collection != -1) {
@@ -106,7 +106,6 @@
 					var new_matches = []
 					var stat = stats[this.id];
 					for(var i = 0; i < stat.heroes.length; i++) {
-						console.log(stat.heroes[i]);
 						if(matches.indexOf(stat.heroes[i]) > -1) {
 							new_matches.push(stat.heroes[i]);
 						}
@@ -114,8 +113,6 @@
 					matches = new_matches.slice();
 				}
 			});
-
-			console.log(matches);
 
 			$("img").each(function() {
 				$(this).removeClass('match');
