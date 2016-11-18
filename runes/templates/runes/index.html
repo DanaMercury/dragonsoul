@@ -55,7 +55,7 @@
 			'heroes' : []
 		};
 			{% for hero in collection.equippers.all %}
-			collections[{{ collection.id | safe }}].heroes.push({{ hero.id | safe }});
+			collections[{{ collection.id | safe }}].heroes.push({{ hero.hero.id | safe }});
 			{% endfor %}
 		{% endfor %}
 
@@ -67,7 +67,7 @@
 			'heroes' : []
 		};
 			{% for hero in stat.stat_users.all %}
-			stats[{{ stat.id | safe }}].heroes.push({{ hero.id | safe }});
+			stats[{{ stat.id | safe }}].heroes.push({{ hero.hero.id | safe }});
 			{% endfor %}
 		{% endfor %}
 
