@@ -71,7 +71,7 @@
 		};
 			{% for hero in stat.stat_users.all %}
 			stats[{{ stat.id | safe }}].heroes.push({{ hero.hero.id | safe }});
-				{% if hero.recommended }
+				{% if hero.recommended %}
 					stats[{{ stat.id | safe }}].heroes.push({{ hero.hero.id | safe }});
 				{% endif %}
 			{% endfor %}
