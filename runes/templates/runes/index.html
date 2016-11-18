@@ -17,7 +17,7 @@
 		#heroside { position: fixed; top: 70px; right: 0; bottom: 0; width: 35%; padding: 1vw; overflow: scroll; }
 		#heroside ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
 		#heroside ul li { display: inline-block; padding: 0; }
-		#heroside ul li img { width: 50px; margin: 0; opacity: 0.4; filter: grayscale(.5); cursor: pointer; }
+		#heroside ul li img { width: 50px; margin: 0; opacity: 0.4; filter: grayscale(.5); }
 		#heroside ul li img.match { opacity: 1; filter: grayscale(0); }
 		div h2:first-of-type { margin-top: 0; }
 		select { display: block; margin-bottom: 40px;}
@@ -54,38 +54,21 @@
 			'id' : {{ collection.id | safe }},
 			'heroes' : []
 		};
-		/*
-			{% for hero in collection.heroes.all %}
+			{% for hero in collection.equippers.all %}
 			collections[{{ collection.id | safe }}].heroes.push({{ hero.id | safe }});
 			{% endfor %}
-	   	*/
-		// fake data
-		{% for hero in heroes %}
-			if(Math.random() > .5) {
-				collections[{{ collection.id | safe }}].heroes.push({{ hero.id | safe }});
-			}
-		{% endfor %}
-		// end fake data
 		{% endfor %}
 
 		stats = {}
 		{% for stat in stats %}
 		stats[{{ stat.id | safe }}] = {
 			'id' : {{ stat.id | safe }},
+			'all' : {{ stat.all_benefit | lower }},
 			'heroes' : []
 		};
-		/*
-			{% for hero in stat.heroes.all %}
+			{% for hero in stat.stat_users.all %}
 			stats[{{ stat.id | safe }}].heroes.push({{ hero.id | safe }});
 			{% endfor %}
-	   	*/
-		// fake data
-		{% for hero in heroes %}
-			if(Math.random() > .5) {
-				stats[{{ stat.id | safe }}].heroes.push({{ hero.id | safe }});
-			}
-		{% endfor %}
-		// end fake data
 		{% endfor %}
 
 		heroes = [];
@@ -108,12 +91,14 @@
 				if($(this).is(':checked')) {
 					var new_matches = []
 					var stat = stats[this.id];
-					for(var i = 0; i < stat.heroes.length; i++) {
-						if(matches.indexOf(stat.heroes[i]) > -1) {
-							new_matches.push(stat.heroes[i]);
+					if(false == stat.all) {
+						for(var i = 0; i < stat.heroes.length; i++) {
+							if(matches.indexOf(stat.heroes[i]) > -1) {
+								new_matches.push(stat.heroes[i]);
+							}
 						}
+						matches = new_matches.slice();
 					}
-					matches = new_matches.slice();
 				}
 			});
 
