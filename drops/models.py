@@ -31,7 +31,7 @@ class Stage(models.Model):
 class Drop(models.Model):
 	#Gear dropped in a stage
 	stage = models.ForeignKey(Stage, on_delete = models.CASCADE, related_name='drops')
-	item = models.ForeignKey(Item, limit_choices_to={'recipe': None}, on_delete = models.CASCADE, null =True, related_name='drops')
+	item = models.ForeignKey(Item, limit_choices_to={'recipe': None}, on_delete = models.CASCADE, null = True, related_name='drops')
 
 	def __str__(self):
 		return self.stage.name + ' drops ' + self.item.name

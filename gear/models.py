@@ -1,6 +1,4 @@
 from django.db import models
-from stats.models import Stat
-
 
 class Item(models.Model):
 	"""The smallest denominator. Could be scraps, scrolls, or equippable items"""
@@ -47,6 +45,7 @@ class Ingredient(models.Model):
 
 class GearStat(models.Model):
 	"""Add Stat def"""
+	from stats.models import Stat
 	item = models.ForeignKey(Item, on_delete = models.CASCADE, related_name="stats")
 	stat = models.ForeignKey(Stat, on_delete = models.CASCADE)
 	quantity = models.IntegerField(null = True)
