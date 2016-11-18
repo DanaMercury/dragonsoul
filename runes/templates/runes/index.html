@@ -73,7 +73,7 @@
 			{% for hero in stat.stat_users.all %}
 			stats[{{ stat.id | safe }}].heroes.push({{ hero.hero.id | safe }});
 				{% if hero.recommended %}
-					stats[{{ stat.id | safe }}].heroes.push({{ hero.hero.id | safe }});
+					stats[{{ stat.id | safe }}].recommended.push({{ hero.hero.id | safe }});
 				{% endif %}
 			{% endfor %}
 		{% endfor %}
@@ -105,16 +105,11 @@
 								new_matches.push(stat.heroes[i]);
 							}
 						}
-						for(var i = 0; i < stat.recommendations.length; i++) {
-							if(0 == reccs.length || reccs.indexOf(stat.recommendations[i]) > -1) {
-								new_reccs.push(stat.recommendations[i]);
-							}
-						}
 						matches = new_matches.slice();
 					}
-					for(var i = 0; i < stat.recommendations.length; i++) {
-						if(0 == reccs.length || reccs.indexOf(stat.recommendations[i]) > -1) {
-							new_reccs.push(stat.recommendations[i]);
+					for(var i = 0; i < stat.recommended.length; i++) {
+						if(0 == reccs.length || reccs.indexOf(stat.recommended[i]) > -1) {
+							new_reccs.push(stat.recommended[i]);
 						}
 					}
 					reccs = new_reccs.slice();
@@ -122,14 +117,14 @@
 			});
 
 			$("img").each(function() {
-				$(this).removeClass('match recommendation');
+				$(this).removeClass('match recommended');
 			});
 			for(var i = 0; i < matches.length; i++) {
 				$('#hero' + matches[i]).addClass('match');
 			}
 			for(var i = 0; i < reccs.length; i++) {
 				if(matches.indexOf(reccs[i]) > -1) {
-					$('#hero' + matches[i]).addClass('recommendation');
+					$('#hero' + matches[i]).addClass('recommended');
 				}
 			}
 		}
