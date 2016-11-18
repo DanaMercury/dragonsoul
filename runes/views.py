@@ -5,9 +5,9 @@ from .models import Collection
 import copy
 
 def index(request):
-    heroes = Hero.objects.all()
-    stats = Stat.objects.all()
-    collections = Collection.objects.all()
+    heroes = Hero.objects.all().order_by('id')
+    stats = Stat.objects.all().order_by('name')
+    collections = Collection.objects.all().order_by('id')
     context = {
         'heroes' : heroes,
         'stats' : stats,
