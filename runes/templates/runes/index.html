@@ -23,7 +23,8 @@
 		select { display: block; margin-bottom: 40px;}
 		label { display: inline-block; margin-bottom: 10px; width: 32%; }
 		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
-		.toggle:hover { color: grey; text-decoration: underline; } 
+		.toggle:hover { color: grey; text-decoration: underline; }
+		.recommended { background: yellow; border: solid 1px gold; }
 	</style>
 	</head><body>
 	<div id="mainnav"><h1>Runes Optimizer <a class="toggle" href="/gear">Scraps Tracker</a> <a class="toggle" href="/drops">Grind Optimizer</a> <a class="toggle" href="/gear/catalog">Items Catalog</a></h1></div>
@@ -46,6 +47,7 @@
 			<li><img id="hero{{ hero.id }}" src="{{ hero.image.url }}" alt="{{ hero.name }}" title="{{ hero.name }}" /></li>
 			{% endfor %}
 		</ul>
+		<p class="recommended">Indicates Highly Recommended</p>
 	</div>
 	<script>
 		collections = {}
@@ -64,10 +66,14 @@
 		stats[{{ stat.id | safe }}] = {
 			'id' : {{ stat.id | safe }},
 			'all' : {{ stat.all_benefit | lower }},
-			'heroes' : []
+			'heroes' : [],
+			'recommended' : [],
 		};
 			{% for hero in stat.stat_users.all %}
 			stats[{{ stat.id | safe }}].heroes.push({{ hero.hero.id | safe }});
+				{% if hero.recommended }
+					stats[{{ stat.id | safe }}].heroes.push({{ hero.hero.id | safe }});
+				{% endif %}
 			{% endfor %}
 		{% endfor %}
 
@@ -79,17 +85,18 @@
 
 		function update() {
 			var collection = $('#collection').val();
-			var matches = []
+			var matches = [];
+			var reccs = [];
 			if(collection != -1) {
 				matches = collections[collection]['heroes'];
 			} else {
 				matches = heroes.slice();
 			}
 
-
 			$('input.stat').each(function() {
 				if($(this).is(':checked')) {
-					var new_matches = []
+					var new_matches = [];
+					var new_reccs = [];
 					var stat = stats[this.id];
 					if(false == stat.all) {
 						for(var i = 0; i < stat.heroes.length; i++) {
@@ -97,16 +104,32 @@
 								new_matches.push(stat.heroes[i]);
 							}
 						}
+						for(var i = 0; i < stat.recommendations.length; i++) {
+							if(0 == reccs.length || reccs.indexOf(stat.recommendations[i]) > -1) {
+								new_reccs.push(stat.recommendations[i]);
+							}
+						}
 						matches = new_matches.slice();
 					}
+					for(var i = 0; i < stat.recommendations.length; i++) {
+						if(0 == reccs.length || reccs.indexOf(stat.recommendations[i]) > -1) {
+							new_reccs.push(stat.recommendations[i]);
+						}
+					}
+					reccs = new_reccs.slice();
 				}
 			});
 
 			$("img").each(function() {
-				$(this).removeClass('match');
+				$(this).removeClass('match recommendation');
 			});
 			for(var i = 0; i < matches.length; i++) {
 				$('#hero' + matches[i]).addClass('match');
+			}
+			for(var i = 0; i < reccs.length; i++) {
+				if(matches.indexOf(reccs[i]) > -1) {
+					$('#hero' + matches[i]).addClass('recommendation');
+				}
 			}
 		}
 
