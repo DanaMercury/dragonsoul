@@ -22,6 +22,7 @@
 		div h2:first-of-type { margin-top: 0; }
 		select { display: block; margin-bottom: 40px;}
 		label { display: inline-block; margin-bottom: 10px; width: 32%; }
+		input[type="button"] { display: block; }
 		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
 		.toggle:hover { color: grey; text-decoration: underline; }
 		.recommended { background: yellow; border: solid 1px gold; }
@@ -41,6 +42,7 @@
 		{% for stat in stats %}
 		<label><input class="stat" type="checkbox" id="{{ stat.id }}" onchange="update();"> {{ stat.name }}</label>
 		{% endfor %}
+		<input type="button" onclick="wipe();" value="Reset" />
 	</div>
 	<div id="heroside">
 		<ul>
@@ -83,6 +85,13 @@
 			heroes.push({{ hero.id | safe }});
 		{% endfor %}
 
+		function wipe() {
+			$('#collection').val('-1');
+			$('input.stat').each(function() {
+				this.checked = false;
+			});
+			update();
+		}
 
 		function update() {
 			var collection = $('#collection').val();
