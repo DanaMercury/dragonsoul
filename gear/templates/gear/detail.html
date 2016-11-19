@@ -12,7 +12,7 @@
 		.bg4 { background: rgba(140,75,198,.1); border: solid 1px #8C4BC6; }
 		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
 		body.bg1, body.bg2, body.bg3, body.bg4, body.bg5, body.bg6 { border: none; }
-		img.title { width: 80px; float: left; margin: 0 10px 20px; 0; }
+		img.title { width: 80px; float: left; margin: 10px 10px 20px; }
 		h1 { padding: 20px 0 0; }
 		h2 { margin: 30px 0 5px; clear: both; }
 		p { clear: both }
@@ -24,79 +24,87 @@
 		ul.recipe li.none, ul.ingredients li.none, ul.heroes li.none { height: auto; }
 		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
 		.toggle:hover { color: grey; text-decoration: underline; } 
+		#mainnav { position: fixed; top: 0; left: 0; height: 100px; background: black; color: white; width: 100%; padding-top: -10px; }
+		#mainnav h1 { margin-top: 10px; }
+		#mainnav .toggle { color: #AAAAAA; }
+		#content { position: fixed; top: 110px; left: 0; padding: 1vw; bottom: 0; overflow-y: scroll; right: 0; }
 	</style>
 </head><body class="bg{{ item.color }}">
-<img class="title" src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" />
-<h1 class="color{{ item.color }}">{{ item.name }} <a class="toggle" href="/gear">Scraps Tracker</a> <a class="toggle" href="/runes">Runes Optimizer</a> <a class="toggle" href="/drops">Grind Optimizer</a> <a class="toggle" href="/gear/catalog">Items Catalog</a></h1>
-<p><strong>Classification:</strong> {{ classification }}</p>
-{% if item.equippable %}
-	<p><strong>Requires Level:</strong> {{ item.level }}</p>
-	{% if item.stats.all %}
-		<p><strong>Stats:</strong></p>
-		<ul>
-			{% for stat in item.stats.all %}
-				<li>{{ stat.quantity }} {{ stat.stat.name }}</li>
-			{% endfor %}
-		</ul>
-	{% endif %}
-{% endif %}
-<p><strong>Description:</strong> {{ item.description }}</p>
-<h2>Recipe</h2>
-<ul class="recipe">
-{% if item.recipe %}
-	{% for ingredient in item.recipe.ingredients.all %}
-		<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" alt="{{ ingredient.item.name }}" title="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
-	{% endfor %}
-{% else %}
-	<li class="none">None</li>
-{% endif %}
-</ul>
-<h2>Used In Recipes For</h2>
-<ul class="ingredients">
-{% if item.ingredients.all %}
-	{% for ingredient in item.ingredients.all %}
-		<li class="bg{{ ingredient.recipe.item.color }} color{{ ingredient.recipe.item.color }}"><a href="/gear/catalog/{{ ingredient.recipe.item.id }}"><img src="{{ ingredient.recipe.item.image.url }}" alt="{{ ingredient.recipe.item.name }}" title="{{ ingredient.recipe.item.name }}" /></a></li>
-	{% endfor %}
-{% else %}
-	<li class="none">None</li>
-{% endif %}
-</ul>
-<h2>Equipped By</h2>
-<ul class="heroes">
-{% if item.gear1.all or item.gear2.all or item.gear3.all or item.gear4.all or item.gear5.all or item.gear6.all %}
-	{% for rarity in rarities %}
-		{% if rarity.gear1.id == item.id %}
-			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 1)</li>
-		{% elif rarity.gear2.id == item.id %}
-			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 2)</li>
-		{% elif rarity.gear3.id == item.id %}
-			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 3)</li>
-		{% elif rarity.gear4.id == item.id %}
-			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 4)</li>
-		{% elif rarity.gear5.id == item.id %}
-			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 5)</li>
-		{% elif rarity.gear6.id == item.id %}
-			<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 6)</li>
-		{% endif %}
-	{% endfor %}
-{% else %}
-	<li class="none">None</li>
-{% endif %}
-</ul>
-<h2>Grindable At</h2>
-<ul class="stages">
-{% if item.drops.all %}
-	{% for stage in stages %}
-		{% for drop in stage.drops.all %}
-			{% if drop.item.id == item.id %}
-				<li>Chapter {{ stage.chapter.name }} &#x2014; Stage {{ stage.level }}: {{ stage.name }}</li>
+	<div id="mainnav">
+		<img class="title" src="{{ item.image.url }}" alt="{{ item.name }}" title="{{ item.name }}" />
+		<h1 class="color{{ item.color }}">{{ item.name }} <a class="toggle" href="/gear">Scraps Tracker</a> <a class="toggle" href="/runes">Runes Optimizer</a> <a class="toggle" href="/drops">Grind Optimizer</a> <a class="toggle" href="/gear/catalog">Items Catalog</a></h1>
+	</div>
+	<div id="content">
+		<p><strong>Classification:</strong> {{ classification }}</p>
+		{% if item.equippable %}
+			<p><strong>Requires Level:</strong> {{ item.level }}</p>
+			{% if item.stats.all %}
+				<p><strong>Stats:</strong></p>
+				<ul>
+					{% for stat in item.stats.all %}
+						<li>{{ stat.quantity }} {{ stat.stat.name }}</li>
+					{% endfor %}
+				</ul>
 			{% endif %}
-		{% endfor %}
-	{% endfor %}
-{% else %}
-	<li>None</li>
-{% endif %}
-</ul>
+		{% endif %}
+		<p><strong>Description:</strong> {{ item.description }}</p>
+		<h2>Recipe</h2>
+		<ul class="recipe">
+		{% if item.recipe %}
+			{% for ingredient in item.recipe.ingredients.all %}
+				<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" alt="{{ ingredient.item.name }}" title="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
+			{% endfor %}
+		{% else %}
+			<li class="none">None</li>
+		{% endif %}
+		</ul>
+		<h2>Used In Recipes For</h2>
+		<ul class="ingredients">
+		{% if item.ingredients.all %}
+			{% for ingredient in item.ingredients.all %}
+				<li class="bg{{ ingredient.recipe.item.color }} color{{ ingredient.recipe.item.color }}"><a href="/gear/catalog/{{ ingredient.recipe.item.id }}"><img src="{{ ingredient.recipe.item.image.url }}" alt="{{ ingredient.recipe.item.name }}" title="{{ ingredient.recipe.item.name }}" /></a></li>
+			{% endfor %}
+		{% else %}
+			<li class="none">None</li>
+		{% endif %}
+		</ul>
+		<h2>Equipped By</h2>
+		<ul class="heroes">
+		{% if item.gear1.all or item.gear2.all or item.gear3.all or item.gear4.all or item.gear5.all or item.gear6.all %}
+			{% for rarity in rarities %}
+				{% if rarity.gear1.id == item.id %}
+					<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 1)</li>
+				{% elif rarity.gear2.id == item.id %}
+					<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 2)</li>
+				{% elif rarity.gear3.id == item.id %}
+					<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 3)</li>
+				{% elif rarity.gear4.id == item.id %}
+					<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 4)</li>
+				{% elif rarity.gear5.id == item.id %}
+					<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 5)</li>
+				{% elif rarity.gear6.id == item.id %}
+					<li class="bg{{ rarity.color }} color{{ rarity.color }}"><a href="/gear/#{{ rarity.hero.id }}"><img src="{{ rarity.hero.image.url }}" alt="{{ rarity.hero.name }}" title="{{ rarity.hero.name }}" /></a><br />{{ rarity }}<br />(slot 6)</li>
+				{% endif %}
+			{% endfor %}
+		{% else %}
+			<li class="none">None</li>
+		{% endif %}
+		</ul>
+		<h2>Grindable At</h2>
+		<ul class="stages">
+		{% if item.drops.all %}
+			{% for stage in stages %}
+				{% for drop in stage.drops.all %}
+					{% if drop.item.id == item.id %}
+						<li>Chapter {{ stage.chapter.name }} &#x2014; Stage {{ stage.level }}: {{ stage.name }}</li>
+					{% endif %}
+				{% endfor %}
+			{% endfor %}
+		{% else %}
+			<li>None</li>
+		{% endif %}
+		</ul>
+	</div>
 	<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
