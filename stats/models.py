@@ -15,6 +15,7 @@ class Stat_User(models.Model):
 	
 	stat = models.ForeignKey(Stat, on_delete = models.CASCADE, related_name='stat_users')
 	hero = models.ForeignKey(Hero, on_delete = models.CASCADE, null = True, related_name='stat_users')
+	recommended = models.BooleanField(default = False)
 	
 	def __str__(self):
 		return self.hero.name + ' benefits from equipping runes with ' + self.stat.name
