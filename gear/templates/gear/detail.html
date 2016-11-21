@@ -96,7 +96,7 @@
 			{% for stage in stages %}
 				{% for drop in stage.drops.all %}
 					{% if drop.item.id == item.id %}
-						<li>Chapter {{ stage.chapter.name }} &#x2014; Stage {{ stage.level }}: {{ stage.name }}</li>
+						<li>{{ stage }}</li>
 					{% endif %}
 				{% endfor %}
 			{% endfor %}

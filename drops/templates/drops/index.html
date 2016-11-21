@@ -39,6 +39,7 @@
 		table tr, table td { padding: 5px; }
 		#items input { width: 50px; }
 		#optimize { margin: 20px auto; width: 200px; display: block; }
+		.chapter_label { margin: 0 auto; display: block; }
 		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
 		.toggle:hover { color: grey; text-decoration: underline; } 
 		#itemside, #stageside { width: 40%; float: left; }
@@ -71,6 +72,11 @@
 			</table>
 		</div>
 		<div id="stageside">
+			<label class="chapter_label">Maximum Chapter Unlocked: <select id="max_chapter">
+				{% for chapter in chapters %}
+					<option value="{{ chapter.id }}">{{ chapter }}</option>
+				{% endfor %}
+			</select></label>
 			<input id="optimize" type="submit" value="Optimize My Grind!" disabled="disabled" onclick="optimize()" />	
 			<div id="next">
 				{% if '' != next %}
@@ -241,7 +247,7 @@
 		}
 
 		function optimize() {
-			var deets = '';
+			var deets = $('#max_chapter').val() + '/';
 			$('#items tr').each(function() {
 				if(parseInt($(this.children[1])[0].innerHTML) > parseInt($(this.children[2].children[0].children[0]).val())) {
 					deets += $(this.children[0].children[0].children[0]).attr('name') + ':';
