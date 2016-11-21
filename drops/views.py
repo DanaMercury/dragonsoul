@@ -26,7 +26,7 @@ def index(request, max_chapter = 0, ingredients_raw = ''):
             values = pair.split(':');
             ingredients.append({ 'item' : int(values[0]), 'quantity' : int(values[1]) });
         ingredients = sorted(ingredients, key=lambda k: k['quantity'], reverse=True)
-        drops = Drop.objects.filter(item = ingredients[0]['item']).filter(stage__chapter__id__lt = max_chapter).order_by('-id')
+        drops = Drop.objects.filter(item = ingredients[0]['item']).filter(stage__chapter__id__lte = max_chapter).order_by('-id')
         if 1 != len(drops):
             for ingredient in ingredients[1:]:
                 drops_new = []
