@@ -270,7 +270,10 @@
 					$('#herolist #' + v).addClass('selected');
 				});
 			}
-			$('#max_chapter').val(localStorage.getItem('chapter'));
+			var chapter = localStorage.getItem('chapter');
+			if(null != chapter) {
+				$('#max_chapter').val(chapter);
+			}
 			schedule_scrap_checks();
 		}
 		calculate_scheduler = null;
