@@ -259,6 +259,7 @@
 				}
 			});
 			deets = deets.replace(/_$/, '');
+			localStorage.setItem('chapter', $('#max_chapter').val());
 			$(location).attr('href', '/drops/' + deets)
 		}
 
@@ -269,9 +270,9 @@
 					$('#herolist #' + v).addClass('selected');
 				});
 			}
+			$('#max_chapter').val(localStorage.getItem('chapter'));
 			schedule_scrap_checks();
 		}
-
 		calculate_scheduler = null;
 		remember();
 	</script>
