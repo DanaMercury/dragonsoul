@@ -79,6 +79,10 @@
 			</select></label>
 			<input id="optimize" type="submit" value="Optimize My Grind!" disabled="disabled" onclick="optimize()" />	
 			<div id="next">
+				{% if True == failed %}
+					<h2>Error</h2>
+					<p>Sorry, the chapter you've selected is too low to satisfy this request.</p>
+				{% endif %}
 				{% if '' != next %}
 					<h2>{{ next.stage }}</h2>
 					<ul id="ingredients">

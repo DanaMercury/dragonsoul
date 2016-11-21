@@ -16,6 +16,7 @@ def index(request, max_chapter = 0, ingredients_raw = ''):
         'quests'
     )
     next_step = ''
+    failed = False
     ingredients = ''
     drops = ''
     if('' != ingredients_raw):
@@ -31,7 +32,6 @@ def index(request, max_chapter = 0, ingredients_raw = ''):
                 drops_new = []
                 for drop in drops:
                     for item in drop.stage.drops.all():
-                        #if item.stage.chapter.id <= max_chapter and item.item.id == ingredient['item']:
                         if item.item.id == ingredient['item']:
                             drops_new.append(drop)
                             break
@@ -39,21 +39,27 @@ def index(request, max_chapter = 0, ingredients_raw = ''):
                     drops = copy.deepcopy(drops_new)
                     if 1 == len(drops_new):
                         break
-        stage = drops[0].stage
-        scraps = []
-        drop_items = {}
-        for drop in stage.drops.all():
-            drop_items[drop.item.id] = drop.item
-        for ingredient in ingredients:
-            if ingredient['item'] in drop_items:
-                scraps.append({'item' : drop_items[ingredient['item']], 'quantity' : ingredient['quantity']})
-        next_step = {
-            'stage' : stage,
-            'scraps' : scraps
-        }
+        try:
+            stage = drops[0].stage
+            scraps = []
+            drop_items = {}
+            for drop in stage.drops.all():
+                drop_items[drop.item.id] = drop.item
+            for ingredient in ingredients:
+                if ingredient['item'] in drop_items:
+                    scraps.append({'item' : drop_items[ingredient['item']], 'quantity' : ingredient['quantity']})
+            next_step = {
+                'stage' : stage,
+                'scraps' : scraps
+            }
+        except IndexError:
+            failed = True
+            pass
+
     context = {
         'heroes' : heroes,
         'next' : next_step,
         'chapters' : chapters,
+        'failed' : failed
     }
     return render(request, 'drops/index.html', context)
