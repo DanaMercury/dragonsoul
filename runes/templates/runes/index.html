@@ -12,11 +12,11 @@
 		.bg3 { background: rgba(16,125,178,.1); border: solid 1px #107DB2; }
 		.bg4 { background: rgba(140,75,198,.1); border: solid 1px #8C4BC6; }
 		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
-		#runeside { position: fixed; top: 70px; left: 0; bottom: 0; width: 60%; padding: 1vw; overflow: scroll; }
-		#heroside { position: fixed; top: 70px; right: 0; bottom: 0; width: 35%; padding: 1vw; overflow: scroll; }
+		#runeside { position: fixed; top: 70px; left: 0; bottom: 0; width: 52%; padding: 1vw; overflow: scroll; }
+		#heroside { position: fixed; top: 70px; right: 0; bottom: 0; width: 44%; padding: 1vw; overflow: scroll; }
 		#heroside ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
 		#heroside ul li { display: inline-block; padding: 0; }
-		#heroside ul li img { width: 50px; margin: 0; opacity: 0.4; filter: grayscale(.5); }
+		#heroside ul li img { width: 50px; margin: 0; opacity: 0.4; filter: grayscale(.5); padding: 5px; }
 		#heroside ul li img.match { opacity: 1; filter: grayscale(0); }
 		div h2:first-of-type { margin-top: 0; }
 		select { display: block; margin-bottom: 40px;}
@@ -27,9 +27,9 @@
 		#mainnav { position: fixed; top: 0; left: 0; height: 60px; background: black; color: white; width: 100%; padding-top: -10px; }
 		#mainnav h1 { margin-top: 10px; }
 		#mainnav .toggle { color: #AAAAAA; }
-		.bronze { background: #8C7853; border: dotted 1px #663033; }
-		.silver { background: #C0C0C0; border: dashed 1px #C9CFC9; }
-		.gold { background: #D9D919; border: solid 1px #C9960C; }
+		.bronze { background: #8C7853; }
+		.silver { background: #C0C0C0; }
+		.gold { background: #D9D919; }
 		p.recommended { display: block; padding: 5px; margin: 1px; }
 	</style>
 	</head><body>
@@ -54,9 +54,9 @@
 			<li><img id="hero{{ hero.id }}" src="{{ hero.image.url }}" alt="{{ hero.name }}" title="{{ hero.name }}" /></li>
 			{% endfor %}
 		</ul>
-		<p class="recommended bronze">Indicates Recommended</p>
-		<p class="recommended silver">Indicates Strongly Recommended</p>
 		<p class="recommended gold">Indicates Extremely Recommended</p>
+		<p class="recommended silver">Indicates Strongly Recommended</p>
+		<p class="recommended bronze">Indicates Recommended</p>
 	</div>
 	<script>
 		collections = {}
