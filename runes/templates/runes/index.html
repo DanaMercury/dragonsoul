@@ -30,7 +30,7 @@
 		.bronze { background: #8C7853; border: dotted 1px #663033; }
 		.silver { background: #C0C0C0; border: dashed 1px #C9CFC9; }
 		.gold { background: #D9D919; border: solid 1px #C9960C; }
-		p.recommended { display: inline-block; padding: 5px; }
+		p.recommended { display: block; padding: 5px; margin: 1px; }
 	</style>
 	</head><body>
 	<div id="mainnav"><h1>Runes Optimizer <a class="toggle" href="/gear">Scraps Tracker</a> <a class="toggle" href="/drops">Grind Optimizer</a> <a class="toggle" href="/gear/catalog">Items Catalog</a></h1></div>
@@ -138,7 +138,7 @@
 				$('#hero' + matches[i]).addClass('match');
 			}
 			$.each(reccs, function(k,v) {
-				if(matches.indexOf(k) > -1) {
+				if(matches.indexOf(parseInt(k)) > -1) {
 					$('#hero' + k).addClass('recommended');
 					if(3 > v) {
 						$('#hero' + k).addClass('bronze');
