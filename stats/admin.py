@@ -17,6 +17,7 @@ class StatAdmin(admin.ModelAdmin):
 		(None, {'fields': ['name', 'all_benefit']}),
 	]
 	inlines = [Stat_UserInline]
+	list_display = ('name', 'all_benefit',)
 	search_fields = ['name']
 	ordering = ['name']
 
