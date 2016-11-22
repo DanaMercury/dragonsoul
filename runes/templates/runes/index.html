@@ -27,9 +27,9 @@
 		#mainnav { position: fixed; top: 0; left: 0; height: 60px; background: black; color: white; width: 100%; padding-top: -10px; }
 		#mainnav h1 { margin-top: 10px; }
 		#mainnav .toggle { color: #AAAAAA; }
-		.bronze { background: #F092A5; border: solid 1px #BB1924;  }
-		.silver { background: #EE6C81; border: solid 1px #BB1924; }
-		.gold { background: #BB1924; border: solid 1px #BB1924; }
+		.tertiary { background: yellow; }
+		.secondary { background: orange; }
+		.primary { background: red; }
 		p.recommended { display: block; padding: 5px; margin: 1px; }
 	</style>
 	</head><body>
@@ -54,9 +54,9 @@
 			<li><img id="hero{{ hero.id }}" src="{{ hero.image.url }}" alt="{{ hero.name }}" title="{{ hero.name }}" /></li>
 			{% endfor %}
 		</ul>
-		<p class="recommended gold">Indicates Extremely Recommended</p>
-		<p class="recommended silver">Indicates Very Strongly Recommended</p>
-		<p class="recommended bronze">Indicates Highly Recommended</p>
+		<p class="recommended primary">Indicates Extremely Recommended</p>
+		<p class="recommended secondary">Indicates Very Strongly Recommended</p>
+		<p class="recommended tertiary">Indicates Highly Recommended</p>
 	</div>
 	<script>
 		collections = {}
@@ -132,7 +132,7 @@
 			});
 
 			$("img").each(function() {
-				$(this).removeClass('match recommended bronze gold silver');
+				$(this).removeClass('match recommended tertiary primary secondary');
 			});
 			for(var i = 0; i < matches.length; i++) {
 				$('#hero' + matches[i]).addClass('match');
@@ -141,11 +141,11 @@
 				if(matches.indexOf(parseInt(k)) > -1) {
 					$('#hero' + k).addClass('recommended');
 					if(3 > v) {
-						$('#hero' + k).addClass('bronze');
+						$('#hero' + k).addClass('tertiary');
 					} else if(5 > v) {
-						$('#hero' + k).addClass('silver');
+						$('#hero' + k).addClass('secondary');
 					} else {
-						$('#hero' + k).addClass('gold');
+						$('#hero' + k).addClass('primary');
 					}
 				}
 			});
