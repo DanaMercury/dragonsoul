@@ -4,7 +4,7 @@ from heroes.models import Hero, Rarity
 from .models import Drop, Chapter
 import copy
 
-def index(request, max_chapter = 0, ingredients_raw = ''):
+def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
     chapters = Chapter.objects.all().order_by('-number')
     heroes = Hero.objects.all().prefetch_related(
         'rarities__gear1',
@@ -15,50 +15,37 @@ def index(request, max_chapter = 0, ingredients_raw = ''):
         'rarities__gear6',
         'quests'
     )
-    next_step = ''
+    next_steps = ''
     failed = False
     ingredients = ''
+    candidates = ''
     drops = ''
-    if('' != ingredients_raw):
+    if('' != ingredients_raw and '' != candidates_raw):
         sets = ingredients_raw.split('_')
         ingredients = []
         for pair in sets:
             values = pair.split(':');
-            ingredients.append({ 'item' : int(values[0]), 'quantity' : int(values[1]) });
-        ingredients = sorted(ingredients, key=lambda k: k['quantity'], reverse=True)
-        drops = Drop.objects.filter(item = ingredients[0]['item']).filter(stage__chapter__id__lte = max_chapter).order_by('-id')
-        if 1 != len(drops):
-            for ingredient in ingredients[1:]:
-                drops_new = []
-                for drop in drops:
-                    for item in drop.stage.drops.all():
-                        if item.item.id == ingredient['item']:
-                            drops_new.append(drop)
-                            break
-                if 0 < len(drops_new):
-                    drops = copy.deepcopy(drops_new)
-                    if 1 == len(drops_new):
-                        break
-        try:
-            stage = drops[0].stage
-            scraps = []
-            drop_items = {}
-            for drop in stage.drops.all():
-                drop_items[drop.item.id] = drop.item
-            for ingredient in ingredients:
-                if ingredient['item'] in drop_items:
-                    scraps.append({'item' : drop_items[ingredient['item']], 'quantity' : ingredient['quantity']})
-            next_step = {
-                'stage' : stage,
-                'scraps' : scraps
-            }
-        except IndexError:
-            failed = True
-            pass
+            ingredients.append({ 'item_id' : int(values[0]), 'quantity' : int(values[1]) })
+        sets = candidates_raw.split('_')
+        candidates = []
+        for pair in sets:
+            values = pair.split(':');
+            candidates.append({ 'hero_id' : int(values[0]), 'item_id' : int(values[1]) })
+
+        # YOUR CODE GOES HERE
+
+
+
+
+        # END OF YOUR CODE	
+
+        # MAKE SURE YOU HAVE CREATED A LIST OF DICTIONARIES CALLED 'next_steps'
+        # EACH DICTIONARY SHOULD HAVE THIS FORMAT:
+        # { 'stage' : STAGE_ID, 'scraps' : [{'item' : ITEM_OBJECT, 'quantity' : NUMBER_NEEDED}, ...] }
 
     context = {
         'heroes' : heroes,
-        'next' : next_step,
+        'next' : next_steps,
         'chapters' : chapters,
         'failed' : failed
     }

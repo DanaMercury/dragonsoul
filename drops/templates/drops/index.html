@@ -84,12 +84,14 @@
 					<p>Sorry, the chapter you've selected is too low to satisfy this request.</p>
 				{% endif %}
 				{% if '' != next %}
-					<h2>{{ next.stage }}</h2>
-					<ul id="ingredients">
-						{% for ingredient in next.scraps %}
-							<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" title="{{ ingredient.item.name }}" alt="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
-						{% endfor %}
-					</ul>
+					{% for deets in next %}
+						<h2>{{ deets.stage }}</h2>
+						<ul id="ingredients">
+							{% for ingredient in deets.scraps %}
+								<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" title="{{ ingredient.item.name }}" alt="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
+							{% endfor %}
+						</ul>
+					{% endfor %}
 				{% endif %}
 			</div>
 		</div>
@@ -253,14 +255,19 @@
 		function optimize() {
 			var deets = $('#max_chapter').val() + '/';
 			$('#items tr').each(function() {
-				if(parseInt($(this.children[1])[0].innerHTML) > parseInt($(this.children[2].children[0].children[0]).val())) {
-					deets += $(this.children[0].children[0].children[0]).attr('name') + ':';
-					deets += (parseInt($(this.children[1])[0].innerHTML) - parseInt($(this.children[2].children[0].children[0]).val())) + '_';
+				deets += $(this.children[0].children[0].children[0]).attr('name') + ':';
+				deets += $(this.children[2].children[0].children[0]).val() + '_';
+			});
+			deets = deets.replace(/_$/, '/');
+			$('#rarities li img').each(function() {
+				if(!$(this).hasClass('complete')) {
+					deets += this.id.replace(/_/g, ':').replace(/:[0-9]+:/, ':') + '_';
 				}
 			});
 			deets = deets.replace(/_$/, '');
 			localStorage.setItem('chapter', $('#max_chapter').val());
-			$(location).attr('href', '/drops/' + deets)
+			$(location).attr('href', '/drops/' + deets);
+
 		}
 
 		function remember() {
