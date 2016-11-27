@@ -155,5 +155,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'failed' : failed,
 		'debug' : debug,
 		'candidates' : candidates,
+		'sets' : sets
 	}
 	return render(request, 'drops/index.html', context)
