@@ -30,7 +30,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		for pair in sets:
 			values = pair.split(':');
 			ingredients[values[0]] = { 'item_id' : int(values[0]), 'quantity' : int(values[1]) }
-		sets = candidates_raw.split('@')
+		sets = candidates_raw.split('__')
 		candidates = []
 		for pair in sets:
 			values = pair.split(':');
@@ -43,11 +43,11 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 			most = 0
 			for candidate in winners:
 				points = 0
-				for stat in candidate.item.stats:
-					if stat.id == candidate.hero.primary:
+				for stat in candidate['item'].stats.all():
+					if stat.id == candidate['hero'].primary:
 						points = points + 4
 					else:
-						for recc in candidate.hero.stat_users:
+						for recc in candidate['hero'].stat_users.all():
 							if stat.id == recc.stat.id:
 								if True == recc.recommended:
 									points = points + 3
@@ -69,11 +69,11 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				most = 0
 				for candidate in winners:
 					points = 0
-					for stat in candidate.item.stats:
-						if stat.id == candidate.hero.primary:
+					for stat in candidate['item'].stats.all():
+						if stat.id == candidate['hero']primary:
 							points = points + (4 * stat.quantity)
 						else:
-							for recc in candidate.hero.stat_users:
+							for recc in candidate['hero']stat_users.all():
 								if stat.id == recc.stat.id:
 									if True == recc.recommended:
 										points = points + (3 * stat.quantity)
@@ -95,7 +95,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 					least = 9999999999999999
 					for candidate in winners:
 						count = 0
-						item = items[candidate.unique_id]
+						item = items[candidate['unique_id']]
 						for scrap in item:
 							count = count + scrap.total
 						if count not in new_winners:
