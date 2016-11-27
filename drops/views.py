@@ -62,7 +62,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 						if points > most:
 							most = points
 						break
-			debug['first'] = points
+			debug['first'] = most
 			winners = copy.deepcopy(new_winners[most])
 			if 1 != len(winners):
 				new_winners = {}
@@ -88,7 +88,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 							if points > most:
 								most = points
 							break
-				debug['second'] = points
+				debug['second'] = most
 				winners = copy.deepcopy(new_winners[most])
 				if 1 != len(winners):
 					new_winners = {}
@@ -103,7 +103,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 						new_winners[count].append(candidate)
 						if count < least:
 							least = count
-					debug['third'] = count
+					debug['third'] = least
 					winners = copy.deepcopy(new_winners[least])
 		winner = winners[0]
 		covered = []
