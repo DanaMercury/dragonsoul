@@ -97,7 +97,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 						count = 0
 						item = items[candidate['unique_id']]
 						for scrap in item:
-							count = count + scrap['total']
+							count = count + item[scrap]['total']
 						if count not in new_winners:
 							new_winners[count] = []
 						new_winners[count].append(candidate)
