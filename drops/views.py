@@ -134,7 +134,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 			covered = []
 			for stage in stages:
 				scraps = []
-				stage = Stage.objects.get(id=stage).prefetch_related('drops')
+				stage = Stage.objects.get(id=stage)
 				for drop in stage.drops.all():
 					if drop.item.id in needed_ids and drop.item.id not in covered:
 						covered.append(drop.item.id)
