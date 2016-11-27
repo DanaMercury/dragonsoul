@@ -105,8 +105,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		needed = items[winner['unique_id']]
 		needed_ids = list(needed.keys())
 		stages = []
-		debug1 = []
-		debug2 = []
 		for item_id in needed_ids:
 			if item_id not in covered and ingredients[item_id]['quantity'] < needed[item_id]['total']:
 				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-id').prefetch_related('stage__drops')
@@ -127,8 +125,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 					if drops[0].stage.id not in stages:
 						stages.append(stage.id)
 					for drop in stage.drops.all():
-						debug1.append(drop.item.id)
-						if drop.item.id in needed_ids and drop.item.id not in covered:
+						if str(drop.item.id) in needed_ids and drop.item.id not in covered:
 							covered.append(drop.item.id)
 				else:
 					failed = True
@@ -139,8 +136,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				scraps = []
 				stage = Stage.objects.get(id=stage)
 				for drop in stage.drops.all():
-					debug2.append(drop.item.id)
-					if drop.item.id in needed_ids and drop.item.id not in covered:
+					if str(drop.item.id) in needed_ids and drop.item.id not in covered:
 						covered.append(drop.item.id)
 						quantity = needed[drop.item.id]['total'] - ingredients[drop.item.id].quantity
 						if 0 < quantity:
@@ -153,9 +149,5 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'next' : next_steps,
 		'chapters' : chapters,
 		'failed' : failed,
-		'covered' : covered,
-		'needed_ids' : needed_ids,
-		'debug1' : debug1,
-		'debug2' : debug2
 	}
 	return render(request, 'drops/index.html', context)
