@@ -4,6 +4,7 @@ from heroes.models import Hero, Rarity
 from .models import Drop, Chapter
 import copy
 import json
+import urllib
 
 def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 	chapters = Chapter.objects.all().order_by('-number')
@@ -26,13 +27,14 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		ingredients = {}
 		for pair in sets:
 			values = pair.split(':');
-			ingredients[values[0]].append({ 'item_id' : int(values[0]), 'quantity' : int(values[1]) })
+			ingredients[values[0]] = { 'item_id' : int(values[0]), 'quantity' : int(values[1]) }
 		sets = candidates_raw.split('#')
 		candidates = []
 		for pair in sets:
 			values = pair.split(':');
-			candidates.append({ 'hero' : Hero.objects.filter(id=int(values[0])), 'item' : Item.objects.filter(id=int(values[1])), 'unique_id' : int(values[2]) })
-		items = json.load(open('http://dragonsoul.s3.amazonaws.com/items.json'))
+			candidates.append({ 'hero' : Hero.objects.filter(id=int(values[0])), 'item' : Item.objects.filter(id=int(values[1])), 'unique_id' : values[2] })
+		json_data = urllib.request.urlopen('http://dragonsoul.s3.amazonaws.com/items.json').read()
+		items = json.loads(json_data.decode('utf-8').replace('items = ', '').replace(';', ''))
 		winners = copy.deepcopy(candidates)
 		if 1 != len(winners):
 			new_winners = {}
@@ -100,12 +102,12 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 					winners = copy.deepcopy(new_winners[least])
 		winner = winners[0]	
 		covered = []
-		needed = items[winner.unique_id]
+		needed = items[winner['unique_id']]
 		needed_ids = list(needed.keys())
 		stages = []
-		for item in needed:
-			if item.id not in covered and ingredients[item.id].quantity < item.total:
-				drops = Drop.objects.filter(item = item.id).filter(stage__chapter__id__lte = max_chapter).order_by('-id').prefetch_related('stage__drops')
+		for item_id in needed_ids:
+			if item_id not in covered and ingredients[item_id]['quantity'] < needed[item_id]['total']:
+				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-id').prefetch_related('stage__drops')
 				if 0 < len(drops):
 					if 1 != len(drops):
 						for ingredient in ingredients:
@@ -136,7 +138,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				for drop in stage.drops.all():
 					if drop.item.id in needed_ids and drop.item.id not in covered:
 						covered.append(drop.item.id)
-						quantity = needed[drop.item.id].total - ingredients[drop.item.id].quantity
+						quantity = needed[drop.item.id]['total'] - ingredients[drop.item.id].quantity
 						if 0 < quantity:
 							scraps.append({'item' : drop.item, 'quantity' : quantity})
 				next_steps.stages.append({'stage' : stage, 'scraps' : scraps})
