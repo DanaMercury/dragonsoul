@@ -36,6 +36,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		json_data = urllib.request.urlopen('http://dragonsoul.s3.amazonaws.com/items.json').read()
 		items = json.loads(json_data.decode('utf-8').replace('items = ', '').replace(';', ''))
 		winners = copy.deepcopy(candidates)
+                debug = {}
 		if 1 != len(winners):
 			new_winners = {}
 			most = 0
@@ -60,6 +61,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 						if points > most:
 							most = points
 						break
+                        debug['first'] = points
 			winners = copy.deepcopy(new_winners[most])
 			if 1 != len(winners):
 				new_winners = {}
@@ -85,6 +87,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 							if points > most:
 								most = points
 							break
+                                debug['second'] = points
 				winners = copy.deepcopy(new_winners[most])
 				if 1 != len(winners):
 					new_winners = {}
@@ -99,8 +102,9 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 						new_winners[count].append(candidate)
 						if count < least:
 							least = count
+                                        debug['third'] = count
 					winners = copy.deepcopy(new_winners[least])
-		winner = winners[0]	
+		winner = winners[0]
 		covered = []
 		needed = items[winner['unique_id']]
 		needed_ids = list(needed.keys())
@@ -149,5 +153,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'next' : next_steps,
 		'chapters' : chapters,
 		'failed' : failed,
+                'debug' : debug
 	}
 	return render(request, 'drops/index.html', context)
