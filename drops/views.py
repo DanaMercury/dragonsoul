@@ -138,7 +138,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				for drop in stage.drops.all():
 					if str(drop.item.id) in needed_ids and drop.item.id not in covered:
 						covered.append(drop.item.id)
-						quantity = needed[str(drop.item.id)]['total'] - ingredients[str(drop.item.id)].quantity
+						quantity = needed[str(drop.item.id)]['total'] - ingredients[str(drop.item.id)]['quantity']
 						if 0 < quantity:
 							scraps.append({'item' : drop.item, 'quantity' : quantity})
 				next_steps['stages'].append({'stage' : stage, 'scraps' : scraps})
