@@ -70,10 +70,10 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				for candidate in winners:
 					points = 0
 					for stat in candidate['item'].stats.all():
-						if stat.id == candidate['hero']primary:
+						if stat.id == candidate['hero'].primary:
 							points = points + (4 * stat.quantity)
 						else:
-							for recc in candidate['hero']stat_users.all():
+							for recc in candidate['hero'].stat_users.all():
 								if stat.id == recc.stat.id:
 									if True == recc.recommended:
 										points = points + (3 * stat.quantity)
