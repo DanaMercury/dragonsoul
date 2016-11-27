@@ -32,7 +32,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		candidates = []
 		for pair in sets:
 			values = pair.split(':');
-			candidates.append({ 'hero' : Hero.objects.filter(id=int(values[0])), 'item' : Item.objects.filter(id=int(values[1])), 'unique_id' : values[2] })
+			candidates.append({ 'hero' : Hero.objects.get(id=int(values[0])), 'item' : Item.objects.get(id=int(values[1])), 'unique_id' : values[2] })
 		json_data = urllib.request.urlopen('http://dragonsoul.s3.amazonaws.com/items.json').read()
 		items = json.loads(json_data.decode('utf-8').replace('items = ', '').replace(';', ''))
 		winners = copy.deepcopy(candidates)
@@ -148,6 +148,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'heroes' : heroes,
 		'next' : next_steps,
 		'chapters' : chapters,
-		'failed' : failed
+		'failed' : failed,
 	}
 	return render(request, 'drops/index.html', context)
