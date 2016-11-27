@@ -130,7 +130,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				else:
 					failed = True
 		if 0 < len(stages):
-			next_steps = {'hero' : winner.hero, 'item' : winner.item, 'stages' : []}
+			next_steps = {'hero' : winner['hero'], 'item' : winner['item'], 'stages' : []}
 			covered = []
 			for stage in stages:
 				scraps = []
