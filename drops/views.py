@@ -135,7 +135,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 			for stage in stages:
 				scraps = []
 				stage = Stage.objects.filter(id=stage).prefetch_related('drops')
-				for drop in stage.drops.all():
+				for drop in stage.drops:
 					if drop.item.id in needed_ids and drop.item.id not in covered:
 						covered.append(drop.item.id)
 						quantity = needed[drop.item.id]['total'] - ingredients[drop.item.id].quantity
