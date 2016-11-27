@@ -153,6 +153,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'next' : next_steps,
 		'chapters' : chapters,
 		'failed' : failed,
-		'debug' : debug
+		'debug' : debug,
+		'candidates' : candidates,
 	}
 	return render(request, 'drops/index.html', context)
