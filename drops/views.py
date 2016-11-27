@@ -22,13 +22,15 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 	ingredients = ''
 	candidates = ''
 	drops = ''
+	debug = {}
+	sets = {}
 	if('' != ingredients_raw and '' != candidates_raw):
 		sets = ingredients_raw.split('_')
 		ingredients = {}
 		for pair in sets:
 			values = pair.split(':');
 			ingredients[values[0]] = { 'item_id' : int(values[0]), 'quantity' : int(values[1]) }
-		sets = candidates_raw.split('#')
+		sets = candidates_raw.split('@')
 		candidates = []
 		for pair in sets:
 			values = pair.split(':');
@@ -36,7 +38,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		json_data = urllib.request.urlopen('http://dragonsoul.s3.amazonaws.com/items.json').read()
 		items = json.loads(json_data.decode('utf-8').replace('items = ', '').replace(';', ''))
 		winners = copy.deepcopy(candidates)
-		debug = {}
 		if 1 != len(winners):
 			new_winners = {}
 			most = 0

@@ -265,7 +265,7 @@
 			deets = deets.replace(/_$/, '/');
 			$('#rarities li img').each(function() {
 				if(!$(this).hasClass('complete')) {
-					deets += this.id.replace(/_/g, ':').replace(/:[0-9]+:[0-9]+/, ':') + $(this).data('gear_id') + ':' + this.id + '#';
+					deets += this.id.replace(/_/g, ':').replace(/:[0-9]+:[0-9]+/, ':') + $(this).data('gear_id') + ':' + this.id + '@';
 				}
 			});
 			deets = deets.replace(/_$/, '');
