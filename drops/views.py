@@ -41,9 +41,11 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		if 1 != len(winners):
 			new_winners = {}
 			most = 0
+			debug['first_deets'] = []
 			for candidate in winners:
 				points = 0
 				for stat in candidate['item'].stats.all():
+					debug['first_deets'].append({'stat' : stat, 'primary' : candidate['hero'].primary, 'reccs' : candidate['hero'].stat_users.all()})
 					if stat.id == candidate['hero'].primary:
 						points = points + 4
 					else:
@@ -56,22 +58,20 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 								else:
 									points = points + 1
 								break
-						if points not in new_winners:
-							new_winners[points] = []
-						new_winners[points].append(candidate)
-						if points > most:
-							most = points
-						break
+					if points not in new_winners:
+						new_winners[points] = []
+					new_winners[points].append(candidate)
+					if points > most:
+						most = points
+					break
 			debug['first'] = most
 			winners = copy.deepcopy(new_winners[most])
 			if 1 != len(winners):
 				new_winners = {}
 				most = 0
-				debug['first_deets'] = []
 				for candidate in winners:
 					points = 0
 					for stat in candidate['item'].stats.all():
-						debug['first_deets'].append({'stat' : stat, 'primary' : candidate['hero'].primary, 'reccs' : candidate['hero'].stat_users.all()})
 						if stat.id == candidate['hero'].primary:
 							points = points + (4 * stat.quantity)
 						else:
@@ -84,12 +84,12 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 									else:
 										points = points + (1 * stat.quantity)
 									break
-							if points not in new_winners:
-								new_winners[points] = []
-							new_winners[points].append(candidate)
-							if points > most:
-								most = points
-							break
+						if points not in new_winners:
+							new_winners[points] = []
+						new_winners[points].append(candidate)
+						if points > most:
+							most = points
+						break
 				debug['second'] = most
 				winners = copy.deepcopy(new_winners[most])
 				if 1 != len(winners):
