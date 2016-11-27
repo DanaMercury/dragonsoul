@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from gear.models import Item
 from heroes.models import Hero, Rarity
-from .models import Drop, Chapter
+from .models import Drop, Chapter, Stage
 import copy
 import json
 import urllib
