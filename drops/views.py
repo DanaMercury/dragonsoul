@@ -114,7 +114,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 							drops_new = []
 							for drop in drops:
 								for dropped_item in drop.stage.drops.all():
-									if dropped_item.item.id == ingredient['item']:
+									if dropped_item.item.id == ingredient['item_id']:
 										drops_new.append(drop)
 										break
 							if 0 < len(drops_new):
