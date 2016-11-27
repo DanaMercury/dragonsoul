@@ -14,10 +14,10 @@ class Stat_UserInline(admin.TabularInline):
 class StatAdmin(admin.ModelAdmin):
 	""" Form for Stat class """
 	fieldsets = [
-		(None, {'fields': ['name', 'all_benefit']}),
+		(None, {'fields': ['name', 'all_benefit', 'primary']}),
 	]
 	inlines = [Stat_UserInline]
-	list_display = ('name', 'all_benefit',)
+	list_display = ('name', 'all_benefit','primary',)
 	search_fields = ['name']
 	ordering = ['name']
 

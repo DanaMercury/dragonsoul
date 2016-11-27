@@ -79,19 +79,21 @@
 			</select></label>
 			<input id="optimize" type="submit" value="Optimize My Grind!" disabled="disabled" onclick="optimize()" />	
 			<div id="next">
-				{% if True == failed %}
-					<h2>Error</h2>
-					<p>Sorry, the chapter you've selected is too low to satisfy this request.</p>
-				{% endif %}
 				{% if '' != next %}
-					{% for deets in next %}
-						<h2>{{ deets.stage }}</h2>
+					<img class="hero" src="{{ next.hero.image.url }}" title="{{ next.hero.name }}" alt="{{ next.hero.name }}">
+					<img title="{{ next.item.name }}" src="{{ next.item.image.url }}" alt="{{ next.item.name }}" class="item">	
+					{% for deets in next.stages %}
+						<h3>{{ deets.stage }}</h3>
 						<ul id="ingredients">
 							{% for ingredient in deets.scraps %}
 								<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" title="{{ ingredient.item.name }}" alt="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
 							{% endfor %}
 						</ul>
 					{% endfor %}
+				{% endif %}
+				{% if True == failed %}
+					<h2>Error</h2>
+					<p>Sorry, at least one or more items you need are not available in the chapters available to you.</p>
 				{% endif %}
 			</div>
 		</div>
@@ -143,7 +145,7 @@
 				rarities += '<h3 class="color' + hero_data.rarity.color +'">' + hero_data.rarity.name +'</h3><ul>';
 				for(i = 1; i < 7; i++) {
 					var itemkey = hero.id + '_' + hero_data.rarity.id + '_' + i;
-					rarities += '<li><img id="' + itemkey + '" onclick="$(this).toggleClass(\'complete\'); update_gear(' + hero.id + ', ' + hero_data.rarity.id + ', ' + i + ');" title="' + hero_data.rarity['gear' + i].name + '" src="' + hero_data.rarity['gear' + i].image + '" alt="' + hero_data.rarity['gear' + i].name + '"';
+					rarities += '<li><img id="' + itemkey + '" onclick="$(this).toggleClass(\'complete\'); update_gear(' + hero.id + ', ' + hero_data.rarity.id + ', ' + i + ');" title="' + hero_data.rarity['gear' + i].name + '" src="' + hero_data.rarity['gear' + i].image + '" alt="' + hero_data.rarity['gear' + i].name + '" data-gear_id="' + hero_data.rarity['gear' + i].id + '"';
 					if(null != hero_data.progress[i] && 0 == hero_data.progress[i]) {
 						var ingredients = items[itemkey];
 						$.each(ingredients, function(k, ingredient) {
@@ -261,7 +263,7 @@
 			deets = deets.replace(/_$/, '/');
 			$('#rarities li img').each(function() {
 				if(!$(this).hasClass('complete')) {
-					deets += this.id.replace(/_/g, ':').replace(/:[0-9]+:/, ':') + '_';
+					deets += this.id.replace(/_/g, ':').replace(/:[0-9]+:[0-9]+/, ':') + $(this).data('gear_id') + ':' + this.id + '#';
 				}
 			});
 			deets = deets.replace(/_$/, '');

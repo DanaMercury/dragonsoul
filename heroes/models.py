@@ -1,5 +1,6 @@
 from django.db import models
 from gear.models import Item
+from stats.models import Stat
 
 
 class Hero(models.Model):
@@ -8,6 +9,7 @@ class Hero(models.Model):
 	image = models.ImageField(upload_to = 'heroes', height_field = 'height', width_field = 'width', null = True)
 	height = models.IntegerField(default = 0)
 	width = models.IntegerField(default = 0)
+	primary = models.ForeignKey(Stat, on_delete = models.CASCADE, limit_choices_to={'primary': True}, null = True)
 
 	def __str__(self):
 		return self.name

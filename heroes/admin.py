@@ -16,7 +16,7 @@ class QuestInline(admin.TabularInline):
 class HeroAdmin(admin.ModelAdmin):
 	""" Putting Rarity and Quest forms into the Hero form """
 	fieldsets = [
-		(None, {'fields':['name','image']}),
+		(None, {'fields':['name','image','primary']}),
 	]
 	inlines = [RarityInline, QuestInline]
 	search_fields = ['name']
