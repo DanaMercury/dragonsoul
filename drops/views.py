@@ -113,6 +113,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		needed = items[winner['unique_id']]
 		needed_ids = list(needed.keys())
 		stages = []
+		debug = []
 		for item_id in needed_ids:
 			if item_id not in covered and ingredients[item_id]['quantity'] < needed[item_id]['total']:
 				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-stage__id').prefetch_related('stage__drops')
@@ -122,7 +123,9 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 							drops_new = []
 							for drop in drops:
 								for dropped_item in drop.stage.drops.all():
-									if dropped_item.item.id == int(ingredient):
+									debug.append({ 'drop' : dropped_item.item.id, 'ingredient' : ingredient})
+									if dropped_item.item.id == ingredient:
+										debug.append({ 'match' : True})
 										drops_new.append(drop)
 										break
 							if 0 < len(drops_new):
@@ -157,7 +160,5 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'next' : next_steps,
 		'chapters' : chapters,
 		'failed' : failed,
-		'ingredients' : ingredients,
-		'ingredient' : ingredient
 	}
 	return render(request, 'drops/index.html', context)
