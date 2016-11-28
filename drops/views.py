@@ -119,6 +119,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		stages = []
 		debug = []
 		for item_id in needed_ids:
+			debug.append({'covered' : covered, 'have' : ingredients[item_id]['quantity'], 'needed' : needed[item_id]['total'] })
 			stage_options = {}
 			most = 0
 			if item_id not in covered and ingredients[item_id]['quantity'] < needed[item_id]['total']:
