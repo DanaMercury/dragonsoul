@@ -17,6 +17,9 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'rarities__gear6',
 		'quests'
 	)
+	needed_ids = ''
+	ingredient_ids = ''
+	debug = ''
 	next_steps = ''
 	failed = False
 	ingredients = ''
