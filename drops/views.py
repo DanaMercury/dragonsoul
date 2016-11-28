@@ -45,19 +45,25 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 			for candidate in winners:
 				points = 0
 				for stat in candidate['item'].stats.all():
+					debug['first_deets'].append({'stat' : stat.stat.id, 'primary': candidate['hero'].primary.id}
 					if stat.stat.id == candidate['hero'].primary.id:
+						debug['first_deets'].append({'primary_hit' : True}
 						points = points + 4
 					else:
 						litmus = False
 						for recc in candidate['hero'].stat_users.all():
+							debug['first_deets'].append({'stat' : stat.stat.id, 'recc' : recc.stat.id})
 							if stat.stat.id == recc.stat.id:
+								debug['first_deets'].append({'recc_hit' : True})
 								litmus = True
 								if True == recc.recommended:
 									points = points + 3
 								elif False == recc.stat.primary:
 									points = points + 1
 								break
+						debug['first_deets'].append({'litmus' : litmus})
 						if False == litmus:
+							debug['first_deets'].append({'primary' : stat.stat.primary, 'all' : stat.stat.all_benefit})
 							if True == stat.stat.primary:
 								points = points + 2
 							elif True == stat.stat.all_benefit:
