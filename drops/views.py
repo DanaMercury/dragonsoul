@@ -157,7 +157,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 						quantity = needed[str(drop.item.id)]['total'] - ingredients[str(drop.item.id)]['quantity']
 						if 0 < quantity:
 							scraps.append({'item' : drop.item, 'quantity' : quantity, 'other' : False})
-					elif str(drop.item.id) in ingredients_ids and 0 < ingredients[str(drop.item.id)]['needed']:
+					elif str(drop.item.id) in ingredient_ids and 0 < ingredients[str(drop.item.id)]['needed']:
 						scraps.append({'item' : drop.item, 'quantity' : ingredients[str(drop.item.id)]['needed'], 'other' : True})
 				next_steps['stages'].append({'stage' : stage, 'scraps' : scraps})
 		else:
