@@ -54,7 +54,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 								litmus = True
 								if True == recc.recommended:
 									points = points + 3
-								else if False == recc.stat.primary:
+								elif False == recc.stat.primary:
 									points = points + 1
 								break
 						if False == litmus:
@@ -85,7 +85,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 									litmus = True
 									if True == recc.recommended:
 										points = points + 3
-									else if False == recc.stat.primary:
+									elif False == recc.stat.primary:
 										points = points + 1
 									break
 							if False == litmus:
