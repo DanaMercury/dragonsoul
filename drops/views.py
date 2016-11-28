@@ -57,8 +57,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 								else:
 									points = points + 1
 								break
-							else:
-								debug['first_deets'].append({'recc_hit' : False})
 					debug['first_deets'].append({'points' : points})
 					if points not in new_winners:
 						new_winners[points] = []
