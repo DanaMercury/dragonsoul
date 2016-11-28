@@ -115,7 +115,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		stages = []
 		for item_id in needed_ids:
 			if item_id not in covered and ingredients[item_id]['quantity'] < needed[item_id]['total']:
-				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-id').prefetch_related('stage__drops')
+				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-stage__id').prefetch_related('stage__drops')
 				if 0 < len(drops):
 					if 1 != len(drops):
 						for ingredient in ingredients:

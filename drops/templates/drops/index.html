@@ -82,7 +82,7 @@
 			<div id="next">
 				{% if '' != next %}
 					<img class="hero" src="{{ next.hero.image.url }}" title="{{ next.hero.name }}" alt="{{ next.hero.name }}">
-					<img title="{{ next.item.name }}" src="{{ next.item.image.url }}" alt="{{ next.item.name }}" class="item">	
+					<a href="/gear/catalog/{{ next.item.id }}"><img title="{{ next.item.name }}" src="{{ next.item.image.url }}" alt="{{ next.item.name }}" class="item"></a>
 					{% for deets in next.stages %}
 						<h3>{{ deets.stage }}</h3>
 						<ul id="ingredients">
