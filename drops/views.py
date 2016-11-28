@@ -47,7 +47,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				for stat in candidate['item'].stats.all():
 					debug['first_deets'].append({'stat' : stat.stat.id, 'primary': candidate['hero'].primary.id})
 					if stat.stat.id == candidate['hero'].primary.id:
-						debug['first_deets'].append({'primary_hit' : True}
+						debug['first_deets'].append({'primary_hit' : True})
 						points = points + 4
 					else:
 						litmus = False
