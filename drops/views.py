@@ -49,6 +49,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 						points = points + 4
 					else:
 						for recc in candidate['hero'].stat_users.all():
+							debug['first_deets'].append({'stat' : stat.stat.id, 'recc' : recc.stat.id})
 							if stat.stat.id == recc.stat.id:
 								if True == recc.recommended:
 									points = points + 3
