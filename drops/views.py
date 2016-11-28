@@ -45,24 +45,30 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 			for candidate in winners:
 				points = 0
 				for stat in candidate['item'].stats.all():
-					debug['first_deets'].append({'stat' : stat.stat.id, 'primary' : candidate['hero'].primary.id})
+					debug['first_deets'].append({ 'hero' : candidate['hero'].id, 'stat' : stat.stat.id, 'primary' : candidate['hero'].primary.id})
 					if stat.stat.id == candidate['hero'].primary:
+						debug['first_deets'].append({'primary_hit' : True})
 						points = points + 4
 					else:
+						debug['first_deets'].append({'primary_hit' : False})
 						for recc in candidate['hero'].stat_users.all():
 							debug['first_deets'].append({'recc' : recc.stat.id})
 							if stat.stat.id == recc.stat.id:
+								debug['first_deets'].append({'recc_hit' : True, 'recommended' : recc.recommended, 'primary' : recc.stat.primary})
 								if True == recc.recommended:
 									points = points + 3
 								elif True == recc.stat.primary:
 									points = points + 2
 								else:
 									points = points + 1
-				if points not in new_winners:
-					new_winners[points] = []
-				new_winners[points].append(candidate)
-				if points > most:
-					most = points
+								break
+							else:
+								debug['first_deets'].append({'recc_hit' : False})
+					if points not in new_winners:
+						new_winners[points] = []
+					new_winners[points].append(candidate)
+					if points > most:
+						most = points
 			debug['first'] = most
 			winners = copy.deepcopy(new_winners[most])
 			if 1 != len(winners):
@@ -82,11 +88,11 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 										points = points + (2 * stat.quantity)
 									else:
 										points = points + (1 * stat.quantity)
-					if points not in new_winners:
-						new_winners[points] = []
-					new_winners[points].append(candidate)
-					if points > most:
-						most = points
+						if points not in new_winners:
+							new_winners[points] = []
+						new_winners[points].append(candidate)
+						if points > most:
+							most = points
 				debug['second'] = most
 				winners = copy.deepcopy(new_winners[most])
 				if 1 != len(winners):
