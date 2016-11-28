@@ -46,7 +46,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				points = 0
 				for stat in candidate['item'].stats.all():
 					debug['first_deets'].append({ 'hero' : candidate['hero'].id, 'stat' : stat.stat.id, 'primary' : candidate['hero'].primary.id})
-					if stat.stat.id == candidate['hero'].primary:
+					if stat.stat.id == candidate['hero'].primary.id:
 						debug['first_deets'].append({'primary_hit' : True})
 						points = points + 4
 					else:
@@ -77,7 +77,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				for candidate in winners:
 					points = 0
 					for stat in candidate['item'].stats.all():
-						if stat.id == candidate['hero'].primary:
+						if stat.id == candidate['hero'].primary.id:
 							points = points + (4 * stat.quantity)
 						else:
 							for recc in candidate['hero'].stat_users.all():
