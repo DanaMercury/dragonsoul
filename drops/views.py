@@ -119,16 +119,14 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-stage__id').prefetch_related('stage__drops')
 				if 0 < len(drops):
 					if 1 != len(drops):
-						debug.append({'length' : len(ingredients)})
 						for ingredient in ingredients:
 							drops_new = []
 							for drop in drops:
 								for dropped_item in drop.stage.drops.all():
-									debug.append({ 'drop' : dropped_item.item.id, 'ingredient' : ingredient})
 									if dropped_item.item.id == int(ingredient):
-										debug.append({ 'match' : True})
 										drops_new.append(drop)
 										break
+							debug.append(drops_new)
 							if 0 < len(drops_new):
 								drops = copy.deepcopy(drops_new)
 								if 1 == len(drops_new):
