@@ -49,8 +49,8 @@
 		#mainnav { position: fixed; top: 0; left: 0; height: 60px; background: black; color: white; width: 100%; padding-top: -10px; }
 		#mainnav h1 { margin-top: 10px; }
 		#mainnav .toggle { color: #AAAAAA; }
-		.other { background: white; border: solid 1px lightgrey; color: grey }
-		.other img { opacity: .2; filter: grayscale(.8); }
+		.other { background: white; border: solid 1px lightgrey; color: lightgrey }
+		#ingredients li.other a img { opacity: .2; filter: grayscale(.8); }
 		
 	</style>
 	</head><body>
@@ -91,7 +91,10 @@
 						<h3>{{ deets.stage }}</h3>
 						<ul id="ingredients">
 							{% for ingredient in deets.scraps %}
-								<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }} {% if True == ingredient.other %}other{% endif %}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" title="{{ ingredient.item.name }}" alt="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
+								<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" title="{{ ingredient.item.name }}" alt="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
+							{% endfor %}
+							{% for ingredient in deets.others %}
+								<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }} other"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" title="{{ ingredient.item.name }}" alt="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
 							{% endfor %}
 						</ul>
 					{% endfor %}

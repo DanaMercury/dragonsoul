@@ -150,16 +150,17 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 			covered = []
 			for stage in stages:
 				scraps = []
+				others = []
 				stage = Stage.objects.get(id=stage)
 				for drop in stage.drops.all():
 					if str(drop.item.id) in needed_ids and drop.item.id not in covered:
 						covered.append(drop.item.id)
 						quantity = needed[str(drop.item.id)]['total'] - ingredients[str(drop.item.id)]['quantity']
 						if 0 < quantity:
-							scraps.append({'item' : drop.item, 'quantity' : quantity, 'other' : False})
+							scraps.append({'item' : drop.item, 'quantity' : quantity})
 					elif str(drop.item.id) in ingredient_ids and 0 < ingredients[str(drop.item.id)]['needed']:
-						scraps.append({'item' : drop.item, 'quantity' : ingredients[str(drop.item.id)]['needed'], 'other' : True})
-				next_steps['stages'].append({'stage' : stage, 'scraps' : scraps})
+						others.append({'item' : drop.item, 'quantity' : ingredients[str(drop.item.id)]['needed']})
+				next_steps['stages'].append({'stage' : stage, 'scraps' : scraps, 'others' : others})
 		else:
 			failed = True
 	context = {
