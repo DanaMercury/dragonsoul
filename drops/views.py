@@ -30,7 +30,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		ingredients = {}
 		for pair in sets:
 			values = pair.split(':');
-			ingredients[values[0]] = { 'item_id' : int(values[0]), 'quantity' : int(values[1]) }
+			ingredients[values[0]] = { 'item_id' : int(values[0]), 'needed' : int(values[1]), 'quantity' : int(values[2]) }
 		sets = candidates_raw.split('__')
 		candidates = []
 		for pair in sets:
@@ -134,10 +134,10 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 							points = 100
 							for dropped_item in drop.stage.drops.all():
 								debug.append({'item' : dropped_item.item.id});
-								if str(dropped_item.item.id) in needed_ids:
+								if str(dropped_item.item.id) in needed_ids and 0 < ingredients[str(dropped_item.item.id)]['needed']:
 									debug.append({'match' : 'needed'})
 									points = points + 10
-								elif str(dropped_item.item.id) in ingredient_ids:
+								elif str(dropped_item.item.id) in ingredient_ids and 0 < ingredients[str(dropped_item.item.id)]['needed']:
 									debug.append({'match' : 'ingredients'})
 									points = points + 1
 							debug.append({'points' : points})

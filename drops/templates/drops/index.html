@@ -260,6 +260,7 @@
 			var deets = $('#max_chapter').val() + '/';
 			$('#items tr').each(function() {
 				deets += $(this.children[0].children[0].children[0]).attr('name') + ':';
+				deets += (parseInt($(this.children[1])[0].innerHTML) - parseInt($(this.children[2].children[0].children[0]).val())) + ':';
 				deets += $(this.children[2].children[0].children[0]).val() + '_';
 			});
 			deets = deets.replace(/_$/, '/');
