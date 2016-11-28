@@ -153,7 +153,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				others = []
 				stage = Stage.objects.get(id=stage)
 				for drop in stage.drops.all():
-					if str(drop.item.id) in needed_ids and drop.item.id not in covered:
+					if str(drop.item.id) in needed_ids and drop.item.id not in covered and 0 < needed[str(drop.item.id)]['total'] - ingredients[str(drop.item.id)]['quantity']:
 						covered.append(drop.item.id)
 						quantity = needed[str(drop.item.id)]['total'] - ingredients[str(drop.item.id)]['quantity']
 						if 0 < quantity:
