@@ -48,16 +48,20 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 					if stat.stat.id == candidate['hero'].primary.id:
 						points = points + 4
 					else:
+						litmus = False
 						for recc in candidate['hero'].stat_users.all():
-							debug['first_deets'].append({'stat' : stat.stat.id, 'recc' : recc.stat.id})
 							if stat.stat.id == recc.stat.id:
+								litmus = True
 								if True == recc.recommended:
 									points = points + 3
-								elif True == recc.stat.primary:
-									points = points + 2
-								else:
+								else if False == recc.stat.primary:
 									points = points + 1
 								break
+						if False == litmus:
+							if True == stat.stat.primary:
+								points = points + 2
+							elif True == stat.stat.all_benefit:
+								points = points + 1
 				debug['first_deets'].append({'points' : points})
 				if points not in new_winners:
 					new_winners[points] = []
@@ -75,14 +79,20 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 						if stat.id == candidate['hero'].primary.id:
 							points = points + (4 * stat.quantity)
 						else:
+							litmus = False
 							for recc in candidate['hero'].stat_users.all():
 								if stat.id == recc.stat.id:
+									litmus = True
 									if True == recc.recommended:
-										points = points + (3 * stat.quantity)
-									elif True == recc.stat.primary:
-										points = points + (2 * stat.quantity)
-									else:
-										points = points + (1 * stat.quantity)
+										points = points + 3
+									else if False == recc.stat.primary:
+										points = points + 1
+									break
+							if False == litmus:
+								if True == stat.stat.primary:
+									points = points + 2
+								elif True == stat.stat.all_benefit:
+									points = points + 1
 					if points not in new_winners:
 						new_winners[points] = []
 					new_winners[points].append(candidate)
