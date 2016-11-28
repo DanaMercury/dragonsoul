@@ -77,22 +77,22 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 					points = 0
 					for stat in candidate['item'].stats.all():
 						if stat.stat.id == candidate['hero'].primary.id:
-							points = points + (4 * stat.stat.quantity)
+							points = points + (4 * stat.quantity)
 						else:
 							litmus = False
 							for recc in candidate['hero'].stat_users.all():
 								if stat.stat.id == recc.stat.id:
 									litmus = True
 									if True == recc.recommended:
-										points = points + (3 * stat.stat.quantity)
+										points = points + (3 * stat.quantity)
 									elif False == recc.stat.primary:
-										points = points + (1 * stat.stat.quantity)
+										points = points + (1 * stat.quantity)
 									break
 							if False == litmus:
 								if True == stat.stat.primary:
-									points = points + (2 * stat.stat.quantity)
+									points = points + (2 * stat.quantity)
 								elif True == stat.stat.all_benefit:
-									points = points + (1 * stat.stat.quantity)
+									points = points + (1 * stat.quantity)
 					if points not in new_winners:
 						new_winners[points] = []
 					new_winners[points].append(candidate)
