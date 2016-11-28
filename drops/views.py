@@ -178,5 +178,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'failed' : failed,
 		'needed_ids' : needed_ids,
 		'ingredient_ids' : ingredient_ids,
+		'debug' : debug,
 	}
 	return render(request, 'drops/index.html', context)
