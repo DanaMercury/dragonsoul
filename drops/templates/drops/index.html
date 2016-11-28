@@ -60,8 +60,6 @@
 		</ul>
 	</div>
 	<div id="raritieslist">
-{{ debug }}
-{{ candidates }}
 		<h1>Rarities List</h1>
 		<div id="rarities"></div>
 	</div>
@@ -95,8 +93,8 @@
 					{% endfor %}
 				{% endif %}
 				{% if True == failed %}
-					<h2>Error</h2>
-					<p>Sorry, at least one or more items you need are not available in the chapters available to you.</p>
+					<h2>NOTICE</h2>
+					<p>Either you have everything you need already to craft the next recommended item or at least one or more items you need are not available in the chapters available to you.</p>
 				{% endif %}
 			</div>
 		</div>

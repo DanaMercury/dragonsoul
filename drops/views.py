@@ -22,8 +22,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 	ingredients = ''
 	candidates = ''
 	drops = ''
-	debug = {}
-	sets = {}
 	if('' != ingredients_raw and '' != candidates_raw):
 		sets = ingredients_raw.split('_')
 		ingredients = {}
@@ -41,40 +39,31 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		if 1 != len(winners):
 			new_winners = {}
 			most = 0
-			debug['first_deets'] = []
 			for candidate in winners:
 				points = 0
 				for stat in candidate['item'].stats.all():
-					debug['first_deets'].append({'stat' : stat.stat.id, 'primary': candidate['hero'].primary.id})
 					if stat.stat.id == candidate['hero'].primary.id:
-						debug['first_deets'].append({'primary_hit' : True})
 						points = points + 4
 					else:
 						litmus = False
 						for recc in candidate['hero'].stat_users.all():
-							debug['first_deets'].append({'stat' : stat.stat.id, 'recc' : recc.stat.id})
 							if stat.stat.id == recc.stat.id:
-								debug['first_deets'].append({'recc_hit' : True})
 								litmus = True
 								if True == recc.recommended:
 									points = points + 3
 								elif False == recc.stat.primary:
 									points = points + 1
 								break
-						debug['first_deets'].append({'litmus' : litmus})
 						if False == litmus:
-							debug['first_deets'].append({'primary' : stat.stat.primary, 'all' : stat.stat.all_benefit})
 							if True == stat.stat.primary:
 								points = points + 2
 							elif True == stat.stat.all_benefit:
 								points = points + 1
-				debug['first_deets'].append({'points' : points})
 				if points not in new_winners:
 					new_winners[points] = []
 				new_winners[points].append(candidate)
 				if points > most:
 					most = points
-			debug['first'] = most
 			winners = copy.deepcopy(new_winners[most])
 			if 1 != len(winners):
 				new_winners = {}
@@ -104,7 +93,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 					new_winners[points].append(candidate)
 					if points > most:
 						most = points
-				debug['second'] = most
 				winners = copy.deepcopy(new_winners[most])
 				if 1 != len(winners):
 					new_winners = {}
@@ -119,7 +107,6 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 						new_winners[count].append(candidate)
 						if count < least:
 							least = count
-					debug['third'] = least
 					winners = copy.deepcopy(new_winners[least])
 		winner = winners[0]
 		covered = []
@@ -150,8 +137,8 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 							covered.append(drop.item.id)
 				else:
 					failed = True
+		next_steps = {'hero' : winner['hero'], 'item' : winner['item'], 'stages' : []}
 		if 0 < len(stages):
-			next_steps = {'hero' : winner['hero'], 'item' : winner['item'], 'stages' : []}
 			covered = []
 			for stage in stages:
 				scraps = []
@@ -170,8 +157,5 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'next' : next_steps,
 		'chapters' : chapters,
 		'failed' : failed,
-		'debug' : debug,
-		'candidates' : candidates,
-		'sets' : sets
 	}
 	return render(request, 'drops/index.html', context)
