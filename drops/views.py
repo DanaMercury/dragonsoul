@@ -127,10 +127,11 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-stage__id').prefetch_related('stage__drops')
 				debug.append({'length' : len(drops), 'drops' : drops})
 				if 0 < len(drops):
-					points = points + 100
+					points = 100
 					debug.append({'looping' : True})
 					if 1 != len(drops):
 						for drop in drops:
+							points = 100
 							for dropped_item in drop.stage.drops.all():
 								debug.append({'item' : dropped_item.item.id});
 								if str(dropped_item.item.id) in needed_ids:
