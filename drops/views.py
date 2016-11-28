@@ -112,29 +112,36 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		covered = []
 		needed = items[winner['unique_id']]
 		needed_ids = list(needed.keys())
+		ingredient_ids = list(ingredients.keys())
 		stages = []
 		for item_id in needed_ids:
+			stage_options = {}
+			most = 0
 			if item_id not in covered and ingredients[item_id]['quantity'] < needed[item_id]['total']:
+				points = 0
 				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-stage__id').prefetch_related('stage__drops')
 				if 0 < len(drops):
+					points = points + 100
 					if 1 != len(drops):
-						for ingredient in ingredients:
-							drops_new = []
-							for drop in drops:
-								for dropped_item in drop.stage.drops.all():
-									if dropped_item.item.id == int(ingredient):
-										drops_new.append(drop)
-										break
-							if 0 < len(drops_new):
-								drops = copy.deepcopy(drops_new)
-								if 1 == len(drops_new):
-									break
-					stage = drops[0].stage
-					if drops[0].stage.id not in stages:
-						stages.append(stage.id)
-					for drop in stage.drops.all():
-						if str(drop.item.id) in needed_ids and drop.item.id not in covered:
-							covered.append(drop.item.id)
+						for drop in drops:
+							for dropped_item in drop.stage.drops.all():
+								if str(dropped_item.item.id) in needed_ids:
+									points = points + 10
+								elif str(dropped_item.item.id) in ingredient_ids:
+									points = points + 1
+							if 1 < points:
+								if points not in stage_options:
+									stage_options[points] = []
+								stage_options[points].append(drop.stage.id)
+							if points > most:
+								most = points
+					stage = stage_options[most][0]
+					if stage not in stages:
+						stages.append(stage)
+						stage = Stage.objects.get(id=stage)
+						for drop in stage.drops.all():
+							if str(drop.item.id) in needed_ids and drop.item.id not in covered:
+								covered.append(drop.item.id)
 				else:
 					failed = True
 		next_steps = {'hero' : winner['hero'], 'item' : winner['item'], 'stages' : []}
