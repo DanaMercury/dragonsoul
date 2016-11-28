@@ -121,21 +121,19 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 				points = 0
 				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-stage__id').prefetch_related('stage__drops')
 				if 0 < len(drops):
-					points = 100
-					if 1 != len(drops):
-						for drop in drops:
-							points = 100
-							for dropped_item in drop.stage.drops.all():
-								if str(dropped_item.item.id) in needed_ids and 0 < ingredients[str(dropped_item.item.id)]['needed']:
-									points = points + 10
-								elif str(dropped_item.item.id) in ingredient_ids and 0 < ingredients[str(dropped_item.item.id)]['needed']:
-									points = points + 1
-							if 1 < points:
-								if points not in stage_options:
-									stage_options[points] = []
-								stage_options[points].append(drop.stage.id)
-							if points > most:
-								most = points
+					for drop in drops:
+						points = 100
+						for dropped_item in drop.stage.drops.all():
+							if str(dropped_item.item.id) in needed_ids and 0 < ingredients[str(dropped_item.item.id)]['needed']:
+								points = points + 10
+							elif str(dropped_item.item.id) in ingredient_ids and 0 < ingredients[str(dropped_item.item.id)]['needed']:
+								points = points + 1
+						if 1 < points:
+							if points not in stage_options:
+								stage_options[points] = []
+							stage_options[points].append(drop.stage.id)
+						if points > most:
+							most = points
 					stage = stage_options[most][0]
 					if stage not in stages:
 						stages.append(stage)
