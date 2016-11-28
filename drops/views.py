@@ -114,6 +114,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		needed_ids = list(needed.keys())
 		ingredient_ids = list(ingredients.keys())
 		stages = []
+		debug = []
 		for item_id in needed_ids:
 			stage_options = {}
 			most = 0
@@ -125,16 +126,21 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 					if 1 != len(drops):
 						for drop in drops:
 							for dropped_item in drop.stage.drops.all():
+								debug.append({'item' : dropped_item.item.id});
 								if str(dropped_item.item.id) in needed_ids:
+									debug.append({'match' : 'needed'})
 									points = points + 10
 								elif str(dropped_item.item.id) in ingredient_ids:
+									debug.append({'match' : 'ingredients'})
 									points = points + 1
+							debug.append({'points' : points})
 							if 1 < points:
 								if points not in stage_options:
 									stage_options[points] = []
 								stage_options[points].append(drop.stage.id)
 							if points > most:
 								most = points
+					debug.append({'stage_options' : stage_options})
 					stage = stage_options[most][0]
 					if stage not in stages:
 						stages.append(stage)
@@ -164,5 +170,7 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		'next' : next_steps,
 		'chapters' : chapters,
 		'failed' : failed,
+		'needed_ids' : needed_ids,
+		'ingredient_ids' : ingredient_ids,
 	}
 	return render(request, 'drops/index.html', context)
