@@ -122,10 +122,10 @@
 						matches = new_matches.slice();
 					}
 					for(var i = 0; i < stat.recommended.length; i++) {
-						if(null == reccs[stat.heroes[i]]) {
-							reccs[stat.heroes[i]] = 1;
+						if(null == reccs[stat.recommended[i]]) {
+							reccs[stat.recommended[i]] = 1;
 						} else {
-							reccs[stat.heroes[i]]++;
+							reccs[stat.recommended[i]]++;
 						}
 					}
 				}
