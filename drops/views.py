@@ -27,8 +27,8 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 		ingredients = {}
 		for pair in sets:
 			values = pair.split(':');
-			ingredients[values[0]] = { 'item_id' : int(values[0]), 'quantity' : int(values[1]) }
-		sets = candidates_raw.split('#')
+			ingredients[values[0]] = { 'item_id' : int(values[0]), 'needed' : int(values[1]), 'quantity' : int(values[2]) }
+		sets = candidates_raw.split('__')
 		candidates = []
 		for pair in sets:
 			values = pair.split(':');
@@ -41,107 +41,124 @@ def index(request, max_chapter = 0, ingredients_raw = '', candidates_raw = ''):
 			most = 0
 			for candidate in winners:
 				points = 0
-				for stat in candidate.item.stats:
-					if stat.id == candidate.hero.primary:
+				for stat in candidate['item'].stats.all():
+					if stat.stat.id == candidate['hero'].primary.id:
 						points = points + 4
 					else:
-						for recc in candidate.hero.stat_users:
-							if stat.id == recc.stat.id:
+						litmus = False
+						for recc in candidate['hero'].stat_users.all():
+							if stat.stat.id == recc.stat.id:
+								litmus = True
 								if True == recc.recommended:
 									points = points + 3
-								elif True == recc.stat.primary:
-									points = points + 2
-								else:
+								elif False == recc.stat.primary:
 									points = points + 1
 								break
-						if points not in new_winners:
-							new_winners[points] = []
-						new_winners[points].append(candidate)
-						if points > most:
-							most = points
-						break
+						if False == litmus:
+							if True == stat.stat.primary:
+								points = points + 2
+							elif True == stat.stat.all_benefit:
+								points = points + 1
+				if points not in new_winners:
+					new_winners[points] = []
+				new_winners[points].append(candidate)
+				if points > most:
+					most = points
 			winners = copy.deepcopy(new_winners[most])
 			if 1 != len(winners):
 				new_winners = {}
 				most = 0
 				for candidate in winners:
 					points = 0
-					for stat in candidate.item.stats:
-						if stat.id == candidate.hero.primary:
+					for stat in candidate['item'].stats.all():
+						if stat.stat.id == candidate['hero'].primary.id:
 							points = points + (4 * stat.quantity)
 						else:
-							for recc in candidate.hero.stat_users:
-								if stat.id == recc.stat.id:
+							litmus = False
+							for recc in candidate['hero'].stat_users.all():
+								if stat.stat.id == recc.stat.id:
+									litmus = True
 									if True == recc.recommended:
 										points = points + (3 * stat.quantity)
-									elif True == recc.stat.primary:
-										points = points + (2 * stat.quantity)
-									else:
+									elif False == recc.stat.primary:
 										points = points + (1 * stat.quantity)
 									break
-							if points not in new_winners:
-								new_winners[points] = []
-							new_winners[points].append(candidate)
-							if points > most:
-								most = points
-							break
+							if False == litmus:
+								if True == stat.stat.primary:
+									points = points + (2 * stat.quantity)
+								elif True == stat.stat.all_benefit:
+									points = points + (1 * stat.quantity)
+					if points not in new_winners:
+						new_winners[points] = []
+					new_winners[points].append(candidate)
+					if points > most:
+						most = points
 				winners = copy.deepcopy(new_winners[most])
 				if 1 != len(winners):
 					new_winners = {}
 					least = 9999999999999999
 					for candidate in winners:
 						count = 0
-						item = items[candidate.unique_id]
+						item = items[candidate['unique_id']]
 						for scrap in item:
-							count = count + scrap.total
+							count = count + item[scrap]['total']
 						if count not in new_winners:
 							new_winners[count] = []
 						new_winners[count].append(candidate)
 						if count < least:
 							least = count
 					winners = copy.deepcopy(new_winners[least])
-		winner = winners[0]	
+		winner = winners[0]
 		covered = []
 		needed = items[winner['unique_id']]
 		needed_ids = list(needed.keys())
+		ingredient_ids = list(ingredients.keys())
 		stages = []
 		for item_id in needed_ids:
+			stage_options = {}
+			most = 0
 			if item_id not in covered and ingredients[item_id]['quantity'] < needed[item_id]['total']:
-				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-id').prefetch_related('stage__drops')
+				points = 0
+				drops = Drop.objects.filter(item = item_id).filter(stage__chapter__id__lte = max_chapter).order_by('-stage__id').prefetch_related('stage__drops')
 				if 0 < len(drops):
-					if 1 != len(drops):
-						for ingredient in ingredients:
-							drops_new = []
-							for drop in drops:
-								for dropped_item in drop.stage.drops.all():
-									if dropped_item.item.id == int(ingredient):
-										drops_new.append(drop)
-										break
-							if 0 < len(drops_new):
-								drops = copy.deepcopy(drops_new)
-								if 1 == len(drops_new):
-									break
-					stage = drops[0].stage
-					if drops[0].stage.id not in stages:
-						stages.append(stage.id)
-					for drop in stage.drops.all():
-						if str(drop.item.id) in needed_ids and drop.item.id not in covered:
-							covered.append(drop.item.id)
+					for drop in drops:
+						points = 100
+						for dropped_item in drop.stage.drops.all():
+							if str(dropped_item.item.id) in needed_ids and 0 < ingredients[str(dropped_item.item.id)]['needed']:
+								points = points + 10
+							elif str(dropped_item.item.id) in ingredient_ids and 0 < ingredients[str(dropped_item.item.id)]['needed']:
+								points = points + 1
+						if 1 < points:
+							if points not in stage_options:
+								stage_options[points] = []
+							stage_options[points].append(drop.stage.id)
+						if points > most:
+							most = points
+					stage = stage_options[most][0]
+					if stage not in stages:
+						stages.append(stage)
+						stage = Stage.objects.get(id=stage)
+						for drop in stage.drops.all():
+							if str(drop.item.id) in needed_ids and drop.item.id not in covered:
+								covered.append(drop.item.id)
 				else:
 					failed = True
+		next_steps = {'hero' : winner['hero'], 'item' : winner['item'], 'stages' : []}
 		if 0 < len(stages):
-			next_steps = {'hero' : winner['hero'], 'item' : winner['item'], 'stages' : []}
 			covered = []
 			for stage in stages:
 				scraps = []
+				others = []
 				stage = Stage.objects.get(id=stage)
 				for drop in stage.drops.all():
-					if str(drop.item.id) in needed_ids and drop.item.id not in covered:
+					if str(drop.item.id) in needed_ids and drop.item.id not in covered and 0 < needed[str(drop.item.id)]['total'] - ingredients[str(drop.item.id)]['quantity']:
 						covered.append(drop.item.id)
 						quantity = needed[str(drop.item.id)]['total'] - ingredients[str(drop.item.id)]['quantity']
 						if 0 < quantity:
 							scraps.append({'item' : drop.item, 'quantity' : quantity})
-				next_steps['stages'].append({'stage' : stage, 'scraps' : scraps})
+					elif str(drop.item.id) in ingredient_ids and 0 < ingredients[str(drop.item.id)]['needed']:
+						others.append({'item' : drop.item, 'quantity' : ingredients[str(drop.item.id)]['needed']})
+				next_steps['stages'].append({'stage' : stage, 'scraps' : scraps, 'others' : others})
 		else:
 			failed = True
 	context = {

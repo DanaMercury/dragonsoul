@@ -1,5 +1,5 @@
 <html><head><title>DragonSoul Grind Optimizer</title>
-	<script src="http://dragonsoul.s3.amazonaws.com/items.json"></script>
+	<script src="https://dragonsoul.s3.amazonaws.com/items.json"></script>
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.min.css" />
@@ -33,6 +33,7 @@
 		#heronav ul li img { opacity: 0.6; }
 		#rarities ul li img.complete, #heronav ul li img.selected, #ingredients li img { opacity: 1; filter: grayscale(0); }
 		#heronav ul li img, #rarities .rarity img.hero, #items img { width: 40px; }
+		#next .hero, #next .item { width: 80px; }
 		#rarities .rarity img.hero { position: absolute; top: 10px; left: 10px; }
 		#ingredients li img { margin: 5px; }
 		table { text-align: center; margin: 0 auto; }
@@ -48,6 +49,9 @@
 		#mainnav { position: fixed; top: 0; left: 0; height: 60px; background: black; color: white; width: 100%; padding-top: -10px; }
 		#mainnav h1 { margin-top: 10px; }
 		#mainnav .toggle { color: #AAAAAA; }
+		.other { background: white; border: solid 1px lightgrey; color: lightgrey }
+		#ingredients li.other a img { opacity: .2; filter: grayscale(.8); }
+		
 	</style>
 	</head><body>
 	<div id="mainnav"><h1>Grind Optimizer <a class="toggle" href="/gear">Scraps Tracker</a> <a class="toggle" href="/runes">Runes Optimizer</a> <a class="toggle" href="/gear/catalog">Items Catalog</a></h1></div>
@@ -65,6 +69,7 @@
 	<div id="itemlist">
 		<h1>Grinding List</h1>
 		<p>After you enter the amount you have of the needed scraps and optimize your grind this will tell you where to go next to most efficiently get what you need. Don't forget that there are other sources for the items you might need like Boss Pits, etc.</p>
+		<p>Items in <span class="other">severe grey</span> are items that are not necessary to complete the suggested item, but that you will need to complete all the gear you've selected on the left. If you get this number of those other items you should probably re-optimize because we might suggest you look elsewhere for the rest of the scraps you need to complete the suggested next item.</p>
 		<div id="itemside">
 			<table>
 				<thead><tr><th>Item</th><th>Needed</th><th>Have</th></tr></thead>
@@ -81,19 +86,22 @@
 			<div id="next">
 				{% if '' != next %}
 					<img class="hero" src="{{ next.hero.image.url }}" title="{{ next.hero.name }}" alt="{{ next.hero.name }}">
-					<img title="{{ next.item.name }}" src="{{ next.item.image.url }}" alt="{{ next.item.name }}" class="item">	
+					<a href="/gear/catalog/{{ next.item.id }}"><img title="{{ next.item.name }}" src="{{ next.item.image.url }}" alt="{{ next.item.name }}" class="item"></a>
 					{% for deets in next.stages %}
 						<h3>{{ deets.stage }}</h3>
 						<ul id="ingredients">
 							{% for ingredient in deets.scraps %}
 								<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }}"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" title="{{ ingredient.item.name }}" alt="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
 							{% endfor %}
+							{% for ingredient in deets.others %}
+								<li class="bg{{ ingredient.item.color }} color{{ ingredient.item.color }} other"><a href="/gear/catalog/{{ ingredient.item.id }}"><img src="{{ ingredient.item.image.url }}" title="{{ ingredient.item.name }}" alt="{{ ingredient.item.name }}" /></a><br />{{ ingredient.quantity }}x</li>
+							{% endfor %}
 						</ul>
 					{% endfor %}
 				{% endif %}
 				{% if True == failed %}
-					<h2>Error</h2>
-					<p>Sorry, at least one or more items you need are not available in the chapters available to you.</p>
+					<h2>NOTICE</h2>
+					<p>Either you have everything you need already to craft the next recommended item or at least one or more items you need are not available in the chapters available to you.</p>
 				{% endif %}
 			</div>
 		</div>
@@ -258,15 +266,16 @@
 			var deets = $('#max_chapter').val() + '/';
 			$('#items tr').each(function() {
 				deets += $(this.children[0].children[0].children[0]).attr('name') + ':';
+				deets += (parseInt($(this.children[1])[0].innerHTML) - parseInt($(this.children[2].children[0].children[0]).val())) + ':';
 				deets += $(this.children[2].children[0].children[0]).val() + '_';
 			});
 			deets = deets.replace(/_$/, '/');
 			$('#rarities li img').each(function() {
 				if(!$(this).hasClass('complete')) {
-					deets += this.id.replace(/_/g, ':').replace(/:[0-9]+:[0-9]+/, ':') + $(this).data('gear_id') + ':' + this.id + '#';
+					deets += this.id.replace(/_/g, ':').replace(/:[0-9]+:[0-9]+/, ':') + $(this).data('gear_id') + ':' + this.id + '__';
 				}
 			});
-			deets = deets.replace(/_$/, '');
+			deets = deets.replace(/__$/, '');
 			localStorage.setItem('chapter', $('#max_chapter').val());
 			$(location).attr('href', '/drops/' + deets);
 
