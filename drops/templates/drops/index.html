@@ -216,7 +216,7 @@
 			if(null != progress && null != progress[rarity] && null != progress[rarity][slot]) {
 				var current = JSON.parse(localStorage.getItem('grind'));
 			} else {
-				var current = {'scraps' = {}};
+				var current = {'scraps' : {}};
 			}
 			var itemkey = hero + '_' + rarity + '_' + slot;
 			var ingredients = items[itemkey];
