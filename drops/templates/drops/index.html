@@ -211,20 +211,22 @@
 
 		function update_gear(hero, rarity, slot) {
 			var progress = JSON.parse(localStorage.getItem(hero));
+			var status = $('#' + hero + '_' + rarity + '_' + slot).hasClass('complete') ? 1 : 0;
+			progress[rarity][slot] = status;
 			if(null != progress && null != progress[rarity] && null != progress[rarity][slot]) {
-				var status = $('#' + hero + '_' + rarity + '_' + slot).hasClass('complete') ? 1 : 0;
-				progress[rarity][slot] = status;
 				var current = JSON.parse(localStorage.getItem('grind'));
-				var itemkey = hero + '_' + rarity + '_' + slot;
-				var ingredients = items[itemkey];
-				$.each(ingredients, function(k, item) {
-					have = (null != current ? (null != current.scraps[item.id] ? (null != current.scraps[item.id].have ? current.scraps[item.id].have : 0) : 0) : 0);
-					current.scraps[item.id] = {'id' : item.id, 'quantity' : item.total, 'have' : (status ? (have - item.total < 0 ? 0 : have - item.total) : have + item.total)};
-				});
-				localStorage.setItem(hero, JSON.stringify(progress));
-				localStorage.setItem('grind', JSON.stringify(current));
-				schedule_scrap_checks();
+			} else {
+				var current = {'scraps' = {}};
 			}
+			var itemkey = hero + '_' + rarity + '_' + slot;
+			var ingredients = items[itemkey];
+			$.each(ingredients, function(k, item) {
+				have = (null != current ? (null != current.scraps[item.id] ? (null != current.scraps[item.id].have ? current.scraps[item.id].have : 0) : 0) : 0);
+				current.scraps[item.id] = {'id' : item.id, 'quantity' : item.total, 'have' : (status ? (have - item.total < 0 ? 0 : have - item.total) : have + item.total)};
+			});
+			localStorage.setItem(hero, JSON.stringify(progress));
+			localStorage.setItem('grind', JSON.stringify(current));
+			schedule_scrap_checks();
 		}
 
 		function update_scrap_count(id) {
