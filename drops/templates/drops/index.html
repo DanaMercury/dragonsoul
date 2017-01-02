@@ -211,6 +211,9 @@
 
 		function update_gear(hero, rarity, slot) {
 			var progress = JSON.parse(localStorage.getItem(hero));
+			if(null == progress) {
+				progress = {};
+			}
 			var status = $('#' + hero + '_' + rarity + '_' + slot).hasClass('complete') ? 1 : 0;
 			if(null != progress && null != progress[rarity] && null != progress[rarity][slot]) {
 				progress[rarity][slot] = status;
@@ -218,7 +221,8 @@
 			} else {
 				progress[rarity] = {};
 				progress[rarity][slot] = status
-				var current = {'scraps' : {}};
+				var current = { 'heroes' : [], 'scraps' : []};
+;
 			}
 			var itemkey = hero + '_' + rarity + '_' + slot;
 			var ingredients = items[itemkey];
