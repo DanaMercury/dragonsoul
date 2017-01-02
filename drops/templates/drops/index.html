@@ -235,6 +235,7 @@
 
 		function determine_rarity(hero) {
 			var progress = JSON.parse(localStorage.getItem(hero.id));
+			var no_progress = {1:0,2:0,3:0,4:0,5:0,6:0};
 			var final = false;
 			if(null != progress) {
 				$.each(hero.rarities, function(k, rarity) {
@@ -251,13 +252,13 @@
 						}
 					} else {
 						var rarity = hero.rarities[0];
-						final = {'rarity' : rarity, 'progress' : progress[rarity.id]};
+						final = {'rarity' : rarity, 'progress' : no_progress};
 						return false;
 					}
 				});
 			} else {
 				var rarity = hero.rarities[0];
-				final = {'rarity' : rarity, 'progress' : progress[rarity.id]};
+				final = {'rarity' : rarity, 'progress' : no_progress};
 			}
 			return final;
 		}
