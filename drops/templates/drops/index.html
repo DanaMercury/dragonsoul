@@ -216,10 +216,12 @@
 			}
 			var status = $('#' + hero + '_' + rarity + '_' + slot).hasClass('complete') ? 1 : 0;
 			if(null != progress && null != progress[rarity] && null != progress[rarity][slot]) {
+				console.log('if');
 				progress[rarity][slot] = status;
 				var current = JSON.parse(localStorage.getItem('grind'));
 			} else {
-				progress[rarity] = {};
+				console.log('else');
+				progress[rarity] = {1:0,2:0,3:0,4:0,5:0,6:0};
 				progress[rarity][slot] = status
 				var current = { 'heroes' : [], 'scraps' : []};
 ;
