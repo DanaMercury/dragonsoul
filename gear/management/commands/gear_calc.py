@@ -26,6 +26,7 @@ class Command(BaseCommand):
 			master_items[item.id] = item
 		items = {}
 		for hero in heroes:
+			print(hero.name)
 			for rarity in hero.rarities.all():
 				label = str(hero.id) + '_' + str(rarity.id)
 				for i in range(1,7):
@@ -41,4 +42,5 @@ class Command(BaseCommand):
 		file = default_storage.open('items.json', 'w')
 		file.write('items = ' + json.dumps(items) + ';')
 		file.close()
+		print(json.dumps(items))
 
