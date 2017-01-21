@@ -10,6 +10,7 @@ class Command(BaseCommand):
 	help = 'Recalculates the gear json'
 
 	def handle(self, *args, **options):
+		print('test')
 		heroes = Hero.objects.all().prefetch_related(
 			'rarities__gear1',
 			'rarities__gear2',
