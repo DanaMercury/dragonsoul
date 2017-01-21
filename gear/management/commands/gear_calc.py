@@ -10,7 +10,6 @@ class Command(BaseCommand):
 	help = 'Recalculates the gear json'
 
 	def handle(self, *args, **options):
-		print('test')
 		heroes = Hero.objects.all().prefetch_related(
 			'rarities__gear1',
 			'rarities__gear2',
@@ -40,7 +39,7 @@ class Command(BaseCommand):
 				processItems(master_items[item_id], items[label], quest.quantity, master_items)
 
 		file = default_storage.open('items.json', 'w')
-		file.write('items = ' + json.dumps(items) + ';')
+		print(file)
+		print(file.write('items = ' + json.dumps(items) + ';'))
 		file.close()
-		print(json.dumps(items))
 
