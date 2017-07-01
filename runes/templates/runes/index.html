@@ -47,6 +47,7 @@
 		<label><input class="stat" type="checkbox" id="{{ stat.id }}" onchange="update();"> {{ stat.name }}</label>
 		{% endfor %}
 		<input type="button" onclick="wipe();" value="Reset" />
+		<input type="button" onclick="wipe(1);" value="Reset (Same Collection)" />
 	</div>
 	<div id="heroside">
 		<ul>
@@ -91,8 +92,10 @@
 			heroes.push({{ hero.id | safe }});
 		{% endfor %}
 
-		function wipe() {
-			$('#collection').val('-1');
+		function wipe(collection) {
+			if(undefined == collection) {
+				$('#collection').val('-1');
+			}
 			$('input.stat').each(function() {
 				this.checked = false;
 			});
