@@ -2,22 +2,9 @@
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	<style>
 		html { font-family: sans-serif; }
-		.color1 { color: #333333; }
-		.color2 { color: #10E310; }
-		.color3 { color: #107DB2; }
-		.color4 { color: #8C4BC6; }
-		.color5 { color: #F28200; }
-		.bg1 { background: rgba(237,237,238,.5); border: solid 1px #333333; }
-		.bg2 { background: rgba(16,227,16,.1); border: solid 1px #10E310; }
-		.bg3 { background: rgba(16,125,178,.1); border: solid 1px #107DB2; }
-		.bg4 { background: rgba(140,75,198,.1); border: solid 1px #8C4BC6; }
-		.bg5 { background: rgba(242,130,0,.1); border: solid 1px #F28200; }
 		#runeside { position: fixed; top: 70px; left: 0; bottom: 0; width: 52%; padding: 1vw; overflow: scroll; }
 		#heroside { position: fixed; top: 70px; right: 0; bottom: 0; width: 44%; padding: 1vw; overflow: scroll; }
-		#heroside ul { list-style: none; padding; 0; margin: 0 20px 0 -40px; }
-		#heroside ul li { display: inline-block; padding: 0; }
-		#heroside ul li img { width: 50px; margin: 0; opacity: 0.4; filter: grayscale(.5); padding: 5px; border: solid 1px white; }
-		#heroside ul li img.match { opacity: 1; filter: grayscale(0); }
+		#heroside ul { padding; 0; margin: 0 20px 0 -40px; }
 		div h2:first-of-type { margin-top: 0; }
 		select { display: block; margin-bottom: 40px;}
 		label { display: inline-block; margin-bottom: 10px; width: 32%; }
@@ -29,11 +16,12 @@
 		#mainnav .toggle { color: #AAAAAA; }
 		.tertiary, #heroside ul li img.tertiary { background: yellow; border: solid 1px orange; }
 		.secondary, #heroside ul li img.secondary { background: orange; border: solid 1px red; }
-		.primary, #heroside ul li img.primary { background: red; border: solid 1px darkred; }
+		.primary, #heroside ul li img.primary { background: red; border: solid 1px darkred; color: pink; }
 		p.recommended { display: block; padding: 5px; margin: 1px; }
 	</style>
 	</head><body>
-	<div id="mainnav"><h1>Runes Optimizer <a class="toggle" href="/gear">Scraps Tracker</a> <a class="toggle" href="/drops">Grind Optimizer</a> <a class="toggle" href="/gear/catalog">Items Catalog</a></h1></div>
+	<div id="mainnav"><h1>DragonSoul Runes Optimizer</h1></div>
+	<p>If you've ever needed help deciding which hero should get which rune, this tool is for you. Simply quickly select which stats and what type of rune you have and we will show you which heroes would most benefit from that rune.</p>
 	<div id="runeside">
 		<h2>Collection</h2>
 		<select id="collection" onchange="update();">
@@ -52,7 +40,7 @@
 	<div id="heroside">
 		<ul>
 			{% for hero in heroes %}
-			<li><img id="hero{{ hero.id }}" src="{{ hero.image.url }}" alt="{{ hero.name }}" title="{{ hero.name }}" /></li>
+			<li id="hero{{ hero.id }}">{{ hero.name }}</li>
 			{% endfor %}
 		</ul>
 		<p class="recommended primary">Indicates Extremely Recommended</p>
