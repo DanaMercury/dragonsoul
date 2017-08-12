@@ -5,9 +5,9 @@
 		#runeside { position: fixed; top: 70px; left: 0; bottom: 0; width: 52%; padding: 1vw; overflow: scroll; }
 		#heroside { position: fixed; top: 70px; right: 0; bottom: 0; width: 44%; padding: 1vw; overflow: scroll; }
 		#heroside ul { padding; 0; margin: 0 20px 0 -40px; }
-		div h2:first-of-type { margin-top: 0; }
 		select { display: block; margin-bottom: 40px;}
 		label { display: inline-block; margin-bottom: 10px; width: 32%; }
+		#heroside ul li { display: inline-block; margin-bottom: 3px; padding: 3px; width: 20%; text-align: center; font-size: 12px; }
 		input[type="button"] { display: block; margin-bottom: 10px; }
 		.toggle { font-size: 50%; color: #666666; text-transform: uppercase; display: inline-block; margin-left: 1vw; -webkit-text-stroke: 0px; cursor: pointer; text-decoration: none; }
 		.toggle:hover { color: grey; text-decoration: underline; }
@@ -21,8 +21,8 @@
 	</style>
 	</head><body>
 	<div id="mainnav"><h1>DragonSoul Runes Optimizer</h1></div>
-	<p>If you've ever needed help deciding which hero should get which rune, this tool is for you. Simply quickly select which stats and what type of rune you have and we will show you which heroes would most benefit from that rune.</p>
 	<div id="runeside">
+		<p>If you've ever needed help deciding which hero should get which rune, this tool is for you. Simply quickly select which stats and what type of rune you have and we will show you which heroes would most benefit from that rune.</p>
 		<h2>Collection</h2>
 		<select id="collection" onchange="update();">
 			<option value="-1">Select a Rune Collection</option>
@@ -38,14 +38,14 @@
 		<input type="button" onclick="wipe(1);" value="Reset (Same Collection)" />
 	</div>
 	<div id="heroside">
+		<p class="recommended primary">Indicates Extremely Recommended</p>
+		<p class="recommended secondary">Indicates Very Strongly Recommended</p>
+		<p class="recommended tertiary">Indicates Highly Recommended</p>
 		<ul>
 			{% for hero in heroes %}
 			<li id="hero{{ hero.id }}">{{ hero.name }}</li>
 			{% endfor %}
 		</ul>
-		<p class="recommended primary">Indicates Extremely Recommended</p>
-		<p class="recommended secondary">Indicates Very Strongly Recommended</p>
-		<p class="recommended tertiary">Indicates Highly Recommended</p>
 	</div>
 	<script>
 		collections = {}
@@ -122,7 +122,7 @@
 				}
 			});
 
-			$("img").each(function() {
+			$("li").each(function() {
 				$(this).removeClass('match recommended tertiary primary secondary');
 			});
 			for(var i = 0; i < matches.length; i++) {
