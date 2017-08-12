@@ -5,7 +5,7 @@ from .models import Collection
 import copy
 
 def index(request):
-    heroes = Hero.objects.all().order_by('id')
+    heroes = Hero.objects.all().order_by('name')
     stats = Stat.objects.all().order_by('name')
     collections = Collection.objects.all().order_by('id')
     context = {
