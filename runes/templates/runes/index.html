@@ -17,7 +17,7 @@
 		.tertiary, #heroside ul li img.tertiary { background: yellow; border: solid 1px orange; }
 		.secondary, #heroside ul li img.secondary { background: orange; border: solid 1px red; }
 		.primary, #heroside ul li img.primary { background: red; border: solid 1px darkred; color: pink; }
-		p.recommended { display: block; padding: 5px; margin: 1px; }
+		p.recommended { display: inline-block; padding: 3px; margin: 3px; width: 30%; text-align: center; }
 	</style>
 	</head><body>
 	<div id="mainnav"><h1>DragonSoul Runes Optimizer</h1></div>
@@ -38,9 +38,9 @@
 		<input type="button" onclick="wipe(1);" value="Reset (Same Collection)" />
 	</div>
 	<div id="heroside">
-		<p class="recommended primary">Indicates Extremely Recommended</p>
-		<p class="recommended secondary">Indicates Very Strongly Recommended</p>
-		<p class="recommended tertiary">Indicates Highly Recommended</p>
+		<p class="recommended primary">Extremely Recommended</p>
+		<p class="recommended secondary">Very Strongly Recommended</p>
+		<p class="recommended tertiary">Highly Recommended</p>
 		<ul>
 			{% for hero in heroes %}
 			<li id="hero{{ hero.id }}">{{ hero.name }}</li>
