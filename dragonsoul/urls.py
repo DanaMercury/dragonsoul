@@ -20,8 +20,8 @@ from django.views.generic import RedirectView
 urlpatterns = [
     url(r'^admin/?', admin.site.urls),
     url(r'^nested_admin/', include('nested_admin.urls')),
-    url(r'^gear/?', include('gear.urls')),
-    url(r'^drops/?', include('drops.urls')),
+#    url(r'^gear/?', include('gear.urls')),
+#    url(r'^drops/?', include('drops.urls')),
     url(r'^runes/?', include('runes.urls')),
-    url(r'.*', RedirectView.as_view(url='/gear/splash')),
+    url(r'.*', RedirectView.as_view(url='/runes')),
 ]
